@@ -73,10 +73,8 @@ HKGraph.prototype.setEntity = function(entity)
 
     if(entity.type === Types.NODE || entity.type === Types.REFERENCE || entity.type === Types.CONTEXT)
     {
-        if(entity.interfaces)
-        {
-            oldEntity.interfaces = entity.interfaces;
-        }
+        
+        oldEntity.interfaces = entity.interfaces;
     }
 
 	// Update parent
