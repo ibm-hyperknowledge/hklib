@@ -1,0 +1,32 @@
+{
+  "name": "hklib",
+  "version": "2.1.0",
+  "main": "index.js",
+  "author": "IBM Research",
+  "contributors": [
+    {
+      "name": "Marcelo Machado",
+      "email": "marcelo.machado@ibm.com"
+    },
+    {
+      "name": "Rodrigo Costa",
+      "email": "rodrigo.costa@ibm.com"
+    },
+    {
+      "name": "Wallas Santos",
+      "email": "wallas.sousa@ibm.com"
+    }
+  ],
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.8",
+    "shortid": "^2.2.14",
+	"amqplib": "^0.5.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ibm-hyperknowledge/hklib"
+  }
+}
