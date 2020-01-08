@@ -8,6 +8,10 @@
       "name": "Marcelo Machado",
       "email": "marcelo.machado@ibm.com"
     },
+	{
+      "name": "Marcio Moreno",
+      "email": "mmoreno@br.ibm.com"
+    },
     {
       "name": "Rodrigo Costa",
       "email": "rodrigo.costa@ibm.com"
@@ -33,5 +37,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ibm-hyperknowledge/hklib"
-  }
+  },
+  "keywords": ["hyperknowledge", "hk", "hyperlinkedgraph", "graph", "driver"]
 }
