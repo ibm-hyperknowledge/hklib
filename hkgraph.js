@@ -49,7 +49,7 @@ HKGraph.prototype.hasId = function(id)
 
 /**
  * Update an entity 
- * @param {object} entity an entity with an id. It will update the properties.
+ * @param {object} entity an entity with an id and ALL updated properties (including intrinsecs properties)
  * @returns {object} the new entity
  */
 HKGraph.prototype.setEntity = function(entity)
@@ -91,7 +91,7 @@ HKGraph.prototype.setEntity = function(entity)
 	}
 	
 	// Set new parent
-	let parent = this.getEntity.parent;
+	let parent = entity.parent ? this.getEntity(entity.parent) : null;
 	if(parent)
 	{
 		this.contextMap[entity.parent][entity.id] = entity;
