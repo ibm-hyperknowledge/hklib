@@ -339,7 +339,7 @@ HKGraph.prototype.removeEntity = function(id)
 
         if(this.orphans.hasOwnProperty(entity.parent))
         {
-            this.orphans[entity.parent].delete(id);
+            delete this.orphans[entity.parent][id];
         }
 
         if(this.contextMap.hasOwnProperty(entity.parent))
