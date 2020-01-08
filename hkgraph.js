@@ -91,8 +91,8 @@ HKGraph.prototype.setEntity = function(entity)
 	}
 	
 	// Set new parent
-	let parent = entity.parent ? this.getEntity(entity.parent) : null;
-	if(parent)
+	let parent = this.getEntity(entity.parent);
+	if(parent || entity.parent === null)
 	{
 		this.contextMap[entity.parent][entity.id] = entity;
 	}
