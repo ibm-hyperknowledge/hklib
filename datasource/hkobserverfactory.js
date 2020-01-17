@@ -8,6 +8,8 @@
 const classes = require ('./observer/clients/');
 const request = require ('request-promise-native');
 
+const CONNECTION_REFUSED_ERROR = 'ECONNREFUSED';
+
 const clients = {};
 
 for (let key in classes)
@@ -39,9 +41,19 @@ async function createObserver (basePath, observerOptions = {}, hkbaseOptions = {
 	}
 	catch (err)
 	{
-		console.error (err);
-		console.error ('Creating a default client');
-		return new clients['default']();
+		if (err.error && err.error.code === CONNECTION_REFUSED_ERROR)
+		{
+			let error = new Error ();
+			error.message = `could not connect to server at ${err.error.address}:${err.error.port}`
+			error.code = CONNECTION_REFUSED_ERROR;
+			throw error;
+		}
+		else
+		{
+			console.error (err);
+			console.error ('Creating a default client');
+			return new clients['default']();
+		}
 	}
 }
 
