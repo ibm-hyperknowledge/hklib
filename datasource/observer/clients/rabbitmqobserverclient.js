@@ -57,7 +57,7 @@ class RabbitMQObserverClient extends ObserverClient
 		super ();
 		this._broker       = info.broker;
 		this._exchangeName = info.exchangeName;
-		this._certificate  = options.certificate;
+		this._certificate  = info.certificate || options.certificate;
 		this._connection   = null;
 	}
 
