@@ -70,7 +70,7 @@ function convertEntities(raw)
 		}
 		else
 		{
-			console.warning (`Error deserializing entity ${data[k]}`)
+			console.warn (`Error deserializing entity ${data[k]}`)
 		}
 	}
 
