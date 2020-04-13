@@ -57,7 +57,7 @@ class RabbitMQObserverClient extends ObserverClient
 		super ();
 		this._broker       = info.broker;
 		this._exchangeName = info.exchangeName;
-		this._certificate  = options.certificate;
+		this._certificate  = info.certificate || options.certificate;
 		this._connection   = null;
 	}
 
@@ -74,7 +74,8 @@ class RabbitMQObserverClient extends ObserverClient
 			const q = await this._channel.assertQueue ('', {exclusive: true});
 			this._channel.bindQueue (q.queue, this._exchangeName, '');
 
-			console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", q.queue);
+			console.log(`Bound to exchange "${this._exchangeName}"`);
+			console.log(" [*] Waiting for messages in %s.", q.queue);
 
 			this._channel.consume (q.queue,
 				(msg) =>

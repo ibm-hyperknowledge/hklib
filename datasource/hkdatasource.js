@@ -70,7 +70,7 @@ function convertEntities(raw)
 		}
 		else
 		{
-			throw `Error deserializing entity ${entity.id}`;
+			console.warn (`Warning: Error deserializing entity ${JSON.stringify(data[k])}`)
 		}
 	}
 
@@ -785,7 +785,7 @@ HKDatasource.prototype.importRDF = function(data, options, callback = () => {})
 			"Content-Length": Buffer.byteLength (data)
 		},
 		body: data,
-		qs: options.params
+		qs: options
 	};
 
 
