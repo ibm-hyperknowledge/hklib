@@ -68,7 +68,8 @@ HKGraph.prototype.setEntity = function(entity)
 
     if(entity.type === Types.CONNECTOR)
     {
-        oldEntity.roles = entity.roles;
+		oldEntity.roles = entity.roles;
+		oldEntity.className = entity.className
     }
 
     if(entity.type === Types.NODE || entity.type === Types.REFERENCE || entity.type === Types.CONTEXT)
@@ -80,29 +81,35 @@ HKGraph.prototype.setEntity = function(entity)
 	// Update parent
 
 	// Clean old entity
-	let oldParent = this.getEntity(oldEntity.parent);
-	if(oldParent)
+	if(oldEntity.parent) 
 	{
-		delete this.contextMap[oldEntity.parent][oldEntity.id];
-	}
-	else
-	{
-		delete this.orphans[oldEntity.parent][oldEntity.id];
+		let oldParent = this.getEntity(oldEntity.parent);
+		if(oldParent)
+		{
+			delete this.contextMap[oldEntity.parent][oldEntity.id];
+		}
+		else
+		{
+			delete this.orphans[oldEntity.parent][oldEntity.id];
+		}
 	}
 	
 	// Set new parent
-	let parent = this.getEntity(entity.parent);
-	if(parent || entity.parent === null)
+	if(entity.parent)
 	{
-		this.contextMap[entity.parent][entity.id] = entity;
-	}
-	else
-	{
-		if(!this.orphans.hasOwnProperty(entity.parent))
+		let parent = this.getEntity(entity.parent);
+		if(parent || entity.parent === null)
 		{
-			this.orphans[entity.parent] = {};
+			this.contextMap[entity.parent][entity.id] = entity;
 		}
-		this.orphans[entity.parent][entity.id] = entity;
+		else
+		{
+			if(!this.orphans.hasOwnProperty(entity.parent))
+			{
+				this.orphans[entity.parent] = {};
+			}
+			this.orphans[entity.parent][entity.id] = entity;
+		}
 	}
 
 	oldEntity.parent = entity.parent;
