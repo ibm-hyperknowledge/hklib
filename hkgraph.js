@@ -69,7 +69,7 @@ HKGraph.prototype.setEntity = function(entity)
     if(entity.type === Types.CONNECTOR)
     {
 		oldEntity.roles = entity.roles;
-		oldEntity.className = entity.className
+		oldEntity.className = entity.className;
     }
 
     if(entity.type === Types.NODE || entity.type === Types.REFERENCE || entity.type === Types.CONTEXT)
@@ -81,7 +81,7 @@ HKGraph.prototype.setEntity = function(entity)
 	// Update parent
 
 	// Clean old entity
-	if(oldEntity.parent) 
+	if(oldEntity.hasOwnProperty('parent')) 
 	{
 		let oldParent = this.getEntity(oldEntity.parent);
 		if(oldParent)
@@ -95,7 +95,7 @@ HKGraph.prototype.setEntity = function(entity)
 	}
 	
 	// Set new parent
-	if(entity.parent)
+	if(entity.hasOwnProperty('parent'))
 	{
 		let parent = this.getEntity(entity.parent);
 		if(parent || entity.parent === null)
