@@ -32,7 +32,6 @@ function Reference (id, refId, parent)
     this.parent = parent || null;
   }
   this.type = Types.REFERENCE;
-  this.binds = {};
 }
 
 Reference.prototype = Object.create (HKEntity.prototype);
