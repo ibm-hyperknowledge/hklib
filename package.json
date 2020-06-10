@@ -1,6 +1,6 @@
 {
   "name": "hklib",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "main": "index.js",
   "author": "IBM Research",
   "contributors": [
@@ -8,7 +8,7 @@
       "name": "Marcelo Machado",
       "email": "marcelo.machado@ibm.com"
     },
-	{
+	  {
       "name": "Marcio Moreno",
       "email": "mmoreno@br.ibm.com"
     },
@@ -23,6 +23,10 @@
     {
       "name": "Vítor Lourenço",
       "email": "vitor.nascimento@ibm.com"
+    },
+    {
+      "name": "Elton Soares",
+      "email": "eltons@ibm.com"
     }
   ],
   "dependencies": {
