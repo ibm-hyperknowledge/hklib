@@ -88,7 +88,7 @@ HKGraph.prototype.setEntity = function(entity)
 		{
 			delete this.contextMap[oldEntity.parent][oldEntity.id];
 		}
-		else
+		else if (oldEntity.parent)
 		{
 			delete this.orphans[oldEntity.parent][oldEntity.id];
 		}
@@ -102,7 +102,7 @@ HKGraph.prototype.setEntity = function(entity)
 		{
 			this.contextMap[entity.parent][entity.id] = entity;
 		}
-		else
+		else if (entity.parent)
 		{
 			if(!this.orphans.hasOwnProperty(entity.parent))
 			{
