@@ -23,6 +23,10 @@ function Context(id, parent)
 		{
 			this.metaProperties = context.metaProperties;
 		}
+		if (context.interfaces)
+		{
+			this.interfaces = context.interfaces;
+		}
 	}
 	else
 	{
@@ -34,6 +38,19 @@ function Context(id, parent)
 
 Context.prototype = Object.create(HKEntity.prototype);
 Context.prototype.constructor = Context;
+
+Context.prototype.addInterface = function(key, type, properties)
+{
+	if (!this.interfaces)
+	{
+		this.interfaces = {};
+	}
+
+	this.interfaces[key] = {
+		type: type,
+		properties: properties
+	};
+}
 
 Context.prototype.serialize = function()
 {
@@ -53,6 +70,14 @@ Context.prototype.serialize = function()
 		context.metaProperties = this.serializeMetaProperties();
 	}
 
+	if (this.interfaces)
+	{
+		context.interfaces = {};
+		for (let k in this.interfaces)
+		{
+			context.interfaces[k] = JSON.parse(JSON.stringify(this.interfaces[k])) // Lazy job
+		}
+	}
 
 	return context;
 }
