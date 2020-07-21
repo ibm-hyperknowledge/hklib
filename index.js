@@ -1,8 +1,11 @@
 /*
- * Copyright (c) 2016-present, IBM Research
- * Licensed under The MIT License [see LICENSE for details]
+ * copyright: IBM Confidential
+ * copyright: OCO Source Materials
+ * copyright: © IBM Corp. All Rights Reserved
+ * date: 2020
+ *
+ * IBM Certificate of Originality
  */
-
 "use strict";
 
 exports.HKGraph        = require("./hkgraph");
@@ -39,6 +42,7 @@ exports.FACTS          = ConnectorClass.FACTS;
 exports.REASONING      = ConnectorClass.REASONING;
 exports.CONSTRAINT     = ConnectorClass.CONSTRAINT;
 exports.CAUSAL         = ConnectorClass.CAUSAL;
+exports.POSSIBILITY     = ConnectorClass.POSSIBILITY;
 
 
 exports.hyperify       = require("./hyperify");
