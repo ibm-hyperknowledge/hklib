@@ -15,3 +15,4 @@ exports.REASONING = "r";
 exports.CONSTRAINT = "c";
 exports.CAUSAL = "C";
 exports.POSSIBILITY = "p";
+exports.POSSIBILITYRESOLVER = "P";
