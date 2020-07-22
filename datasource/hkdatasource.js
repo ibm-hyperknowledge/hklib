@@ -494,6 +494,71 @@ HKDatasource.prototype.filterEntities = function(filter, callback = () => {})
 }
 
 /**
+ * Filter entities Ids using CSS pattern `(TODO: document it better)`
+ *
+ * Examples:
+ *
+ * `{"parent" :  "bar"}` - filter entities ids from a context bar
+ *
+ * `{"type" : "node"}` - filter entities ids of type node
+ *
+ * `{"properties" : {"name" : "bar"}` - filter entities ids with property name which it is bar
+ *
+ * `{"parent":"parent_context", {"properties" : {"name" : "bar"}` - Combined filter
+ *
+ * @param {object} filter The CSS filter
+ * @param {GetEntitiesCallback} callback Callback with the entities ids
+ */
+HKDatasource.prototype.filterEntitiesLazy = function(filter, callback = () => {})
+{
+	let url = this.url + "repository/" + this.graphName + "/entity/lazy";
+
+	let params = {}
+
+	if(typeof filter === "object")
+	{
+		params.headers = {"content-type": "application/json"};
+		params.body = JSON.stringify(filter);
+	}
+	else if(typeof filter === "string")
+	{
+		params.headers = {"content-type": "text/plain"};
+		params.body = filter;
+	}
+
+	Object.assign(params, this.options);
+
+	request.post(url, params, (err, res) =>
+	{
+		if(!err)
+		{
+			if(requestCompletedWithSuccess (res.statusCode))
+			{
+				try
+				{
+					callback(null, JSON.parse(res.body));
+				}
+				catch(exp)
+				{
+					callback(exp);
+				}
+			}
+			else
+			{
+				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+			}
+
+		}
+		else
+		{
+			callback(err);
+		}
+	});
+
+
+}
+
+/**
  * @callback QueryResultsCallback
  * @param err An error object that indicate if the operation was succesful or not
  * @param data The result set from the execution of the input query

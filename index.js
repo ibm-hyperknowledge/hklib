@@ -42,7 +42,8 @@ exports.FACTS          = ConnectorClass.FACTS;
 exports.REASONING      = ConnectorClass.REASONING;
 exports.CONSTRAINT     = ConnectorClass.CONSTRAINT;
 exports.CAUSAL         = ConnectorClass.CAUSAL;
-exports.POSSIBILITY     = ConnectorClass.POSSIBILITY;
+exports.POSSIBILITY    = ConnectorClass.POSSIBILITY;
+exports.POSSIBILITYRESOLVER    = ConnectorClass.POSSIBILITYRESOLVER;
 
 
 exports.hyperify       = require("./hyperify");
