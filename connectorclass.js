@@ -1,8 +1,11 @@
 /*
- * Copyright (c) 2016-present, IBM Research
- * Licensed under The MIT License [see LICENSE for details]
+ * copyright: IBM Confidential
+ * copyright: OCO Source Materials
+ * copyright: © IBM Corp. All Rights Reserved
+ * date: 2020
+ *
+ * IBM Certificate of Originality
  */
-
 "use strict";
 
 
@@ -11,3 +14,4 @@ exports.FACTS = "f";
 exports.REASONING = "r";
 exports.CONSTRAINT = "c";
 exports.CAUSAL = "C";
+exports.POSSIBILITY = "p";
