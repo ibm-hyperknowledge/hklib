@@ -89,7 +89,7 @@ function convertEntities(raw)
 
 HKDatasource.prototype.getInfo = function (callback = () => {})
 {
-	request.get(`${this.url}/info`, this.options, (err, res) =>
+	request.get(`${this.url}info`, this.options, (err, res) =>
 	{
 		if(!err)
 		{
