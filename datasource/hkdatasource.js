@@ -930,6 +930,60 @@ HKDatasource.prototype.importRDF = function(data, options, callback = () => {})
 	});
 }
 
+/**
+ * Import data from an external database, like Wordnet, DBpedia...
+ * @param {object} data a set of needed information to be considered when importing
+ * @param {object} options a set of options to customize the importation
+ * @param {string} options.context the target context to import the entities
+ * @param {string} options.base the identifier of the database where data will come from (e.g. "wordnet" indicate the WordNet dataset).
+ * @param {OperationCallback} callback Response callback
+ */
+
+HKDatasource.prototype.importFrom = function(data, options, callback = () => {})
+{
+	let url = `${this.url}repository/${this.graphName}/from/`;
+
+	let params =
+	{
+		body: data,
+		qs: options
+	};
+
+	if (options.context)
+	{
+		params.headers["context-parent"] = `${options.context}`;
+	}
+
+	Object.assign(params, this.options);
+
+	request.put(url, params, (err, res) =>
+	{
+		if(!err)
+		{
+			if(requestCompletedWithSuccess (res.statusCode))
+			{
+				let out;
+				try
+				{
+					out = JSON.parse(res.body);
+				}
+				catch (err)
+				{
+					out = null;
+				}
+				callback(null, out);
+			}
+			else
+			{
+				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+			}
+		}
+		else
+		{
+			callback(err);
+		}
+	});
+}
 
 /**
  * Import a RDF data
