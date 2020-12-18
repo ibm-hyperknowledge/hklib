@@ -945,7 +945,8 @@ HKDatasource.prototype.importFrom = function(data, options, callback = () => {})
 
 	let params =
 	{
-		body: data,
+		headers: {"content-type": "application/json"},
+		body: JSON.stringify(data),
 		qs: options
 	};
 
