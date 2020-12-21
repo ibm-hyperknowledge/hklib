@@ -1,6 +1,6 @@
 {
   "name": "hklib",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "main": "index.js",
   "author": "IBM Research",
   "contributors": [
@@ -8,7 +8,7 @@
       "name": "Marcelo Machado",
       "email": "marcelo.machado@ibm.com"
     },
-	  {
+    {
       "name": "Marcio Moreno",
       "email": "mmoreno@br.ibm.com"
     },
@@ -30,17 +30,23 @@
     }
   ],
   "dependencies": {
+    "amqplib": "^0.5.5",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.8",
-    "shortid": "^2.2.14",
-	"amqplib": "^0.5.5"
+    "shortid": "^2.2.14"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/ibm-hyperknowledge/hklib"
   },
-  "keywords": ["hyperknowledge", "hk", "hyperlinkedgraph", "graph", "driver"]
+  "keywords": [
+    "hyperknowledge",
+    "hk",
+    "hyperlinkedgraph",
+    "graph",
+    "driver"
+  ]
 }
