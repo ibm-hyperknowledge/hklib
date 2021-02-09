@@ -10,7 +10,7 @@ const HKEntity = require("./hkentity");
 
 function Reference (id, refId, parent)
 {
-  if(arguments[0] && typeof arguments[0] === "object" && arguments[0])
+  if(arguments[0] && typeof arguments[0] === "object")
   {
     let ref = arguments[0];
     this.id = ref.id || null;
