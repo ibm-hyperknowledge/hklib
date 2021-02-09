@@ -5,8 +5,11 @@ function id(x) { return x[0]; }
 
 const moo = require("moo");
 
+//TODO: define a better number format.
+
 const lexer = moo.compile({
   QUOTED_STRING: /"(?:(?:""|[^"])*)"/,
+  NUMBER: /[+-]?[0-9]+(?:\.[0-9]+)?/,
   STRING_NO_SHARP_NO_DIAMONDS: /[^"#@<>?&=\s]+/,
   '<': '<',
   '>': '>',
@@ -19,20 +22,16 @@ const lexer = moo.compile({
 
 //Try to emulate lark idiom for parsing
 
+const {IFI, Anchor} = require("./ifi");
+
 function processIfi(d){
     if (d[0].type === 'group'){
-        return {
-            type:'ifi',
-            artifact: d[0].value 
-        }
-    } else if (d[0].type === 'ifi'){
+        return new IFI(d[0].value);
+    } else if (d[0] instanceof IFI){
         d[0].fragment = d[2];
         return d[0];
     } else if (d[0].type === 'atom'){
-        return {
-            type:'ifi',
-            artifact: d[0].value 
-        }
+        return new IFI(d[0].value);
     }
 }
 
@@ -50,34 +49,32 @@ function processGroup(d){
 
 
 function processFullAnchor(d){
-    return {
-        type: 'anchor',
-        indexer: d[0],
-        arguments: d[2]
+    //unstack arguments
+    let mapArgs = new Map();
+    const lstArgs = d[2];
+    for (let i = lstArgs.length - 1; i >= 0; i--){
+        mapArgs.set(lstArgs[i][0], lstArgs[i][1]);
     }
+    
+    return new Anchor(d[0], mapArgs);
 }
 
 function processArgumentList(d){
     if (d.length > 1){
         //more than one parameter/value pair
-        return {...d[0], ...d[2]};
+        d[2].push(d[0])
+        return d[2];
     } else if (d.length == 1){
-        return d[0];
+        return [d[0]];
     }
 }
 
 function processArgument(d){
-    let pair = {};
-    pair[d[0]] = d[2];
-    console.log(pair);
-    return pair;
+    return [d[0], d[2]];
 }
 
 function processSimpleAnchor(d){
-    return {
-        type: 'anchor',
-        indexer: d[0],
-    }
+    return new Anchor(d[0]);
 }
 
 
@@ -193,7 +190,7 @@ var grammar = {
     {"name": "indexer", "symbols": ["group"], "postprocess": (d) => { return  processIfi(d) }},
     {"name": "parameter", "symbols": [(lexer.has("STRING_NO_SHARP_NO_DIAMONDS") ? {type: "STRING_NO_SHARP_NO_DIAMONDS"} : STRING_NO_SHARP_NO_DIAMONDS)], "postprocess": (d) => { return String(d[0]) }},
     {"name": "value", "symbols": [(lexer.has("QUOTED_STRING") ? {type: "QUOTED_STRING"} : QUOTED_STRING)], "postprocess": (d) => { return String(d[0]) }},
-    {"name": "value", "symbols": ["jsonfloat"], "postprocess": (d) => { return parseFloat(d[0]) }},
+    {"name": "value", "symbols": [(lexer.has("NUMBER") ? {type: "NUMBER"} : NUMBER)], "postprocess": (d) => { return parseFloat(d[0]) }},
     {"name": "atom", "symbols": [(lexer.has("STRING_NO_SHARP_NO_DIAMONDS") ? {type: "STRING_NO_SHARP_NO_DIAMONDS"} : STRING_NO_SHARP_NO_DIAMONDS)], "postprocess": (d) => {return processAtom(d)}},
     {"name": "atom", "symbols": [(lexer.has("QUOTED_STRING") ? {type: "QUOTED_STRING"} : QUOTED_STRING)], "postprocess": (d) => {return processAtom(d)}}
 ]
