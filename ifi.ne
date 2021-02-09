@@ -22,9 +22,9 @@ const lexer = moo.compile({
 
 ifi -> group            {% (d) => {return processIfi(d)} %}
     | atom              {% (d) => {return processIfi(d)} %}
-    | ifi "#" fragment  {% (d) => {return processIfi(d)} %}
-fragment -> full_anchor {% (d) => {return processFragment(d)} %}
-    | simple_anchor     {% (d) => {return processFragment(d)} %}
+    | ifi "#" anchor  {% (d) => {return processIfi(d)} %}
+anchor -> full_anchor {% (d) => {return processAnchor(d)} %}
+    | simple_anchor     {% (d) => {return processAnchor(d)} %}
 group -> "<" ifi ">"    {% (d) => {return processGroup(d)} %}
 
 full_anchor -> indexer "?" argument_list {% (d) => {return processFullAnchor(d)} %}
@@ -55,14 +55,14 @@ function processIfi(d){
     if (d[0].type === 'group'){
         return new IFI(d[0].value);
     } else if (d[0] instanceof IFI){
-        d[0].fragment = d[2];
+        d[0].anchor = d[2];
         return d[0];
     } else if (d[0].type === 'atom'){
         return new IFI(d[0].value);
     }
 }
 
-function processFragment(d){
+function processAnchor(d){
     return d[0];
 }
 

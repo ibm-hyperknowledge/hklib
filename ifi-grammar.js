@@ -28,14 +28,14 @@ function processIfi(d){
     if (d[0].type === 'group'){
         return new IFI(d[0].value);
     } else if (d[0] instanceof IFI){
-        d[0].fragment = d[2];
+        d[0].anchor = d[2];
         return d[0];
     } else if (d[0].type === 'atom'){
         return new IFI(d[0].value);
     }
 }
 
-function processFragment(d){
+function processAnchor(d){
     return d[0];
 }
 
@@ -177,9 +177,9 @@ var grammar = {
         },
     {"name": "ifi", "symbols": ["group"], "postprocess": (d) => {return processIfi(d)}},
     {"name": "ifi", "symbols": ["atom"], "postprocess": (d) => {return processIfi(d)}},
-    {"name": "ifi", "symbols": ["ifi", {"literal":"#"}, "fragment"], "postprocess": (d) => {return processIfi(d)}},
-    {"name": "fragment", "symbols": ["full_anchor"], "postprocess": (d) => {return processFragment(d)}},
-    {"name": "fragment", "symbols": ["simple_anchor"], "postprocess": (d) => {return processFragment(d)}},
+    {"name": "ifi", "symbols": ["ifi", {"literal":"#"}, "anchor"], "postprocess": (d) => {return processIfi(d)}},
+    {"name": "anchor", "symbols": ["full_anchor"], "postprocess": (d) => {return processAnchor(d)}},
+    {"name": "anchor", "symbols": ["simple_anchor"], "postprocess": (d) => {return processAnchor(d)}},
     {"name": "group", "symbols": [{"literal":"<"}, "ifi", {"literal":">"}], "postprocess": (d) => {return processGroup(d)}},
     {"name": "full_anchor", "symbols": ["indexer", {"literal":"?"}, "argument_list"], "postprocess": (d) => {return processFullAnchor(d)}},
     {"name": "argument_list", "symbols": ["argument"], "postprocess": (d) => {return processArgumentList(d)}},

@@ -3,15 +3,15 @@ const grammar = require("./ifi-grammar.js");
 
 class IFI {
 
-    constructor(artifact, fragment = undefined, grouped = false) {
+    constructor(artifact, anchor = undefined, grouped = false) {
         this.artifact = artifact;
-        this.fragment = fragment;
+        this.anchor = anchor;
         this.grouped = grouped;
     }
 
     toString() {
         let strIFI = this.artifact.toString()
-        strIFI = (this.fragment) ? `${strIFI}#${this.fragment}` : strIFI;
+        strIFI = (this.anchor) ? `${strIFI}#${this.anchor}` : strIFI;
         strIFI = (this.grouped) ? `(${this.artifact})` : strIFI;
         return strIFI
     }
