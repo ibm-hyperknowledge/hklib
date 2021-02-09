@@ -10,7 +10,7 @@ const moo = require("moo");
 const lexer = moo.compile({
   QUOTED_STRING: /"(?:(?:""|[^"])*)"/,
   NUMBER: /[+-]?[0-9]+(?:\.[0-9]+)?/,
-  STRING_NO_SHARP_NO_DIAMONDS: /[^"#@<>?&=\s]+/,
+  UNQUOTED_IDENTIFIER: /[^"#@<>?&=\s]+/,
   '<': '<',
   '>': '>',
   '#': '#',
@@ -27,11 +27,11 @@ const {IFI, Anchor} = require("./ifi");
 function processIfi(d){
     if (d[0].type === 'group'){
         return new IFI(d[0].value);
+    } else if (d[0].type === 'atom'){
+        return new IFI(d[0].value);
     } else if (d[0] instanceof IFI){
         d[0].anchor = d[2];
         return d[0];
-    } else if (d[0].type === 'atom'){
-        return new IFI(d[0].value);
     }
 }
 
@@ -188,10 +188,10 @@ var grammar = {
     {"name": "simple_anchor", "symbols": ["indexer"], "postprocess": (d) => {return processSimpleAnchor(d)}},
     {"name": "indexer", "symbols": ["atom"], "postprocess": (d) => { return processIfi(d) }},
     {"name": "indexer", "symbols": ["group"], "postprocess": (d) => { return  processIfi(d) }},
-    {"name": "parameter", "symbols": [(lexer.has("STRING_NO_SHARP_NO_DIAMONDS") ? {type: "STRING_NO_SHARP_NO_DIAMONDS"} : STRING_NO_SHARP_NO_DIAMONDS)], "postprocess": (d) => { return String(d[0]) }},
+    {"name": "parameter", "symbols": [(lexer.has("UNQUOTED_IDENTIFIER") ? {type: "UNQUOTED_IDENTIFIER"} : UNQUOTED_IDENTIFIER)], "postprocess": (d) => { return String(d[0]) }},
     {"name": "value", "symbols": [(lexer.has("QUOTED_STRING") ? {type: "QUOTED_STRING"} : QUOTED_STRING)], "postprocess": (d) => { return String(d[0]) }},
     {"name": "value", "symbols": [(lexer.has("NUMBER") ? {type: "NUMBER"} : NUMBER)], "postprocess": (d) => { return parseFloat(d[0]) }},
-    {"name": "atom", "symbols": [(lexer.has("STRING_NO_SHARP_NO_DIAMONDS") ? {type: "STRING_NO_SHARP_NO_DIAMONDS"} : STRING_NO_SHARP_NO_DIAMONDS)], "postprocess": (d) => {return processAtom(d)}},
+    {"name": "atom", "symbols": [(lexer.has("UNQUOTED_IDENTIFIER") ? {type: "UNQUOTED_IDENTIFIER"} : UNQUOTED_IDENTIFIER)], "postprocess": (d) => {return processAtom(d)}},
     {"name": "atom", "symbols": [(lexer.has("QUOTED_STRING") ? {type: "QUOTED_STRING"} : QUOTED_STRING)], "postprocess": (d) => {return processAtom(d)}}
 ]
   , ParserStart: "ifi"

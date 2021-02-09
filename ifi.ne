@@ -6,7 +6,7 @@ const moo = require("moo");
 const lexer = moo.compile({
   QUOTED_STRING: /"(?:(?:""|[^"])*)"/,
   NUMBER: /[+-]?[0-9]+(?:\.[0-9]+)?/,
-  STRING_NO_SHARP_NO_DIAMONDS: /[^"#@<>?&=\s]+/,
+  UNQUOTED_IDENTIFIER: /[^"#@<>?&=\s]+/,
   '<': '<',
   '>': '>',
   '#': '#',
@@ -37,11 +37,11 @@ simple_anchor -> indexer {% (d) => {return processSimpleAnchor(d)} %}
 indexer -> atom    {% (d) => { return processIfi(d) } %}
     | group        {% (d) => { return  processIfi(d) } %}
 
-parameter -> %STRING_NO_SHARP_NO_DIAMONDS    {% (d) => { return String(d[0]) } %}
+parameter -> %UNQUOTED_IDENTIFIER    {% (d) => { return String(d[0]) } %}
 value -> %QUOTED_STRING                      {% (d) => { return String(d[0]) } %}
     | %NUMBER                                {% (d) => { return parseFloat(d[0]) } %}
 
-atom -> %STRING_NO_SHARP_NO_DIAMONDS    {% (d) => {return processAtom(d)} %}
+atom -> %UNQUOTED_IDENTIFIER    {% (d) => {return processAtom(d)} %}
     |  %QUOTED_STRING                   {% (d) => {return processAtom(d)} %}
 
 
@@ -54,11 +54,11 @@ const {IFI, Anchor} = require("./ifi");
 function processIfi(d){
     if (d[0].type === 'group'){
         return new IFI(d[0].value);
+    } else if (d[0].type === 'atom'){
+        return new IFI(d[0].value);
     } else if (d[0] instanceof IFI){
         d[0].anchor = d[2];
         return d[0];
-    } else if (d[0].type === 'atom'){
-        return new IFI(d[0].value);
     }
 }
 
