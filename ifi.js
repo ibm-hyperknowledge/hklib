@@ -50,6 +50,9 @@ class IFI {
         return this.grouped;
     }
 
+    hasAnchor(){
+        return this.anchor != '';
+    }
 
     toString() {
         let strIFI = this.artifact.toString()

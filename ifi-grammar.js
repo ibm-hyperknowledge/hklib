@@ -25,17 +25,25 @@ const lexer = moo.compile({
 const {IFI, Anchor} = require("./ifi");
 
 function processIfi(d){
+    // console.log('- Processing IFI:');
+    // console.log(d);
     if (d[0].type === 'group'){
         return new IFI(d[0].value);
     } else if (d[0].type === 'atom'){
         return new IFI(d[0].value);
     } else if (d[0] instanceof IFI){
-        d[0].anchor = d[2];
-        return d[0];
+        if (d[0].hasAnchor()){
+            return new IFI(d[0],d[2]);
+        } else {
+            d[0].anchor = d[2];
+            return d[0];
+        }
     }
 }
 
 function processAnchor(d){
+    // console.log('--- Processing anchor:');
+    // console.log(d);
     return d[0];
 }
 
@@ -55,7 +63,7 @@ function processFullAnchor(d){
     for (let i = lstArgs.length - 1; i >= 0; i--){
         mapArgs.set(lstArgs[i][0], lstArgs[i][1]);
     }
-    
+
     return new Anchor(d[0], mapArgs);
 }
 
