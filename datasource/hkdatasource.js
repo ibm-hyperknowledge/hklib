@@ -18,7 +18,7 @@ const UNEXPECTED_NULL_DATA = "Unexpected empty data on parsing";
  * Creates a datasource connected to a hkbase
  *
  * @constructor
- * @param {string} url The base url of the hkbase. Example: `http://myserver:3000/v2/`
+ * @param {string} url The base url of the hkbase. Example: `http://myserver:3000/`
  * @param {string} repository The repository to perform operations
  * @param {object} options Additional setup for the hkbase connection
  * @param {string} options.authToken JWT Token to authentication to the HKBase

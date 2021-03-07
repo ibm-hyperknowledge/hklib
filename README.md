@@ -24,7 +24,7 @@ let datasource = new HKDatasource("<HKBase's URL, repository's name>", token);
 ```
  For example:
 ```js
-let datasource = new HKDatasource("https://hkbase-dev.mybluemix.net/v2/", "testRepository", "exampleToken");
+let datasource = new HKDatasource("https://hkbase-dev.mybluemix.net/", "testRepository", "exampleToken");
 ```
 It receives as parameters the base URL of the HKBase, the name of a repository and an authentication token. The repository may or may not exist - in case it does, the datasource will be connected to the informed repository and every operation will be performed on this repository. In case the repository does not exist, the datasource object can be used to create the informed repository, as the next topic will show.
 
@@ -32,7 +32,7 @@ It receives as parameters the base URL of the HKBase, the name of a repository a
 
 Once the name of a repository is defined in the datasource object, you can call the following method to create this repository:
 ```js
-let datasource = new HKDatasource("https://hkbase-dev.mybluemix.net/v2/", "testRepository", token);
+let datasource = new HKDatasource("https://hkbase-dev.mybluemix.net/", "testRepository", token);
 datasource.createRepository((err,  data)=>
 {
 	if(!err){
@@ -69,7 +69,7 @@ If the operation is successful, a callback function will be invoked with the lis
 ## Delete repository
 To delete a repository, the datasource object has to be connected to the repository that you want to drop. For example:
 ```js
-let datasource = new HKDatasource("https://hkbase-dev.mybluemix.net/v2/", "testRepository", token);
+let datasource = new HKDatasource("https://hkbase-dev.mybluemix.net/", "testRepository", token);
 datasource.dropRepository((err,  data)=>
 {
 	if(!err){
