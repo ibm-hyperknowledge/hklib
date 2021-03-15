@@ -38,7 +38,7 @@ class IFI {
                 }
             }
         }
-        if (typeof anchor == 'string'  && anchor != '') {
+        if (typeof anchor == 'string' && anchor != '') {
             anchor = new Anchor(anchor);
         }
         this.artifact = artifact;
@@ -50,7 +50,7 @@ class IFI {
         return this.grouped;
     }
 
-    hasAnchor(){
+    hasAnchor() {
         return this.anchor != '';
     }
 
@@ -72,11 +72,14 @@ class IFI {
         const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
 
         let l = parser.feed(strIFI);
-        if (l.results.length > 1){
+        if (l.results.length > 1) {
             // this should not happen if grammar is correct
             throw new Exception(`The string IFI "${strIFI}" is ambiguous.`);
         }
-        return l.results[0]; //assume one result
+        let tree = l.results[0]; //assume one result
+
+        let result = postProcessTree(tree);
+        return result
     }
 
 }
@@ -114,6 +117,73 @@ class Anchor {
     }
 
 }
+
+
+//Try to emulate lark idiom for parsing
+
+function postProcessTree(tree) {
+    return processIfi(tree);
+}
+
+function processIfi(d) {
+    // console.log('- Processing IFI:');
+    // console.log(d);
+    if (d.type === 'group') {
+        return new IFI(processIfi(d.value), group = true);
+    } else if (d.type === 'atom') {
+        return new IFI(d.value);
+    } else if (d.type === 'ifi') {
+        let artifact = processIfi(d.artifact);
+        let anchor = processAnchor(d.anchor);
+
+        if (artifact.hasAnchor()) {
+            return new IFI(artifact, anchor);
+        } else {
+            artifact.anchor = anchor;
+            return artifact;
+        }
+    }
+}
+
+
+// function processIndexerIfi(d) {
+//     // console.log('- Processing indexer IFI:');
+//     // console.log(d);
+//     if (d[0].type === 'group') {
+//         return new IFI(d[0].value, group = true);
+//     } else if (d[0].type === 'atom') {
+//         return new IFI(d[0].value);
+//     }
+// }
+
+function processAnchor(d) {
+    if (d.type === 'anchor') {
+        let indexer = processIfi(d.indexer);
+
+        //unstack arguments
+        let mapArgs;
+        if (d.arguments.length > 0) {
+            mapArgs = new Map();
+            const lstArgs = d.arguments;
+            for (let i = 0; i < lstArgs.length; i++) {
+                mapArgs.set(lstArgs[i].parameter, lstArgs[i].value);
+            }
+        } else {
+            mapArgs = undefined;
+        }
+
+        return new Anchor(indexer, mapArgs);
+    } else if (d.type === 'atom') {
+        //canonical anchor
+        return new Anchor(new IFI(d.value));
+    }
+}
+
+
+
+
+
+
 
 module.exports = {
     IFI,

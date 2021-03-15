@@ -17,83 +17,6 @@ const lexer = moo.compile({
   '?': '?',
   '&': '&',
   '=': '='});
-
-
-
-//Try to emulate lark idiom for parsing
-
-const {IFI, Anchor} = require("./ifi");
-
-function processIfi(d){
-    // console.log('- Processing IFI:');
-    // console.log(d);
-    if (d[0].type === 'group'){
-        return new IFI(d[0].value);
-    } else if (d[0].type === 'atom'){
-        return new IFI(d[0].value);
-    } else if (d[0] instanceof IFI){
-        if (d[0].hasAnchor()){
-            return new IFI(d[0],d[2]);
-        } else {
-            d[0].anchor = d[2];
-            return d[0];
-        }
-    }
-}
-
-function processAnchor(d){
-    // console.log('--- Processing anchor:');
-    // console.log(d);
-    return d[0];
-}
-
-
-function processGroup(d){
-    return {
-        type: 'group',
-        value: d[0]
-    }
-}
-
-
-function processFullAnchor(d){
-    //unstack arguments
-    let mapArgs = new Map();
-    const lstArgs = d[2];
-    for (let i = lstArgs.length - 1; i >= 0; i--){
-        mapArgs.set(lstArgs[i][0], lstArgs[i][1]);
-    }
-
-    return new Anchor(d[0], mapArgs);
-}
-
-function processArgumentList(d){
-    if (d.length > 1){
-        //more than one parameter/value pair
-        d[2].push(d[0])
-        return d[2];
-    } else if (d.length == 1){
-        return [d[0]];
-    }
-}
-
-function processArgument(d){
-    return [d[0], d[2]];
-}
-
-function processSimpleAnchor(d){
-    return new Anchor(d[0]);
-}
-
-
-
-function processAtom(d){
-    return {
-        type: 'atom',
-        value: String(d[0])
-    }
-}
-
 var grammar = {
     Lexer: lexer,
     ParserRules: [
@@ -183,24 +106,24 @@ var grammar = {
             );
         }
         },
-    {"name": "ifi", "symbols": ["group"], "postprocess": (d) => {return processIfi(d)}},
-    {"name": "ifi", "symbols": ["atom"], "postprocess": (d) => {return processIfi(d)}},
-    {"name": "ifi", "symbols": ["ifi", {"literal":"#"}, "anchor"], "postprocess": (d) => {return processIfi(d)}},
-    {"name": "anchor", "symbols": ["full_anchor"], "postprocess": (d) => {return processAnchor(d)}},
-    {"name": "anchor", "symbols": ["simple_anchor"], "postprocess": (d) => {return processAnchor(d)}},
-    {"name": "group", "symbols": [{"literal":"<"}, "ifi", {"literal":">"}], "postprocess": (d) => {return processGroup(d)}},
-    {"name": "full_anchor", "symbols": ["indexer", {"literal":"?"}, "argument_list"], "postprocess": (d) => {return processFullAnchor(d)}},
-    {"name": "argument_list", "symbols": ["argument"], "postprocess": (d) => {return processArgumentList(d)}},
-    {"name": "argument_list", "symbols": ["argument", {"literal":"&"}, "argument_list"], "postprocess": (d) => {return processArgumentList(d)}},
-    {"name": "argument", "symbols": ["parameter", {"literal":"="}, "value"], "postprocess": (d) => {return processArgument(d)}},
-    {"name": "simple_anchor", "symbols": ["indexer"], "postprocess": (d) => {return processSimpleAnchor(d)}},
-    {"name": "indexer", "symbols": ["atom"], "postprocess": (d) => { return processIfi(d) }},
-    {"name": "indexer", "symbols": ["group"], "postprocess": (d) => { return  processIfi(d) }},
+    {"name": "ifi", "symbols": ["group"], "postprocess": id},
+    {"name": "ifi", "symbols": ["atom"], "postprocess": id},
+    {"name": "ifi", "symbols": ["ifi", {"literal":"#"}, "anchor"], "postprocess": (d) => { return {type: 'ifi', artifact: d[0], anchor: d[2] } }},
+    {"name": "anchor", "symbols": ["full_anchor"], "postprocess": id},
+    {"name": "anchor", "symbols": ["simple_anchor"], "postprocess": id},
+    {"name": "group", "symbols": [{"literal":"<"}, "ifi", {"literal":">"}], "postprocess": (d) => { return {type: 'group', artifact: d[0] } }},
+    {"name": "full_anchor", "symbols": ["indexer", {"literal":"?"}, "argument_list"], "postprocess": (d) => { return {type: 'anchor', indexer: d[0], arguments: d[2] } }},
+    {"name": "argument_list", "symbols": ["argument"], "postprocess": (d) => { return [d[0]] }},
+    {"name": "argument_list", "symbols": ["argument", {"literal":"&"}, "argument_list"], "postprocess": (d) => { return [d[0], ...d[2]] }},
+    {"name": "argument", "symbols": ["parameter", {"literal":"="}, "value"], "postprocess": (d) => { return {type: 'argument', parameter: d[0], value: d[2]} }},
+    {"name": "simple_anchor", "symbols": ["indexer"], "postprocess": id},
+    {"name": "indexer", "symbols": ["atom"], "postprocess": id},
+    {"name": "indexer", "symbols": ["group"], "postprocess": id},
     {"name": "parameter", "symbols": [(lexer.has("UNQUOTED_IDENTIFIER") ? {type: "UNQUOTED_IDENTIFIER"} : UNQUOTED_IDENTIFIER)], "postprocess": (d) => { return String(d[0]) }},
     {"name": "value", "symbols": [(lexer.has("QUOTED_STRING") ? {type: "QUOTED_STRING"} : QUOTED_STRING)], "postprocess": (d) => { return String(d[0]) }},
     {"name": "value", "symbols": [(lexer.has("NUMBER") ? {type: "NUMBER"} : NUMBER)], "postprocess": (d) => { return parseFloat(d[0]) }},
-    {"name": "atom", "symbols": [(lexer.has("UNQUOTED_IDENTIFIER") ? {type: "UNQUOTED_IDENTIFIER"} : UNQUOTED_IDENTIFIER)], "postprocess": (d) => {return processAtom(d)}},
-    {"name": "atom", "symbols": [(lexer.has("QUOTED_STRING") ? {type: "QUOTED_STRING"} : QUOTED_STRING)], "postprocess": (d) => {return processAtom(d)}}
+    {"name": "atom", "symbols": [(lexer.has("UNQUOTED_IDENTIFIER") ? {type: "UNQUOTED_IDENTIFIER"} : UNQUOTED_IDENTIFIER)], "postprocess": (d) => { return {type: 'atom', value: String(d[0])} }},
+    {"name": "atom", "symbols": [(lexer.has("QUOTED_STRING") ? {type: "QUOTED_STRING"} : QUOTED_STRING)], "postprocess": (d) => { return {type: 'atom', value: String(d[0])} }}
 ]
   , ParserStart: "ifi"
 }
