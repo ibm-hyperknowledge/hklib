@@ -136,12 +136,12 @@ function processIfi(d) {
         let artifact = processIfi(d.artifact);
         let anchor = processAnchor(d.anchor);
 
-        if (artifact.hasAnchor()) {
-            return new IFI(artifact, anchor);
-        } else {
-            artifact.anchor = anchor;
-            return artifact;
-        }
+        // if (artifact.hasAnchor()) {
+        return new IFI(artifact, anchor);
+        // } else {
+        //     artifact.anchor = anchor;
+        //     return artifact;
+        // }
     }
 }
 
