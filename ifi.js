@@ -136,25 +136,11 @@ function processIfi(d) {
         let artifact = processIfi(d.artifact);
         let anchor = processAnchor(d.anchor);
 
-        // if (artifact.hasAnchor()) {
         return new IFI(artifact, anchor);
-        // } else {
-        //     artifact.anchor = anchor;
-        //     return artifact;
-        // }
     }
 }
 
 
-// function processIndexerIfi(d) {
-//     // console.log('- Processing indexer IFI:');
-//     // console.log(d);
-//     if (d[0].type === 'group') {
-//         return new IFI(d[0].value, group = true);
-//     } else if (d[0].type === 'atom') {
-//         return new IFI(d[0].value);
-//     }
-// }
 
 function processAnchor(d) {
     if (d.type === 'anchor') {
