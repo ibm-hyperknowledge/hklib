@@ -6,10 +6,11 @@ const moo = require("moo");
 const lexer = moo.compile({
   QUOTED_STRING: /"(?:(?:""|[^"])*)"/,
   NUMBER: /[+-]?[0-9]+(?:\.[0-9]+)?/,
-  UNQUOTED_IDENTIFIER: /[^"#@<>?&=\s]+/,
+  UNQUOTED_IDENTIFIER: /[^"#\*<>?&=\s]+/,
   '<': '<',
   '>': '>',
   '#': '#',
+  '*': '*',
   '?': '?',
   '&': '&',
   '=': '='});
@@ -22,17 +23,24 @@ const lexer = moo.compile({
 
 ifi -> group          {% id %} 
     | atom            {% id %} 
-    | ifi "#" anchor  {% (d) => { return {type: 'ifi', artifact: d[0], anchor: d[2] } } %}
-anchor -> full_anchor {% id %} 
-    | simple_anchor   {% id %} 
-group -> "<" ifi ">"  {% (d) => { return {type: 'group', artifact: d[0] } } %}  
+    | ifi anchor      {% (d) => { return {type: 'ifi', artifact: d[0], anchor: d[1]} } %}
+group -> "<" ifi ">"  {% (d) => { return {type: 'group', artifact: d[1] } } %}  
 
-full_anchor -> indexer "?" argument_list {% (d) => { return {type: 'anchor', indexer: d[0], arguments: d[2] } } %}
+anchor -> mod indexer ("?" token):?  {% (d) => { return {
+                                                type: 'anchor', 
+                                                mod: d[0][0].value, 
+                                                indexer: d[1], 
+                                                token: (d.length > 2 && d[2]) ? d[2][1] : undefined} } %}
+
+mod -> "#" | "*"
+
+token -> argument_list     {% (d) => { return new Map(d[0]) } %}
+        | atom             {% id %} 
+        | group            {% id %} 
+
 argument_list ->  argument               {% (d) => { return [d[0]] } %}
     | argument "&" argument_list         {% (d) => { return [d[0], ...d[2]] } %}
-argument -> parameter "=" value          {% (d) => { return {type: 'argument', parameter: d[0], value: d[2]} } %}
-
-simple_anchor -> indexer    {% id %}
+argument -> parameter "=" value          {% (d) => { return [d[0], d[2]] } %}
 
 indexer -> atom     {% id %}
     | group         {% id %}

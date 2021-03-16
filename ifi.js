@@ -3,7 +3,7 @@ const moo = require("moo");
 
 const lexer = moo.compile({
     QUOTED_STRING: /"(?:(?:""|[^"])*)"/,
-    UNQUOTED_IDENTIFIER: /[^"#@<>?&=\s]+/,
+    UNQUOTED_IDENTIFIER: /[^"#\*<>?&=\s]+/,
     ALL_THE_REST: /.+/
 });
 
@@ -57,7 +57,7 @@ class IFI {
     toString() {
         let strIFI = this.artifact.toString()
         strIFI = (this.isGrouped()) ? `<${this.artifact}>` : strIFI;
-        strIFI = (this.anchor) ? `${strIFI}#${this.anchor}` : strIFI;
+        strIFI = (this.anchor) ? `${strIFI}${this.anchor}` : strIFI;
         return strIFI
     }
 
@@ -91,18 +91,22 @@ class Anchor {
      * ordered collection of arguments.
      * 
      * @param {string|IFI} IFI or string representing ifi.
-     * @param {Map} args Map with anchor tuple token arguments. Assumed to be ordered by key.
+     * @param {Map} args Map with anchor tuple token arguments. Assumed to be ordered by key. Default is empty map.
+     * @param {boolean} meta set this a description anchor. Default is false.
      */
-    constructor(indexer, args = new Map()) {
+    constructor(indexer, args = new Map(), meta = false) {
         if (typeof (indexer) == 'string') {
             indexer = IFI(indexer);
         }
         this.indexer = indexer;
         this.arguments = args;
+        this.meta = meta;
     }
 
     toString() {
-        let strAnchor = this.indexer.toString();
+
+        let strAnchor = (this.meta)? '*' : '#';
+        strAnchor = strAnchor + this.indexer.toString();
 
         if (this.arguments.size > 0) {
             let args = [];
@@ -129,7 +133,7 @@ function processIfi(d) {
     // console.log('- Processing IFI:');
     // console.log(d);
     if (d.type === 'group') {
-        return new IFI(processIfi(d.value), group = true);
+        return new IFI(processIfi(d.artifact), undefined, true);
     } else if (d.type === 'atom') {
         return new IFI(d.value);
     } else if (d.type === 'ifi') {
@@ -147,21 +151,14 @@ function processAnchor(d) {
         let indexer = processIfi(d.indexer);
 
         //unstack arguments
-        let mapArgs;
-        if (d.arguments.length > 0) {
-            mapArgs = new Map();
-            const lstArgs = d.arguments;
-            for (let i = 0; i < lstArgs.length; i++) {
-                mapArgs.set(lstArgs[i].parameter, lstArgs[i].value);
-            }
-        } else {
-            mapArgs = undefined;
-        }
+        let token = d.token;
+        let meta = d.mod === '*'; //assuming # otherwise
 
-        return new Anchor(indexer, mapArgs);
+        return new Anchor(indexer, token, meta);
     } else if (d.type === 'atom') {
         //canonical anchor
-        return new Anchor(new IFI(d.value));
+        let ifi = processIfi(d);
+        return new Anchor(ifi);
     }
 }
 
