@@ -7,7 +7,7 @@ const lexer = moo.compile({
     ALL_THE_REST: /.+/
 });
 
-const operators = {
+const IFIOperator = {
 	FRAGMENTATION: "#",
 	DESCRIPTION: "*",
 }
@@ -175,6 +175,7 @@ function processAnchor(d) {
 
 module.exports = {
     IFI,
-    Anchor
+    Anchor,
+    IFIOperator
 };
 
