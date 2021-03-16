@@ -26,13 +26,13 @@ ifi -> group          {% id %}
     | ifi anchor      {% (d) => { return {type: 'ifi', artifact: d[0], anchor: d[1]} } %}
 group -> "<" ifi ">"  {% (d) => { return {type: 'group', artifact: d[1] } } %}  
 
-anchor -> mod indexer ("?" token):?  {% (d) => { return {
+anchor -> oper indexer ("?" token):?  {% (d) => { return {
                                                 type: 'anchor', 
-                                                mod: d[0][0].value, 
+                                                oper: d[0][0].value, 
                                                 indexer: d[1], 
                                                 token: (d.length > 2 && d[2]) ? d[2][1] : undefined} } %}
 
-mod -> "#" | "*"
+oper -> "#" | "*"
 
 token -> argument_list     {% (d) => { return new Map(d[0]) } %}
         | atom             {% id %} 

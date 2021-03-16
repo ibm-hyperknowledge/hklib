@@ -114,13 +114,13 @@ var grammar = {
     {"name": "anchor$ebnf$1$subexpression$1", "symbols": [{"literal":"?"}, "token"]},
     {"name": "anchor$ebnf$1", "symbols": ["anchor$ebnf$1$subexpression$1"], "postprocess": id},
     {"name": "anchor$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
-    {"name": "anchor", "symbols": ["mod", "indexer", "anchor$ebnf$1"], "postprocess":  (d) => { return {
+    {"name": "anchor", "symbols": ["oper", "indexer", "anchor$ebnf$1"], "postprocess":  (d) => { return {
         type: 'anchor', 
-        mod: d[0][0].value, 
+        oper: d[0][0].value, 
         indexer: d[1], 
         token: (d.length > 2 && d[2]) ? d[2][1] : undefined} } },
-    {"name": "mod", "symbols": [{"literal":"#"}]},
-    {"name": "mod", "symbols": [{"literal":"*"}]},
+    {"name": "oper", "symbols": [{"literal":"#"}]},
+    {"name": "oper", "symbols": [{"literal":"*"}]},
     {"name": "token", "symbols": ["argument_list"], "postprocess": (d) => { return new Map(d[0]) }},
     {"name": "token", "symbols": ["atom"], "postprocess": id},
     {"name": "token", "symbols": ["group"], "postprocess": id},

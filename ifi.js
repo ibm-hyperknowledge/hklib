@@ -7,6 +7,11 @@ const lexer = moo.compile({
     ALL_THE_REST: /.+/
 });
 
+const operators = {
+	FRAGMENTATION: "#",
+	DESCRIPTION: "*",
+}
+
 function checkAtom(atom) {
     lexer.reset(atom)
     let good = true;
@@ -91,26 +96,26 @@ class Anchor {
      * ordered collection of arguments.
      * 
      * @param {string|IFI} IFI or string representing ifi.
-     * @param {Map} args Map with anchor tuple token arguments. Assumed to be ordered by key. Default is empty map.
+     * @param {any|Map} token Anything parseable as an ifi or tuple token map. If argument list, use Map ordered  by key. 
      * @param {boolean} meta set this a description anchor. Default is false.
      */
-    constructor(indexer, args = new Map(), meta = false) {
+    constructor(indexer, token, operator = operators.FRAGMENTATION) {
         if (typeof (indexer) == 'string') {
             indexer = IFI(indexer);
         }
         this.indexer = indexer;
-        this.arguments = args;
-        this.meta = meta;
+        this.token = token;
+        this.operator = operator;
     }
 
     toString() {
 
-        let strAnchor = (this.meta)? '*' : '#';
+        let strAnchor = this.operator;
         strAnchor = strAnchor + this.indexer.toString();
 
-        if (this.arguments.size > 0) {
+        if (this.token instanceof Map && this.token.size > 0) {
             let args = [];
-            for (let [param, value] of this.arguments) {
+            for (let [param, value] of this.token) {
                 //assuming Map iterates using insertion order (as stated in documentation)
                 args.push(`${param}=${value}`);
             }
@@ -152,9 +157,9 @@ function processAnchor(d) {
 
         //unstack arguments
         let token = d.token;
-        let meta = d.mod === '*'; //assuming # otherwise
+        let oper = d.oper;
 
-        return new Anchor(indexer, token, meta);
+        return new Anchor(indexer, token, oper);
     } else if (d.type === 'atom') {
         //canonical anchor
         let ifi = processIfi(d);
