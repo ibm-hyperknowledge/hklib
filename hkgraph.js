@@ -500,7 +500,7 @@ HKGraph.prototype.serialize = function()
 		refs: this.refs,
 		trails: this.trails
 	}
-	return JSON.stringify({});
+	return JSON.stringify(out);
 };
 
 
