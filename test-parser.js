@@ -51,4 +51,6 @@ testIfi('picture1.jpg#<http://exemple.org/fmask>?m=3');
 testIfi('http://example.org/document.txt#subtext?istart=2&iend=5');
 testIfi('http://www.example.org/mytext.txt#subtext?start=4&end=56#char?ind=2');
 testIfi('http://www.example.org/mytext.txt*subtext?start=4&end=56');
+testIfi('picture1.jpg#<http://exemple.org/fmask>?<themask.bmp>');
+testIfi('picture1.jpg#<http://exemple.org/fmask>?m=<themask.bmp>&p=56');
 

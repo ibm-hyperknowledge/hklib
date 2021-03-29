@@ -8,8 +8,8 @@ const lexer = moo.compile({
 });
 
 const IFIOperator = {
-	FRAGMENTATION: "#",
-	DESCRIPTION: "*",
+    FRAGMENTATION: "#",
+    DESCRIPTION: "*",
 }
 
 function checkAtom(atom) {
@@ -79,7 +79,7 @@ class IFI {
         let l = parser.feed(strIFI);
         if (l.results.length > 1) {
             // this should not happen if grammar is correct
-            throw new Exception(`The string IFI "${strIFI}" is ambiguous.`);
+            throw new Error(`The string IFI "${strIFI}" is ambiguous.`);
         }
         let tree = l.results[0]; //assume one result
 
@@ -112,15 +112,18 @@ class Anchor {
 
         let strAnchor = this.operator;
         strAnchor = strAnchor + this.indexer.toString();
-
-        if (this.token instanceof Map && this.token.size > 0) {
-            let args = [];
-            for (let [param, value] of this.token) {
-                //assuming Map iterates using insertion order (as stated in documentation)
-                args.push(`${param}=${value}`);
+        if (this.token) {
+            if (this.token instanceof Map && this.token.size > 0) {
+                let args = [];
+                for (let [param, value] of this.token) {
+                    //assuming Map iterates using insertion order (as stated in documentation)
+                    args.push(`${param}=${value}`);
+                }
+                let strArguments = args.join('&');
+                strAnchor = `${strAnchor}?${strArguments}`;
+            } else {
+                strAnchor = `${strAnchor}?${this.token.toString()}`;
             }
-            let strArguments = args.join('&');
-            strAnchor = `${strAnchor}?${strArguments}`;
         }
         return strAnchor;
     }
@@ -158,6 +161,20 @@ function processAnchor(d) {
         //unstack arguments
         let token = d.token;
         let oper = d.oper;
+
+        if (token) {
+            if (token.type && (token.type == 'group' || token.type == 'atom')) {
+                token = processIfi(token);
+            } else if (token instanceof Map) {
+                for (let [key, value] of token){
+                    if (value.type && value.type == 'group') {
+                        //value is an group ifi, which is allowed
+                        value = processIfi(value);
+                        token.set(key, value);
+                    }
+                }
+            }
+        }
 
         return new Anchor(indexer, token, oper);
     } else if (d.type === 'atom') {

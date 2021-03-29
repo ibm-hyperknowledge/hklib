@@ -132,6 +132,7 @@ var grammar = {
     {"name": "parameter", "symbols": [(lexer.has("UNQUOTED_IDENTIFIER") ? {type: "UNQUOTED_IDENTIFIER"} : UNQUOTED_IDENTIFIER)], "postprocess": (d) => { return String(d[0]) }},
     {"name": "value", "symbols": [(lexer.has("QUOTED_STRING") ? {type: "QUOTED_STRING"} : QUOTED_STRING)], "postprocess": (d) => { return String(d[0]) }},
     {"name": "value", "symbols": [(lexer.has("NUMBER") ? {type: "NUMBER"} : NUMBER)], "postprocess": (d) => { return parseFloat(d[0]) }},
+    {"name": "value", "symbols": ["group"], "postprocess": id},
     {"name": "atom", "symbols": [(lexer.has("UNQUOTED_IDENTIFIER") ? {type: "UNQUOTED_IDENTIFIER"} : UNQUOTED_IDENTIFIER)], "postprocess": (d) => { return {type: 'atom', value: String(d[0])} }},
     {"name": "atom", "symbols": [(lexer.has("QUOTED_STRING") ? {type: "QUOTED_STRING"} : QUOTED_STRING)], "postprocess": (d) => { return {type: 'atom', value: String(d[0])} }}
 ]

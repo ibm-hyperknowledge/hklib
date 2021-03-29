@@ -48,7 +48,7 @@ indexer -> atom     {% id %}
 parameter -> %UNQUOTED_IDENTIFIER    {% (d) => { return String(d[0]) } %}
 value -> %QUOTED_STRING                      {% (d) => { return String(d[0]) } %}
     | %NUMBER                                {% (d) => { return parseFloat(d[0]) } %}
-                         
+    | group                          {% id %} 
 
 atom -> %UNQUOTED_IDENTIFIER    {% (d) => { return {type: 'atom', value: String(d[0])} } %}
     |  %QUOTED_STRING           {% (d) => { return {type: 'atom', value: String(d[0])} } %}          
