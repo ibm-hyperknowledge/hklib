@@ -53,4 +53,4 @@ testIfi('http://www.example.org/mytext.txt#subtext?start=4&end=56#char?ind=2');
 testIfi('http://www.example.org/mytext.txt*subtext?start=4&end=56');
 testIfi('picture1.jpg#<http://exemple.org/fmask>?<themask.bmp>');
 testIfi('picture1.jpg#<http://exemple.org/fmask>?m=<themask.bmp>&p=56');
-
+testIfi('http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetarianPizza');
