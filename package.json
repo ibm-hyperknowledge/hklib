@@ -1,6 +1,6 @@
 {
   "name": "hklib",
-  "version": "2.4.2",
+  "version": "2.5.0",
   "main": "index.js",
   "author": "IBM Research",
   "contributors": [
@@ -27,6 +27,10 @@
     {
       "name": "Elton Soares",
       "email": "eltons@ibm.com"
+    },
+    {
+      "name": "Sandro Rama Fiorini",
+      "email": "srfiorini@ibm.com"
     }
   ],
   "dependencies": {
