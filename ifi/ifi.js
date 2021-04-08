@@ -16,6 +16,10 @@ const IFIOperator =
 
 const Anchor = require("./anchor");
 
+
+/**
+ * Integrated Fragment Identifier (IFI)
+ */
 class IFI 
 {
 
