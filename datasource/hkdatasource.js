@@ -1181,43 +1181,6 @@ HKDatasource.prototype.exportRDF = function(filter, options, callback = () => {}
 	});
 }
 
-/**
- * Asks HKBase to resolve an Integrated Fragment Identifier (IFI) 
- *
- * @param {Array} ifi IFI string
- * @param {GetEntitiesCallback} callback Callback with the Fragment Data or JSON Description, and content type
- */
- HKDatasource.prototype.resolveIFI = function(ifi, callback = () => {})
- {
-	 let url = this.url + "repository/"+ this.graphName + "/ifi/" + encodeURIComponent(ifi);
- 
-	 request.get(url, this.options, (err, res) =>
-	 {
-		 if(!err)
-		 {
-			 if(requestCompletedWithSuccess (res.statusCode))
-			 {
-				 try
-				 {
-					callback(null, res.body, res.headers.contentType);
-				 }
-				 catch(exp)
-				 {
-					 callback(exp)
-				 }
-			 }
-			 else
-			 {
-				 callback(`Server responded with ${res.statusCode}. ${res.body}`);
-			 }
-		 }
-		 else
-		 {
-			 callback(err);
-		 }
-	 });
- }
-
 function toQueryString(options)
 {
 	let optionsKeys = Object.keys(options);
