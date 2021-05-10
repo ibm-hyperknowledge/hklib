@@ -993,8 +993,8 @@ HKDatasource.prototype.importFrom = function(data, options, callback = () => {})
  * @param {string} datasource 
  * @param {*} options
  */
-HKDatasource.prototype.getSimilarEntitiesFromExternalDataSource = function(entityId, datasource, options = {}, callback = () => {}) {
-	let url = `${this.url}repository/${this.graphName}/external-data/entity/search`;
+ HKDatasource.prototype.getSimilarEntitiesFromExternalDataSource = function(entityId, datasource, options = {}, callback = () => {}) {
+	let url = `${this.url}repository/${this.graphName}/external-data/entity/similar`;
 
 	if (!options || typeof (options) === 'function')
 	{
@@ -1049,6 +1049,69 @@ HKDatasource.prototype.getSimilarEntitiesFromExternalDataSource = function(entit
 }
 
 /**
+ * Will return a list of entities similar to the given entity
+ * 
+ * @param {string} entityId
+ * @param {string} datasource 
+ * @param {*} options
+ */
+HKDatasource.prototype.searchEntitiesFromExternalDataSource = function(searchCriteria, datasource, options = {}, callback = () => {}) {
+	let url = `${this.url}repository/${this.graphName}/external-data/entity/search`;
+
+	if (!options || typeof (options) === 'function')
+	{
+		callback = options;
+		options = {};
+	}
+	options.datasource = datasource;
+
+	let data = {
+		searchCriteria: searchCriteria
+	};
+
+	let params =
+	{
+		headers: {
+			"content-type": "application/json",
+		},
+		body: JSON.stringify(data),
+		qs: options
+	};
+
+
+	Object.assign(params, this.options);
+
+	request.post(url, params, (err, res) =>
+	{
+		if(!err)
+		{
+			if(requestCompletedWithSuccess (res.statusCode))
+			{
+				let out;
+				try
+				{
+					out = JSON.parse(res.body);
+				}
+				catch (err)
+				{
+					out = null;
+				}
+				callback(null, out);
+			}
+			else
+			{
+				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+			}
+		}
+		else
+		{
+			callback(err);
+		}
+	});
+
+}
+
+/**
  * 
  * @param {string} externalDSEntityId 
  * @param {string} datasource 
@@ -1057,6 +1120,60 @@ HKDatasource.prototype.getSimilarEntitiesFromExternalDataSource = function(entit
 HKDatasource.prototype.getPropertiesFromExternalDataSource = function(externalDSEntityId, datasource, options = {}, callback = () => {}) {
 	// let url = `${this.url}repository/${this.graphName}/external-data/entity/${externalDSEntityId}/properties`;
 	let url = `${this.url}repository/${this.graphName}/external-data/entity/properties`;
+
+	if (!options || typeof (options) === 'function')
+	{
+		callback = options;
+		options = {};
+	}
+
+	options.datasource = datasource;
+
+	let params =
+	{
+		headers: {
+			"content-type": "application/json",
+		},
+		body: JSON.stringify({
+			externalDatasourceEntityId: externalDSEntityId
+		}),
+		qs: options
+	};
+
+
+	Object.assign(params, this.options);
+
+	request.post(url, params, (err, res) =>
+	{
+		if(!err)
+		{
+			if(requestCompletedWithSuccess (res.statusCode))
+			{
+				let out;
+				try
+				{
+					out = JSON.parse(res.body);
+				}
+				catch (err)
+				{
+					out = null;
+				}
+				callback(null, out);
+			}
+			else
+			{
+				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+			}
+		}
+		else
+		{
+			callback(err);
+		}
+	});
+}
+
+HKDatasource.prototype.getEntityFromExternalDataSource = function(externalDSEntityId, datasource, options = {}, callback = () => {}) {
+	let url = `${this.url}repository/${this.graphName}/external-data/entity`;
 
 	if (!options || typeof (options) === 'function')
 	{
