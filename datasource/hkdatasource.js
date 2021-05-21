@@ -1049,11 +1049,17 @@ HKDatasource.prototype.importFrom = function(data, options, callback = () => {})
 }
 
 /**
- * Will return a list of entities similar to the given entity
+ * @callback ExternalDatasourceCallback
+ * @param err An error object that indicate if the operation was succesful or not
+ * @param {*} data
+ */
+/**
+ * Will return a list of entities that match the search criteria.
  * 
- * @param {string} entityId
+ * @param {string} searchCriteria
  * @param {string} datasource 
  * @param {*} options
+ * @param {ExternalDatasourceCallback} callback Response callback
  */
 HKDatasource.prototype.searchEntitiesFromExternalDataSource = function(searchCriteria, datasource, options = {}, callback = () => {}) {
 	let url = `${this.url}repository/${this.graphName}/external-data/entity/search`;
@@ -1116,6 +1122,7 @@ HKDatasource.prototype.searchEntitiesFromExternalDataSource = function(searchCri
  * @param {string} externalDSEntityId 
  * @param {string} datasource 
  * @param {*} options 
+ * @param {ExternalDatasourceCallback} callback
  */
 HKDatasource.prototype.getPropertiesFromExternalDataSource = function(externalDSEntityId, datasource, options = {}, callback = () => {}) {
 	// let url = `${this.url}repository/${this.graphName}/external-data/entity/${externalDSEntityId}/properties`;
