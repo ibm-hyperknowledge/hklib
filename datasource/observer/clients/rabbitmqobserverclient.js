@@ -5,7 +5,6 @@
 
 'use strict';
 
-const request        = require ('request-promise-native');
 const ObserverClient = require ('./observerclient')
 const amqp           = require ('amqplib');
 
@@ -13,7 +12,12 @@ async function createChannel ()
 {
 	try
 	{
-		this._channel = await this._connection.createChannel ();
+		this._channel = await this._connection.createChannel ({
+			json: true,
+			setup: (channel) => {
+				return channel.assertQueue(this._exchangeName, this._exchangeOptions);
+			}
+		});
 		this._channel.on ('error', console.log);
 		this._channel.on ('close', () => this.init() );
 
@@ -55,10 +59,11 @@ class RabbitMQObserverClient extends ObserverClient
 	constructor (info, options)
 	{
 		super ();
-		this._broker       = info.broker;
-		this._exchangeName = info.exchangeName;
-		this._certificate  = info.certificate || options.certificate;
-		this._connection   = null;
+		this._broker          = info.broker;
+		this._exchangeName    = info.exchangeName;
+		this._exchangeOptions = info.exchangeOptions;
+		this._certificate     = info.certificate || options.certificate;
+		this._connection      = null;
 	}
 
 	static getType ()
@@ -82,7 +87,7 @@ class RabbitMQObserverClient extends ObserverClient
 				{
 					try
 					{
-						let notification = JSON.parse (msg.content.toString());
+						let notification = JSON.parse(JSON.parse (msg.content.toString()));
 						this.notify (notification);
 					}
 					catch (err)
