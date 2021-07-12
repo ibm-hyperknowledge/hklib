@@ -38,7 +38,7 @@ async function connect ()
 			options.ca = [Buffer.from (this._certificate, 'base64')];
 		}
 
-		this._connectionManager = amqp.connect (this._broker, options);
+		this._connectionManager = amqp.connect (this._broker, {connectionOptions: options});
 		await this._connectionManager._connectPromise;
 		this._connectionManager._currentConnection.connection.on ('error', console.log);
 
