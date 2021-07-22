@@ -1233,6 +1233,58 @@ HKDatasource.prototype.getEntityFromExternalDataSource = function(externalDSEnti
 	});
 }
 
+
+/**
+ * 
+ * @param {string} datasource 
+ * @param {ExternalDatasourceCallback} callback
+ */
+ HKDatasource.prototype.getExternalDatasourceSettings = function(datasource, callback = () => {}) {
+
+	let url = `${this.url}repository/${this.graphName}/external-data/settings`;
+
+	let options = {datasource}
+
+	let params =
+	{
+		headers: {
+			"content-type": "application/json",
+		},
+		qs: options
+	};
+
+
+	Object.assign(params, this.options);
+
+	request.get(url, params, (err, res) =>
+	{
+		if(!err)
+		{
+			if(requestCompletedWithSuccess (res.statusCode))
+			{
+				let out;
+				try
+				{
+					out = JSON.parse(res.body);
+				}
+				catch (err)
+				{
+					out = null;
+				}
+				callback(null, out);
+			}
+			else
+			{
+				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+			}
+		}
+		else
+		{
+			callback(err);
+		}
+	});
+}
+
 /**
  * Import a RDF data
  * @param {string} data the contents of the RDF
