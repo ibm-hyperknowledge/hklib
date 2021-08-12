@@ -14,7 +14,7 @@ exports.Context        = require("./context");
 exports.Connector      = require("./connector");
 exports.Reference      = require("./reference");
 exports.Link           = require("./link");
-exports.Trail          = require("./trail");
+exports.Trail          = require("./trail").List;
 exports.HKEntity       = require("./hkentity");
 
 const Types            = require("./types");
