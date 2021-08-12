@@ -5,6 +5,8 @@
 
 'use strict'
 
+const {List, Item} = require('linked-list');
+
 const shortid   = require('shortid');
 const Types     = require('./types');
 const HKEntity  = require('./hkentity');
@@ -12,14 +14,10 @@ const Connector = require('./connector');
 const Link      = require('./link');
 const RoleTypes = require('./roletypes');
 
-const CONNECTOR_NAME = 'occurs';
 
-const vConnector = new Connector (CONNECTOR_NAME, 'f');
-vConnector.addRole ('sub', RoleTypes.SUBJECT);
-vConnector.addRole ('obj', RoleTypes.OBJECT);
-
-function Trail (id, parent)
+function Trail (id, actions, parent)
 {
+
   if(arguments[0] && typeof arguments[0] === 'object' && isValid(arguments[0]))
   {
     let trail = arguments[0];
@@ -29,8 +27,11 @@ function Trail (id, parent)
     this.properties = trail.properties || {};
     this.metaproperties = trail.metaproperties || {};
     this.interfaces = trail.interfaces || {};
-    this.children = trail.children || [];
-    _loadSteps.call (this);
+    this.actions = trail.actions || [];
+
+    if (this.actions && Object.keys(this.actions).length > 0) {
+      loadActions.call (this); 
+    }
   }
   else
   {
@@ -39,57 +40,43 @@ function Trail (id, parent)
     this.interfaces = {};
     this.properties = {};
     this.metaproperties = {};
-    this.children = [];
-    this.steps = [];
+    this.actions = actions || [];
   }
 
   this.type = Types.TRAIL;
 }
 
 Trail.prototype = Object.create (HKEntity.prototype);
+
+Object.assign(Trail.prototype, List.prototype); // Multiple inheritance with assign
+
 Trail.prototype.constructor = Trail;
 
-Trail.prototype.addStep = function (key, properties)
-{
-  let ts = properties.begin || new Date().toISOString();
-  properties.begin = ts;
 
-  if (this.steps.length > 0)
-  {
-    let lastStep = this.steps[this.steps.length - 1].key;
-    if (! this.interfaces[lastStep].properties.end )
-    {
-      this.interfaces[lastStep].properties.end = ts;
+// Update a given action in trail
+Trail.prototype.updateAction = function (oldAction, newAction)
+{
+  oldAction.prepend(newAction);
+  oldAction.detach();
+}
+
+// Remove an action from trail using its reference
+Trail.prototype.removeAction = function (action) 
+{
+    var action;
+    if(typeof(action) === 'string') {
+        this.action = this.search(action)
+        
+        //action not found
+        if(!this.action){
+            return
+        }
     }
-  }
+    else { 
+        this.action = action;
+    }
 
-  this.steps.push ({key: key, begin: ts});
-  this.addInterface (key, 'temporal', properties);
-}
-
-Trail.prototype.addInterface  = function (key, type, properties)
-{
-  this.interfaces[key] = {type: type, properties: properties}
-}
-
-Trail.prototype.createLinksFromSteps = function ()
-{
-	let vEntities = [vConnector];
-
-	for (let key in this.interfaces)
-	{
-		let interProp = this.interfaces[key].properties;
-		if (!interProp) continue;
-
-		if (interProp.obj)
-		{
-			let l = new Link (shortid(), vConnector.id, this.parent);
-			l.addBind ('sub', interProp.obj, interProp.objInterface);
-			l.addBind ('obj', this.id);
-			vEntities.push (l);
-		}
-	}
-	return vEntities;
+    this.action.detach();
 }
 
 Trail.prototype.serialize = function ()
@@ -100,40 +87,40 @@ Trail.prototype.serialize = function ()
       properties: this.properties,
       metaproperties: this.metaproperties,
       interfaces: this.interfaces,
+      actions: this.actions,
       type: this.type
   };
 }
 
-function _loadSteps ()
+function loadActions(actions = null)
 {
-  let steps = [];
-  for (let key in this.interfaces)
+  if(actions)
   {
-    let begin = new Date (Date.parse(this.interfaces[key].properties.begin));
-    let end = new Date (Date.parse(this.interfaces[key].properties.end));
-
-    this.interfaces[key].properties.begin = begin;
-    this.interfaces[key].properties.end = end;
-
-    steps.push ( { key: key, begin: begin } );
+    this.actions = actions;
+    return;
   }
 
-  steps.sort (
-    (a,b) =>
+  let actionArray = []
+  for (let i in this.actions) 
+  {
+    // create Action objects from parsed data
+    if (this.actions[i].hasOwnProperty("from") && 
+    this.actions[i].hasOwnProperty("to") && 
+    this.actions[i].hasOwnProperty("agent") &&
+    this.actions[i].hasOwnProperty("eventType"))
     {
-      if (a.begin < b.begin )
-      {
-        return -1;
-      }
-      if (a.begin > b.begin )
-      {
-        return 1;
-      }
+      let from = new TrailNode(this.actions[i].from.split('#')[0], this.actions[i].from.split('#').length > 1 ? this.actions[i].from.split('#')[1] : "lambda")
+      let to = new TrailNode(this.actions[i].to.split('#')[0], this.actions[i].to.split('#').length > 1 ? this.actions[i].to.split('#')[1] : "lambda")
+      let event = { "id": i, "type": this.actions[i].eventType, "properties": this.actions[i].eventProperties, "timestamp": new Date(parseInt(this.actions[i].hasTimestamp))}
+      let agent = this.actions[i].agent
 
-      return 0;
-    });
-
-  this.steps = steps;
+      actionArray.push(new Action(from, to, event, agent));
+    }
+  }
+  if (actionArray.length>0)
+  {
+    this.actions = actionArray; 
+  }
 }
 
 function isValid(entity)
@@ -151,7 +138,74 @@ function isValid(entity)
   return isValid;
 }
 
+// TrailNode is basically an envelope for a hknode and a target anchor
+class TrailNode {
+  constructor(nodeId, targetAnchor) {
+    this.nodeId = nodeId;
+    this.targetAnchor = targetAnchor;
+  }
+
+  toString() {
+      return this.nodeId + "#" + this.targetAnchor;
+  }
+
+  toJSON() {
+    return this.nodeId + "#" + this.targetAnchor;
+  }
+}
+
+// actions hold references to source and destination trail 
+// nodes (along with their respective target anchors), 
+// the related event and an agent (user, system or content).
+class Action extends Item {
+  constructor(from, to, event, agent) 
+  {
+      super()
+      this.from = from;
+      this.to = to;
+      this.agent = agent;
+      this.event = event;
+
+      if(!this.event)
+      {
+        return
+      }
+
+      // create timestamp if needed
+      if(!this.event['timestamp'])
+      {
+          this.event['timestamp'] = new Date().getTime();
+      }
+
+      // get event id or create a new one
+      if(!this.event['id'] || this.event['id'] == '') 
+      {
+          this.event['id'] = this.event.type + '_' + this.event.timestamp;
+          this.id = this.event['id'];
+      }
+      else 
+      {
+          this.id = this.event['id'];
+      }
+  }
+
+  getTime()
+  {
+      return new Date(this.event['timestamp']).getTime();
+  }
+
+  toString() 
+  {
+      return "[" + new Date(this.event['timestamp']).toISOString() + "] " + this.from + " -- " + this.event['eventId'] + " (by " + this.agent + ") --> " + this.to;
+  }
+}
+
 Trail.type = Types.TRAIL;
 Trail.isValid = isValid;
 
-module.exports = Trail;
+
+module.exports = {
+  Action : Action,
+  List : Trail
+}
+
