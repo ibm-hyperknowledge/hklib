@@ -204,8 +204,5 @@ Trail.type = Types.TRAIL;
 Trail.isValid = isValid;
 
 
-module.exports = {
-  Action : Action,
-  List : Trail
-}
+module.exports = Trail;
 
