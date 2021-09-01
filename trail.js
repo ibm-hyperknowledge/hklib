@@ -82,7 +82,7 @@ Trail.prototype.removeAction = function (action)
 // aliases `in` and `out` represent the entrypoint and
 // output TrailNodes for this trail, which conceptually is
 // done through the use of Port elements in Hyperknowledge
-Trail.prototype.in = function(from) {
+Trail.prototype.in = function(from = null) {
   if (from)
   {
     this.head.from = from;
@@ -90,7 +90,7 @@ Trail.prototype.in = function(from) {
     
   return this.head.from;
 }
-Trail.prototype.out = function(to) {
+Trail.prototype.out = function(to = null) {
   if (to)
   {
     this.tail.to = to;
@@ -248,13 +248,17 @@ Trail.prototype.search = function(eventId = null, filters){
 
 function loadActions(actions = null)
 {
-  if(actions)
+
+  // use array of actions if passed
+  if(actions && Array.isArray(actions))
   {
-    this.actions = actions;
+    this.actions = sort(actions);
+    
     return;
   }
 
   let actionArray = []
+  let actionIds = []
   for (let i in this.actions) 
   {
     // create Action objects from parsed data
@@ -270,11 +274,27 @@ function loadActions(actions = null)
 
       actionArray.push(new Action(from, to, event, agent));
     }
+    else if(this.actions[i].hasOwnProperty("hasTimestamp"))
+    {
+      // all we got is event's id and timestamp
+      actionIds.push(new Action(null, null, {"id": i, "timestamp": new Date(this.actions[i].hasTimestamp)}, null));
+    }
   }
+  
   if (actionArray.length>0)
   {
-    this.actions = actionArray; 
+    this.actions = sort(actionArray);
   }
+  else if (actionIds.length>0)
+  {
+    actionIds = sort(actionIds);
+
+    for (let i in actionIds)
+    {
+      this.actions.push(actionIds[i].id);
+    }
+  }
+  
 }
 
 function isValid(entity)
@@ -292,6 +312,25 @@ function isValid(entity)
   return isValid;
 }
 
+function sort(actions = null)
+{
+  if (actions && Array.isArray(actions) && actions[0] instanceof Object)
+  {
+    // sort and return object array based on timestamp
+    return actions.sort(function(action1, action2)
+    {
+      return new Date(action1.event['timestamp']) - new Date(action2.event['timestamp']);
+    });
+  }
+  else if (actions && Array.isArray(actions) && this.actions[0] instanceof Action)
+  {
+    // sort Action array based on timestamp
+    return actions.sort(function(action1, action2)
+    {
+      return action1.event['timestamp'] - action2.event['timestamp'];
+    });
+  }
+}
 
 Trail.prototype.serialize = function ()
 {
@@ -372,6 +411,8 @@ class Action extends Item {
 
 Trail.type = Types.TRAIL;
 Trail.isValid = isValid;
+Trail.sort = sort;
+
 // Trail.Action = Action;
 // Trail.TrailNode = TrailNode;
 
