@@ -28,10 +28,10 @@ function HKGraph()
 	this.linkMap = {};
     this.refMap = {};
     this.orphans = {};
-	this.contextMap = {};
+	this.compositeNodeMap = {};
     this.relationless = {};
 
-	this.contextMap[null] = {};
+	this.compositeNodeMap[null] = {};
 
 	this.generateId = generateId;
 }
@@ -72,7 +72,7 @@ HKGraph.prototype.setEntity = function(entity)
 		oldEntity.className = entity.className;
     }
 
-    if(entity.type === Types.NODE || entity.type === Types.REFERENCE || entity.type === Types.CONTEXT)
+    if(entity.type === Types.NODE || entity.type === Types.TRAIL || entity.type === Types.REFERENCE || entity.type === Types.CONTEXT)
     {
         
         oldEntity.interfaces = entity.interfaces;
@@ -86,7 +86,7 @@ HKGraph.prototype.setEntity = function(entity)
 		let oldParent = this.getEntity(oldEntity.parent);
 		if(oldParent)
 		{
-			delete this.contextMap[oldEntity.parent][oldEntity.id];
+			delete this.compositeNodeMap[oldEntity.parent][oldEntity.id];
 		}
 		else if (oldEntity.parent)
 		{
@@ -100,7 +100,7 @@ HKGraph.prototype.setEntity = function(entity)
 		let parent = this.getEntity(entity.parent);
 		if(parent || entity.parent === null)
 		{
-			this.contextMap[entity.parent][entity.id] = entity;
+			this.compositeNodeMap[entity.parent][entity.id] = entity;
 		}
 		else if (entity.parent)
 		{
@@ -164,11 +164,11 @@ HKGraph.prototype.addEntity = function(entity)
                 {
                     newEntity = new Context(entity);
                     this.contexts[entity.id] = newEntity;
-					this.contextMap[entity.id] = {};
+					this.compositeNodeMap[entity.id] = {};
 
                     if(this.orphans.hasOwnProperty(entity.id))
                     {
-						this.contextMap[entity.id] = this.orphans[entity.id];
+						this.compositeNodeMap[entity.id] = this.orphans[entity.id];
                         delete this.orphans[entity.id];
                     }
                 }
@@ -180,6 +180,13 @@ HKGraph.prototype.addEntity = function(entity)
                 {
                     newEntity = new Trail(entity);
                     this.trails[entity.id] = newEntity;
+					this.compositeNodeMap[entity.id] = {};
+
+                    if(this.orphans.hasOwnProperty(entity.id))
+                    {
+						this.compositeNodeMap[entity.id] = this.orphans[entity.id];
+                        delete this.orphans[entity.id];
+                    }
                 }
                 break;
             }
@@ -247,9 +254,9 @@ HKGraph.prototype.addEntity = function(entity)
 		// Set parent
 		if (entity.type !== Types.CONNECTOR) 
 		{	
-			if (this.contextMap.hasOwnProperty(newEntity.parent))
+			if (this.compositeNodeMap.hasOwnProperty(newEntity.parent))
 			{
-				this.contextMap[newEntity.parent][newEntity.id] = newEntity;
+				this.compositeNodeMap[newEntity.parent][newEntity.id] = newEntity;
 			}
 			else 
 			{
@@ -291,7 +298,7 @@ HKGraph.prototype.removeEntity = function(id)
 			case Context.type:
 			{
                 delete this.contexts[id];
-				delete this.contextMap[entity.id];
+				delete this.compositeNodeMap[entity.id];
 				break;
 			}
 			case Reference.type:
@@ -340,6 +347,7 @@ HKGraph.prototype.removeEntity = function(id)
             {
                 /* delete children trails? */
                 delete this.trails[id];
+				delete this.compositeNodeMap[entity.id];
                 break;
             }
 		}
@@ -349,9 +357,9 @@ HKGraph.prototype.removeEntity = function(id)
             delete this.orphans[entity.parent][id];
         }
 
-        if(this.contextMap.hasOwnProperty(entity.parent))
+        if(this.compositeNodeMap.hasOwnProperty(entity.parent))
 		{
-			delete this.contextMap[entity.parent][entity.id];
+			delete this.compositeNodeMap[entity.parent][entity.id];
 		}
 
 		if(this.bindsMap.hasOwnProperty(entity.id))
@@ -435,9 +443,9 @@ HKGraph.prototype.getReference = function(id, parent)
 
 HKGraph.prototype.getChildren = function(contextId)
 {
-	if(this.contextMap.hasOwnProperty(contextId))
+	if(this.compositeNodeMap.hasOwnProperty(contextId))
 	{
-		return this.contextMap[contextId];
+		return this.compositeNodeMap[contextId];
 	}
 	else
 	{
