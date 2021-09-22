@@ -29,7 +29,7 @@ function Trail (id, actions, parent)
       this.properties = trail.properties || {};
       this.metaproperties = trail.metaproperties || {};
       this.interfaces = trail.interfaces || {};
-      this.actions = trail.actions || new List();
+      this.actions = trail.actions || {};
 
       if (this.actions && Object.keys(this.actions).length > 0) {
         loadActions.call(this); 
@@ -42,7 +42,7 @@ function Trail (id, actions, parent)
       this.interfaces = {};
       this.properties = {};
       this.metaproperties = {};
-      this.actions = actions || new List();
+      this.actions = actions || {};
 
     }
 
@@ -295,21 +295,8 @@ function loadActions(actions = null)
   let actionIds = []
   for (let i in this.actions) 
   {
-    // create Action object from hkb parsed data
+    // create Action object from json object
     if (this.actions[i] && this.actions[i].hasOwnProperty("from") && 
-    this.actions[i].hasOwnProperty("to") && 
-    this.actions[i].hasOwnProperty("agent") &&
-    this.actions[i].hasOwnProperty("eventType"))
-    {
-      let from = new TrailNode(JSON.parse(this.actions[i].from).nodeId, JSON.parse(this.actions[i].from).nodeType, JSON.parse(this.actions[i].from).targetAnchor);
-      let to = new TrailNode(JSON.parse(this.actions[i].to).nodeId, JSON.parse(this.actions[i].to).nodeType, JSON.parse(this.actions[i].to).targetAnchor);
-      let event = { "id": i, "type": this.actions[i].eventType, "properties": JSON.parse(this.actions[i].eventProperties), "timestamp": new Date(this.actions[i].hasTimestamp)};
-      let agent = this.actions[i].agent;
-
-      actionArray.push(new Action(from, to, event, agent));
-    }
-    // create Action object from json obj
-    else if (this.actions[i] && this.actions[i].hasOwnProperty("from") && 
     this.actions[i].hasOwnProperty("to") && 
     this.actions[i].hasOwnProperty("agent") &&
     this.actions[i].hasOwnProperty("event"))
@@ -321,20 +308,26 @@ function loadActions(actions = null)
 
       actionArray.push(new Action(from, to, event, agent));
     }
-    else if(this.actions[i] && this.actions[i].hasOwnProperty("hasTimestamp"))
+    else if(this.actions[i] && this.actions[i].hasOwnProperty("event") && this.actions[i].event.hasOwnProperty("timestamp"))
     {
-      // all we got is event's id and timestamp
-      actionIds.push(new Action(null, null, {"id": i, "timestamp": new Date(this.actions[i].hasTimestamp)}, null));
+      // we got event's id and timestamp
+      actionArray.push(new Action(null, null, {"id": i, "timestamp": new Date(this.actions[i].event.timestamp)}, null));
+    }
+    else 
+    {
+       // all we got is event's id
+       actionIds.push(i);
     }
   }
   
+  // sort action items before creating list
   if (actionArray.length > 0)
   {
     this.actions = new List(...sort(actionArray));
   }
   else if (actionIds.length > 0)
   {
-    this.actions = new List(...sort(actionIds));
+    this.actions = actionIds;
   }
 }
 
@@ -375,18 +368,27 @@ function sort(actions = null)
 
 Trail.prototype.toJSON = function ()
 {
-  if (this.actions.constructor === List && this.actions.head && (!this.actions.head.from && !this.actions.head.to && !this.actions.head.agent))
-  {
-    let actionArray = [];
-    let action = this.actions.head;
-    
-    while(action.next)
-    {
-      actionArray.push(action.id);
-      action = action.next;
-    }
+  let actionArray = [];
 
-    this.actions = actionArray;
+  if (this.actions.constructor === List)
+  {
+    //in case we have only action ids and timestamps
+    if(this.actions.head && (!this.actions.head.from && !this.actions.head.to && !this.actions.head.agent))
+    {
+      let action = this.actions.head;
+      
+      while(action.next)
+      {
+        actionArray.push(action.id);
+        action = action.next;
+      }
+    }
+    else {
+      actionArray = this.actions.toArray();
+    }
+  }
+  else{
+    actionArray = this.actions;
   }
 
   return {
@@ -395,7 +397,7 @@ Trail.prototype.toJSON = function ()
     properties: this.properties,
     metaproperties: this.metaproperties,
     interfaces: this.interfaces,
-    actions: this.actions,
+    actions: actionArray,
     type: this.type
   }; 
 }
