@@ -12,6 +12,7 @@ const {List, Item}    = require('linked-list');
 // const shortid   = require('shortid');
 const Types     = require('./types');
 const HKEntity  = require('./hkentity');
+const e = require('express');
 // const Connector = require('./connector');
 // const Link      = require('./link');
 // const RoleTypes = require('./roletypes');
@@ -29,10 +30,10 @@ function Trail (id, actions, parent)
       this.properties = trail.properties || {};
       this.metaproperties = trail.metaproperties || {};
       this.interfaces = trail.interfaces || {};
-      this.actions = trail.actions || {};
+      this.actions = trail.actions || new List();
 
       if (this.actions && Object.keys(this.actions).length > 0) {
-        loadActions.call(this); 
+        this.loadActions(); 
       }
     }
     else
@@ -42,7 +43,7 @@ function Trail (id, actions, parent)
       this.interfaces = {};
       this.properties = {};
       this.metaproperties = {};
-      this.actions = actions || {};
+      this.actions = actions || new List();
 
     }
 
@@ -70,13 +71,12 @@ Trail.prototype.addAction = function (action)
   {
     if (new Date(current.event['timestamp']) - new Date(action.event['timestamp']))
     {
-      current.prepend(action);
-      return;
+      return current.prepend(action);
     }
     current = current.next;
   }
 
-  this.actions.append(action);
+  return this.actions.append(action);
 }
 
 // Remove an action from trail using its reference
@@ -96,6 +96,18 @@ Trail.prototype.removeAction = function (action)
     }
 
     this.action.detach();
+}
+
+// `append` and `prepend` operations are 
+// handled by our linked list structure
+Trail.prototype.append = function(action)
+{
+  return this.actions.append(action);
+}
+
+Trail.prototype.prepend = function(action)
+{
+  return this.actions.prepend(action);
 }
 
 // aliases `in` and `out` represent the input and
@@ -223,7 +235,7 @@ Trail.prototype.getPositionOf = function(action){
     //search action by eventId
     var array = this.actions.toArray();
     for (var i = 0; i < this.actions.size; i++) {
-        if(array[i].event["eventId"] == action.event["eventId"]){
+        if(array[i].event["id"] == action.event["id"]){
             return i;
         }
     }
@@ -261,7 +273,7 @@ Trail.prototype.search = function(eventId = null, filters){
     var array = this.actions.toArray();
     if (eventId){
         for (var i = 0; i < this.actions.size; i++) {
-            if(array[i].event["eventId"] == eventId){
+            if(array[i].event["id"] == eventId){
                 return array[i];
             }
         }
@@ -281,14 +293,20 @@ Trail.prototype.search = function(eventId = null, filters){
     return resultSet
 }
 
-function loadActions(actions = null)
+Trail.prototype.loadActions = function (actions = null)
 {
 
   // use array of actions if passed
   if(actions && Array.isArray(actions))
   {
-    this.actions = new List(...sort(actions));
-    return;
+    if(actions[0].event.timestamp)
+    {
+      this.actions = new List(...sort(actions));
+    }
+    else {
+      this.actions = new List(...actions);
+    }
+    return this.actions;
   }
 
   let actionArray = []
@@ -306,12 +324,12 @@ function loadActions(actions = null)
       let event = { "id": this.actions[i].event.id, "type": this.actions[i].event.type, "properties": this.actions[i].event.properties, "timestamp": new Date(this.actions[i].event.timestamp)};
       let agent = this.actions[i].agent;
 
-      actionArray.push(new Action(from, to, event, agent));
+      actionArray.push(new Action({from, to, event, agent}));
     }
     else if(this.actions[i] && this.actions[i].hasOwnProperty("event") && this.actions[i].event.hasOwnProperty("timestamp"))
     {
       // we got event's id and timestamp
-      actionArray.push(new Action(null, null, {"id": i, "timestamp": new Date(this.actions[i].event.timestamp)}, null));
+      actionArray.push(new Action({event: {"id": i, "timestamp": new Date(this.actions[i].event.timestamp)}}));
     }
     else 
     {
@@ -356,7 +374,7 @@ function sort(actions = null)
       return action1.event['timestamp'] - action2.event['timestamp'];
     });
   }
-  else if (actions && Array.isArray(actions) && actions[0].event.timestamp.constructor === String)
+  else if (actions && Array.isArray(actions) && (actions[0].event.timestamp.constructor === String || actions[0].event.timestamp.constructor === Number))
   {
     // sort Action array based on timestamp
     return actions.sort(function(action1, action2)
@@ -376,8 +394,8 @@ Trail.prototype.toJSON = function ()
     if(this.actions.head && (!this.actions.head.from && !this.actions.head.to && !this.actions.head.agent))
     {
       let action = this.actions.head;
-      
-      while(action.next)
+
+      while(action)
       {
         actionArray.push(action.id);
         action = action.next;
@@ -387,7 +405,8 @@ Trail.prototype.toJSON = function ()
       actionArray = this.actions.toArray();
     }
   }
-  else{
+  else if (Array.isArray(this.actions))
+  {
     actionArray = this.actions;
   }
 
@@ -437,7 +456,7 @@ class TrailNode {
 // nodes (along with their respective target anchors), 
 // the related event and an agent (user, system or content).
 class Action extends Item {
-  constructor(from, to, event, agent) 
+  constructor({from = null, to = null, event = {}, agent = null} = {}) 
   {
       super();
       this.from = from;
@@ -445,16 +464,12 @@ class Action extends Item {
       this.agent = agent;
       this.event = event;
 
-      if(!this.event)
-      {
-        return
-      }
 
       // create timestamp if needed
-      if(!this.event['timestamp'])
-      {
-          this.event['timestamp'] = new Date().getTime();
-      }
+      // if(!this.event['timestamp'])
+      // {
+      //     this.event['timestamp'] = new Date().getTime();
+      // }
 
       // get event id or create a new one
       if(!this.event['id'] || this.event['id'] == '') 
@@ -475,17 +490,33 @@ class Action extends Item {
 
   toString() 
   {
+    if(this.from && this.to && this.agent && this.event && this.event.id )
+    {
       return JSON.stringify({ from: this.from, to: this.to, agent: this.agent, event: this.event, id: this.event.id });
+    }
+    else 
+    {
+      return this.event.id;
+    }
   }
 
   toJSON() 
   {
+    if(this.from && this.to && this.agent && this.event && this.event.id )
+    {
       return { from: this.from, to: this.to, agent: this.agent, event: this.event, id: this.event.id };
+    }
+    else 
+    {
+      return this.event.id;
+    }
   }
 }
 
 Trail.type = Types.TRAIL;
 Trail.isValid = isValid;
 Trail.sort = sort;
+Trail.Action = Action;
+Trail.TrailNode = TrailNode;
 
 module.exports = Trail;
