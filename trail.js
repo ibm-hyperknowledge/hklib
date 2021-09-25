@@ -6,16 +6,10 @@
 'use strict'
 
 const {List, Item}    = require('linked-list');
-// const List      = Linked.List;
-// const Item      = Linked.Item;
 
 // const shortid   = require('shortid');
 const Types     = require('./types');
 const HKEntity  = require('./hkentity');
-const e = require('express');
-// const Connector = require('./connector');
-// const Link      = require('./link');
-// const RoleTypes = require('./roletypes');
 
 
 function Trail (id, actions, parent)
