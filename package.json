@@ -6,7 +6,7 @@
   "contributors": [
     {
       "name": "Marcelo Machado",
-      "email": "marcelo.machado@ibm.com"
+      "email": "mmachado@ibm.com"
     },
     {
       "name": "Marcio Moreno",
@@ -54,5 +54,12 @@
     "hyperlinkedgraph",
     "graph",
     "driver"
-  ]
+  ],
+  "scripts": {
+    "unit": "mocha test/unit test/setup.json --timeout 360000"
+  },
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "mocha": "^9.1.3"
+  }
 }

@@ -124,7 +124,6 @@ HKEntity.prototype.appendToProperty = function(property, value, metaProperty)
 }
 
 
-
 /**
  *  Remove property value. If property or value does not exist, does nothing. If the property
  * becomes empty, remove the property altogether.
