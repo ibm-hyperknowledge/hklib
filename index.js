@@ -22,7 +22,6 @@ const Types = require("./types");
 exports.Types = Types;
 exports.NODE_TYPE = Types.NODE;
 exports.CONTEXT_TYPE = Types.CONTEXT;
-exports.VIRTUAL_CONTEXT_TYPE = Types.VIRTUALCONTEXT;
 exports.LINK_TYPE = Types.LINK;
 exports.CONNECTOR_TYPE = Types.CONNECTOR;
 exports.BIND_TYPE = Types.BIND;

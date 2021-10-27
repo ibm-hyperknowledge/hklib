@@ -13,7 +13,6 @@ const Reference = require("./reference");
 const Trail = require("./trail");
 const Types = require("./types");
 const shortid = require('shortid');
-const VirtualContext = require("./virtualcontext");
 
 function HKGraph()
 {
@@ -73,7 +72,7 @@ HKGraph.prototype.setEntity = function (entity)
 		oldEntity.className = entity.className;
 	}
 
-	if (entity.type === Types.NODE || entity.type === Types.REFERENCE || entity.type === Types.CONTEXT || entity.type === Types.VIRTUALCONTEXT)
+	if (entity.type === Types.NODE || entity.type === Types.REFERENCE || entity.type === Types.CONTEXT)
 	{
 
 		oldEntity.interfaces = entity.interfaces;
@@ -156,15 +155,6 @@ HKGraph.prototype.addEntity = function (entity)
 					{
 						newEntity = new Node(entity);
 						this.nodes[entity.id] = newEntity;
-					}
-					break;
-				}
-			case Types.VIRTUALCONTEXT:
-				{
-					if (VirtualContext.isValid(entity))
-					{
-						newEntity = new VirtualContext(entity);
-						this.virtualContexts[entity.id] = newEntity;
 					}
 					break;
 				}
@@ -544,7 +534,6 @@ function generateId(model, length)
 module.exports = HKGraph;
 HKGraph.NODE_TYPE = Types.NODE;
 HKGraph.CONTEXT_TYPE = Types.CONTEXT;
-HKGraph.VIRTUAL_CONTEXT_TYPE = Types.VIRTUALCONTEXT;
 HKGraph.LINK_TYPE = Types.LINK;
 HKGraph.CONNECTOR_TYPE = Types.CONNECTOR;
 HKGraph.INTERFACE = Types.INTERFACE;

@@ -14,7 +14,6 @@ exports.REFERENCE = 'ref';
 exports.INTERFACE = 'interface';
 exports.BIND      = 'bind';
 exports.TRAIL     = 'trail';
-exports.VIRTUALCONTEXT     = 'virtualcontext';
 
 exports.isValidType = function (type)
 {
