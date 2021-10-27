@@ -9,8 +9,6 @@ const Context = require("../../context");
 const VContext = require("../../virtualcontext");
 const HKEntity = require("../../hkentity");
 
-const { promisify } = require('util');
-
 const HKDatasource = util.preamble();
 
 
