@@ -34,9 +34,9 @@ function VirtualContext(id, endpoint=null, parent=null)
 		this.id = id || null;
 		this.endpoint = endpoint || null;
 		this.parent = parent || null;
+		this.properties = {"readonly": true};
 	}
 
-	this.readonly = true;
 	this.type = Types.CONTEXT;
 }
 
