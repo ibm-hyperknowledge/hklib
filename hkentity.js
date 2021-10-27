@@ -25,7 +25,7 @@ function HKEntity()
  */
 
 /**
- * Iterate throuch each valid property of the entity
+ * Iterate through each valid property of the entity
  * 
  * @param {PropertyCallback} callback
  */
