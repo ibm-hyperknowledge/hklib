@@ -8,11 +8,34 @@
 const Types = require("./types");
 const Context = require("./context");
 
-function VirtualContext(id, endpoint, parent=null)
+function VirtualContext(id, endpoint=null, parent=null)
 {
-	this.id = id;
-	this.endpoint = endpoint;
-	this.parent = parent;
+	if (arguments[0] && typeof arguments[0] === "object")
+	{
+		let vContext = arguments[0];
+		this.id = vContext.id || null;
+		this.parent = vContext.parent || null;
+		this.endpoint = vContext.endpoint || null;
+		if (vContext.properties)
+		{
+			this.properties = vContext.properties;
+		}
+		if (vContext.metaProperties)
+		{
+			this.metaProperties = vContext.metaProperties;
+		}
+		if (vContext.interfaces)
+		{
+			this.interfaces = vContext.interfaces;
+		}
+	}
+	else
+	{
+		this.id = id || null;
+		this.endpoint = endpoint || null;
+		this.parent = parent || null;
+	}
+
 	this.readonly = true;
 	this.type = Types.CONTEXT;
 }

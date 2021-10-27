@@ -13,6 +13,7 @@ const Reference = require("./reference");
 const Trail = require("./trail");
 const Types = require("./types");
 const shortid = require('shortid');
+const VirtualContext = require("./virtualcontext");
 
 function HKGraph()
 {
@@ -160,9 +161,21 @@ HKGraph.prototype.addEntity = function (entity)
 				}
 			case Types.CONTEXT:
 				{
-					if (Context.isValid(entity))
+					const validVirtualContext = VirtualContext.isValid(entity);
+					const validContext = Context.isValid(entity);
+					
+					if (validVirtualContext || validContext)
 					{
-						newEntity = new Context(entity);
+						let newEntity;
+						if(validVirtualContext) 
+						{
+							newEntity = new VirtualContext(entity);
+						}
+						else
+						{
+							newEntity = new Context(entity);
+						}	
+						
 						this.contexts[entity.id] = newEntity;
 						this.contextMap[entity.id] = {};
 
