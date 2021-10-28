@@ -166,7 +166,6 @@ HKGraph.prototype.addEntity = function (entity)
 					
 					if (validVirtualContext || validContext)
 					{
-						let newEntity;
 						if(validVirtualContext) 
 						{
 							newEntity = new VirtualContext(entity);
