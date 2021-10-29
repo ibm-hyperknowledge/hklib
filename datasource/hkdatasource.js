@@ -122,7 +122,7 @@ HKDatasource.prototype.getInfo = function (callback = () => {})
  * @param err An error object that indicate if the operation was succesful or not
  */
 /**
- * Get version of the current IDB
+ * Get version of the current HKBase
  *
  * @param {OperationCallback} callback Response callback
  */
