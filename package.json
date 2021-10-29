@@ -1,6 +1,6 @@
 {
   "name": "hklib",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "main": "index.js",
   "author": "IBM Research",
   "contributors": [
@@ -31,6 +31,10 @@
     {
       "name": "Sandro Rama Fiorini",
       "email": "srfiorini@ibm.com"
+    },
+    {
+      "name": "Henrique Chaves Magalhães de Menezes",
+      "email": "h.chaves@ibm.com"
     }
   ],
   "dependencies": {
