@@ -5,14 +5,15 @@
 
 "use strict";
 
-const Connector 	= require("./connector");
-const Context 		= require("./context");
-const Link 			= require("./link");
-const Node 			= require("./node");
-const Reference 	= require("./reference");
-const Trail 		= require("./trail");
-const Types 		= require("./types");
-const shortid 		= require('shortid');
+const Connector = require("./connector");
+const Context = require("./context");
+const Link = require("./link");
+const Node = require("./node");
+const Reference = require("./reference");
+const Trail = require("./trail");
+const Types = require("./types");
+const shortid = require('shortid');
+const VirtualContext = require("./virtualcontext");
 
 function HKGraph()
 {
@@ -26,17 +27,17 @@ function HKGraph()
 	// Auxiliar maps
 	this.bindsMap = {};
 	this.linkMap = {};
-    this.refMap = {};
-    this.orphans = {};
+	this.refMap = {};
+	this.orphans = {};
 	this.contextMap = {};
-    this.relationless = {};
+	this.relationless = {};
 
 	this.contextMap[null] = {};
 
 	this.generateId = generateId;
 }
 
-HKGraph.prototype.hasId = function(id)
+HKGraph.prototype.hasId = function (id)
 {
 	return this.nodes.hasOwnProperty(id) ||
 		this.contexts.hasOwnProperty(id) ||
@@ -52,39 +53,49 @@ HKGraph.prototype.hasId = function(id)
  * @param {object} entity an entity with an id and ALL updated properties (including intrinsecs properties)
  * @returns {object} the new entity
  */
-HKGraph.prototype.setEntity = function(entity)
+HKGraph.prototype.setEntity = function (entity)
 {
-    let oldEntity = this.getEntity(entity.id);
+	let oldEntity = this.getEntity(entity.id);
 
-    if(!oldEntity)
-    {
-        return null;
-    }
+	if (!oldEntity)
+	{
+		return null;
+	}
 
-    if(entity.type === Types.LINK)
-    {
-        oldEntity.binds = entity.binds;
-    }
+	if (entity.type === Types.LINK)
+	{
+		oldEntity.binds = entity.binds;
+	}
 
-    if(entity.type === Types.CONNECTOR)
-    {
+	if (entity.type === Types.CONNECTOR)
+	{
 		oldEntity.roles = entity.roles;
 		oldEntity.className = entity.className;
-    }
+	}
 
-    if(entity.type === Types.NODE || entity.type === Types.REFERENCE || entity.type === Types.CONTEXT)
+	if (entity.type === Types.NODE || entity.type === Types.REFERENCE)
+	{
+
+		oldEntity.interfaces = entity.interfaces;
+
+	}
+
+  if (entity.type === Types.CONTEXT)
+  {
+    if(entity.endpoint !== undefined && entity.endpoint !== "")
     {
-        
-        oldEntity.interfaces = entity.interfaces;
+      oldEntity.endpoint = entity.endpoint;
     }
+    oldEntity.interfaces = entity.interfaces;
+  }
 
 	// Update parent
 
 	// Clean old entity
-	if(oldEntity.hasOwnProperty('parent')) 
+	if (oldEntity.hasOwnProperty('parent')) 
 	{
 		let oldParent = this.getEntity(oldEntity.parent);
-		if(oldParent)
+		if (oldParent)
 		{
 			delete this.contextMap[oldEntity.parent][oldEntity.id];
 		}
@@ -93,18 +104,18 @@ HKGraph.prototype.setEntity = function(entity)
 			delete this.orphans[oldEntity.parent][oldEntity.id];
 		}
 	}
-	
+
 	// Set new parent
-	if(entity.hasOwnProperty('parent'))
+	if (entity.hasOwnProperty('parent'))
 	{
 		let parent = this.getEntity(entity.parent);
-		if(parent || entity.parent === null)
+		if (parent || entity.parent === null)
 		{
 			this.contextMap[entity.parent][entity.id] = entity;
 		}
 		else if (entity.parent)
 		{
-			if(!this.orphans.hasOwnProperty(entity.parent))
+			if (!this.orphans.hasOwnProperty(entity.parent))
 			{
 				this.orphans[entity.parent] = {};
 			}
@@ -115,9 +126,9 @@ HKGraph.prototype.setEntity = function(entity)
 	oldEntity.parent = entity.parent;
 
 	// Update properties
-    oldEntity.properties = entity.properties;
+	oldEntity.properties = entity.properties;
 
-    return oldEntity;
+	return oldEntity;
 };
 
 /**
@@ -125,7 +136,7 @@ HKGraph.prototype.setEntity = function(entity)
  * @param {object} entity The entity object to be added.
  * @returns {object} The entity added, if the input object does not have an id, the returned will have.
  */
-HKGraph.prototype.addEntity = function(entity)
+HKGraph.prototype.addEntity = function (entity)
 {
 	let newEntity = null;
 
@@ -133,7 +144,7 @@ HKGraph.prototype.addEntity = function(entity)
 	{
 		let id;
 
-		if(this.hasId(entity.id))
+		if (this.hasId(entity.id))
 		{
 			return this.setEntity(entity);
 		}
@@ -150,123 +161,134 @@ HKGraph.prototype.addEntity = function(entity)
 		switch (entity.type)
 		{
 			case Types.NODE:
-            {
-                if (Node.isValid(entity))
-                {
-                    newEntity = new Node(entity);
-                    this.nodes[entity.id] = newEntity;
-                }
-                break;
-            }
-			case Types.CONTEXT:
-            {
-                if (Context.isValid(entity))
-                {
-                    newEntity = new Context(entity);
-                    this.contexts[entity.id] = newEntity;
-					this.contextMap[entity.id] = {};
-
-                    if(this.orphans.hasOwnProperty(entity.id))
-                    {
-						this.contextMap[entity.id] = this.orphans[entity.id];
-                        delete this.orphans[entity.id];
-                    }
-                }
-                break;
-            }
-			case Types.TRAIL:
-            {
-                if (Trail.isValid(entity))
-                {
-                    newEntity = new Trail(entity);
-                    this.trails[entity.id] = newEntity;
-                }
-                break;
-            }
-			case Types.LINK:
-            {
-                if (Link.isValid(entity))
-                {
-                    newEntity = new Link(entity);
-                    newEntity.id = id;
-                    this.links[id] = newEntity;
-
-                    if (!this.linkMap.hasOwnProperty(newEntity.connector))
-                    {
-                        this.linkMap[newEntity.connector] = {};
-                    }
-                    this.linkMap[newEntity.connector][newEntity.id] = newEntity;
-
-					this.bindsMap[newEntity.id] = new Set();
-					newEntity.forEachBind((__, comp) =>
+				{
+					if (Node.isValid(entity))
 					{
-						this.bindsMap[newEntity.id].add(comp);
-
-						if(!this.bindsMap.hasOwnProperty(comp))
+						newEntity = new Node(entity);
+						this.nodes[entity.id] = newEntity;
+					}
+					break;
+				}
+			case Types.CONTEXT:
+				{
+					const validVirtualContext = VirtualContext.isValid(entity);
+					const validContext = Context.isValid(entity);
+					
+					if (validVirtualContext || validContext)
+					{
+						if(validVirtualContext) 
 						{
-							this.bindsMap[comp] = new Set();
+							newEntity = new VirtualContext(entity);
 						}
-						this.bindsMap[comp].add(newEntity.id);
-					})
-                }
-                break;
-            }
-			case Types.CONNECTOR:
-            {
-                if (Connector.isValid(entity))
-                {
-                    newEntity = new Connector(entity);
-                    this.connectors[entity.id] = newEntity;
-                }
-                break;
-            }
-			case Types.REFERENCE:
-            {
-                if (Reference.isValid(entity))
-                {
-                    newEntity = new Reference(entity);
-                    newEntity.id = id;
-                    this.refs[newEntity.id] = newEntity;
+						else
+						{
+							newEntity = new Context(entity);
+						}	
+						
+						this.contexts[entity.id] = newEntity;
+						this.contextMap[entity.id] = {};
 
-                    if (!this.refMap.hasOwnProperty(newEntity.ref))
-                    {
-                        this.refMap[newEntity.ref] = {};
-                    }
-                    this.refMap[newEntity.ref][newEntity.id] = newEntity;
-                }
-                break;
-            
-			}
+						if (this.orphans.hasOwnProperty(entity.id))
+						{
+							this.contextMap[entity.id] = this.orphans[entity.id];
+							delete this.orphans[entity.id];
+						}
+					}
+					break;
+				}
+			case Types.TRAIL:
+				{
+					if (Trail.isValid(entity))
+					{
+						newEntity = new Trail(entity);
+						this.trails[entity.id] = newEntity;
+					}
+					break;
+				}
+			case Types.LINK:
+				{
+					if (Link.isValid(entity))
+					{
+						newEntity = new Link(entity);
+						newEntity.id = id;
+						this.links[id] = newEntity;
+
+						if (!this.linkMap.hasOwnProperty(newEntity.connector))
+						{
+							this.linkMap[newEntity.connector] = {};
+						}
+						this.linkMap[newEntity.connector][newEntity.id] = newEntity;
+
+						this.bindsMap[newEntity.id] = new Set();
+						newEntity.forEachBind((__, comp) =>
+						{
+							this.bindsMap[newEntity.id].add(comp);
+
+							if (!this.bindsMap.hasOwnProperty(comp))
+							{
+								this.bindsMap[comp] = new Set();
+							}
+							this.bindsMap[comp].add(newEntity.id);
+						})
+					}
+					break;
+				}
+			case Types.CONNECTOR:
+				{
+					if (Connector.isValid(entity))
+					{
+						newEntity = new Connector(entity);
+						this.connectors[entity.id] = newEntity;
+					}
+					break;
+				}
+			case Types.REFERENCE:
+				{
+					if (Reference.isValid(entity))
+					{
+						newEntity = new Reference(entity);
+						newEntity.id = id;
+						this.refs[newEntity.id] = newEntity;
+
+						if (!this.refMap.hasOwnProperty(newEntity.ref))
+						{
+							this.refMap[newEntity.ref] = {};
+						}
+						this.refMap[newEntity.ref][newEntity.id] = newEntity;
+					}
+					break;
+
+				}
 		}
 
-		if(!newEntity)
+		if (!newEntity)
 		{
 			console.log(entity);
 		}
 
 		// Set parent
 		if (entity.type !== Types.CONNECTOR) 
-		{	
+		{
 			if (this.contextMap.hasOwnProperty(newEntity.parent))
 			{
 				this.contextMap[newEntity.parent][newEntity.id] = newEntity;
 			}
 			else 
 			{
-				if(!this.orphans.hasOwnProperty(newEntity.parent))
+				if (!this.orphans.hasOwnProperty(newEntity.parent))
 				{
 					this.orphans[newEntity.parent] = {};
 				}
 				this.orphans[newEntity.parent][newEntity.id] = newEntity;
 			}
-        }
-        
-        // Set binds
-        if(this.relationless.hasOwnProperty(id))
-        {
-            newEntity.binds = this.relationless[id];
-            delete this.relationless[id];
-        }
+		}
+
+		// Set binds
+		if (this.relationless.hasOwnProperty(id))
+		{
+			newEntity.binds = this.relationless[id];
+			delete this.relationless[id];
+		}
 
 	}
 	return newEntity;
@@ -276,7 +298,7 @@ HKGraph.prototype.addEntity = function(entity)
  * @param {string} id the id of entity to be removed
  * @returns {object} the removed entity
  */
-HKGraph.prototype.removeEntity = function(id)
+HKGraph.prototype.removeEntity = function (id)
 {
 	let entity = this.getEntity(id);
 	if (entity)
@@ -284,88 +306,88 @@ HKGraph.prototype.removeEntity = function(id)
 		switch (entity.type)
 		{
 			case Node.type:
-			{
-                delete this.nodes[id];
-				break;
-			}
-			case Context.type:
-			{
-                delete this.contexts[id];
-				delete this.contextMap[entity.id];
-				break;
-			}
-			case Reference.type:
-            {
-                if (this.refMap.hasOwnProperty(entity.ref))
 				{
-					if (this.refMap[entity.ref].hasOwnProperty(entity.id))
-					{
-						delete this.refMap[entity.ref][entity.id];
-					}
+					delete this.nodes[id];
+					break;
 				}
-				delete this.refs[id];
-                break;
-            }
+			case Context.type:
+				{
+					delete this.contexts[id];
+					delete this.contextMap[entity.id];
+					break;
+				}
+			case Reference.type:
+				{
+					if (this.refMap.hasOwnProperty(entity.ref))
+					{
+						if (this.refMap[entity.ref].hasOwnProperty(entity.id))
+						{
+							delete this.refMap[entity.ref][entity.id];
+						}
+					}
+					delete this.refs[id];
+					break;
+				}
 			case Connector.type:
-            {
-                for (let link_id in this.links)
-                {
-                    let link = this.links[link_id];
-                    if (link.connector === entity)
-                    {
-                        link.connector = null;
-                    }
-                }
-                delete this.connectors[id];
-                break;
-            }
+				{
+					for (let link_id in this.links)
+					{
+						let link = this.links[link_id];
+						if (link.connector === entity)
+						{
+							link.connector = null;
+						}
+					}
+					delete this.connectors[id];
+					break;
+				}
 			case Link.type:
-            {
-                if (this.linkMap.hasOwnProperty(entity.connector))
-                {
-                    let links = this.linkMap[entity.connector];
-                    for (let j = 0; j < links.length; j++)
-                    {
-                        if (links[j].id === entity.id)
-                        {
-                            links.splice(j, 1);
-                            break;
-                        }
-                    }
-                }
-                delete this.links[id];
-                break;
-            }
+				{
+					if (this.linkMap.hasOwnProperty(entity.connector))
+					{
+						let links = this.linkMap[entity.connector];
+						for (let j = 0; j < links.length; j++)
+						{
+							if (links[j].id === entity.id)
+							{
+								links.splice(j, 1);
+								break;
+							}
+						}
+					}
+					delete this.links[id];
+					break;
+				}
 			case Trail.type:
-            {
-                /* delete children trails? */
-                delete this.trails[id];
-                break;
-            }
+				{
+					/* delete children trails? */
+					delete this.trails[id];
+					break;
+				}
 		}
 
-        if(this.orphans.hasOwnProperty(entity.parent))
-        {
-            delete this.orphans[entity.parent][id];
-        }
+		if (this.orphans.hasOwnProperty(entity.parent))
+		{
+			delete this.orphans[entity.parent][id];
+		}
 
-        if(this.contextMap.hasOwnProperty(entity.parent))
+		if (this.contextMap.hasOwnProperty(entity.parent))
 		{
 			delete this.contextMap[entity.parent][entity.id];
 		}
 
-		if(this.bindsMap.hasOwnProperty(entity.id))
+		if (this.bindsMap.hasOwnProperty(entity.id))
 		{
 			let connections = this.bindsMap[entity.id];
 
-			for(let k in connections)
+			for (let k in connections)
 			{
 				let binds = connections[k];
 				binds.delete(entity.id);
 			}
 			delete this.bindsMap[entity.id];
 		}
-    }
+	}
 	else
 	{
 		return null;
@@ -373,7 +395,7 @@ HKGraph.prototype.removeEntity = function(id)
 	return entity;
 };
 
-HKGraph.prototype.hasBind = function(connectorId, bind)
+HKGraph.prototype.hasBind = function (connectorId, bind)
 {
 	if (this.linkMap.hasOwnProperty(connectorId))
 	{
@@ -390,7 +412,7 @@ HKGraph.prototype.hasBind = function(connectorId, bind)
 	return false;
 }
 
-HKGraph.prototype.getReferences = function(id)
+HKGraph.prototype.getReferences = function (id)
 {
 	if (this.refMap.hasOwnProperty(id))
 	{
@@ -399,7 +421,7 @@ HKGraph.prototype.getReferences = function(id)
 	return [];
 }
 
-HKGraph.prototype.hasReference = function(id, parent)
+HKGraph.prototype.hasReference = function (id, parent)
 {
 	if (this.refMap.hasOwnProperty(id))
 	{
@@ -416,7 +438,7 @@ HKGraph.prototype.hasReference = function(id, parent)
 	return false;
 }
 
-HKGraph.prototype.getReference = function(id, parent)
+HKGraph.prototype.getReference = function (id, parent)
 {
 	if (this.refMap.hasOwnProperty(id))
 	{
@@ -433,9 +455,9 @@ HKGraph.prototype.getReference = function(id, parent)
 	return null;
 }
 
-HKGraph.prototype.getChildren = function(contextId)
+HKGraph.prototype.getChildren = function (contextId)
 {
-	if(this.contextMap.hasOwnProperty(contextId))
+	if (this.contextMap.hasOwnProperty(contextId))
 	{
 		return this.contextMap[contextId];
 	}
@@ -445,14 +467,14 @@ HKGraph.prototype.getChildren = function(contextId)
 	}
 }
 
-HKGraph.prototype.getNeighbors = function(entityId)
+HKGraph.prototype.getNeighbors = function (entityId)
 {
 	let out = [];
-	if(this.bindsMap.hasOwnProperty(entityId))
+	if (this.bindsMap.hasOwnProperty(entityId))
 	{
 		let binds = this.bindsMap[entityId];
 
-		for(let k of binds)
+		for (let k of binds)
 		{
 			let entity = this.getEntity(k);
 			if (entity)
@@ -464,7 +486,7 @@ HKGraph.prototype.getNeighbors = function(entityId)
 	return out;
 }
 
-HKGraph.prototype.getEntity = function(id)
+HKGraph.prototype.getEntity = function (id)
 {
 	if (id === null)
 	{
@@ -475,7 +497,7 @@ HKGraph.prototype.getEntity = function(id)
 	return this.nodes[id] || this.contexts[id] || this.links[id] || this.connectors[id] || this.refs[id] || this.trails[id] || null;
 };
 
-HKGraph.prototype.getEntities = function()
+HKGraph.prototype.getEntities = function ()
 {
 	let out = {};
 
@@ -490,7 +512,7 @@ HKGraph.prototype.getEntities = function()
 }
 
 
-HKGraph.prototype.serialize = function()
+HKGraph.prototype.serialize = function ()
 {
 	let out = {
 		nodes: this.nodes,
@@ -507,8 +529,8 @@ HKGraph.prototype.serialize = function()
 function deserialize(str)
 {
 	let model = new HKGraph();
-    let serialized = str ? JSON.parse(str) : {};
-    
+	let serialized = str ? JSON.parse(str) : {};
+
 	if (serialized.hasOwnProperty('nodes')) model.nodes = serialized.nodes;
 	if (serialized.hasOwnProperty('contexts')) model.contexts = serialized.contexts;
 	if (serialized.hasOwnProperty('connectors')) model.connectors = serialized.connectors;
@@ -523,7 +545,8 @@ function deserialize(str)
 function generateId(model, length)
 {
 	let id;
-	do {
+	do
+	{
 		id = shortid();
 	}
 	while (model.hasId(id));

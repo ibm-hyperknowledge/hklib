@@ -11,6 +11,7 @@ const Connector       = require("./connector");
 const Reference       = require("./reference");
 const Link            = require("./link");
 const Trail           = require("./trail");
+const VirtualContext = require("./virtualcontext");
 
 function _deserialize(input)
 {
@@ -23,6 +24,7 @@ function _deserialize(input)
         case Node.type:
             return new Node(input);
         case Context.type:
+			if(input.endpoint) return new VirtualContext(input);
             return new Context(input);
         case Link.type:
             return new Link(input);

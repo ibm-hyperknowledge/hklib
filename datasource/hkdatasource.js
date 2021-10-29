@@ -118,6 +118,46 @@ HKDatasource.prototype.getInfo = function (callback = () => {})
 }
 
 /**
+ * @callback OperationCallback
+ * @param err An error object that indicate if the operation was succesful or not
+ */
+/**
+ * Get version of the current HKBase
+ *
+ * @param {OperationCallback} callback Response callback
+ */
+ HKDatasource.prototype.getVersion = function (callback = () => {})
+ {
+	 request.get(`${this.url}version`, this.options, (err, res) =>
+	 {
+		 if(!err)
+		 {
+			 if(requestCompletedWithSuccess (res.statusCode))
+			 {
+				 try
+				 {
+					 let data = JSON.parse(res.body);
+					 callback(null, data);
+				 }
+				 catch(exp)
+				 {
+					 callback(exp);
+				 }
+			 }
+			 else
+			 {
+				 callback(`Server responded with ${res.statusCode}. ${res.body}`);
+			 }
+		 }
+		 else
+		 {
+			 callback(err);
+		 }
+	 });
+ }
+
+
+/**
  * Callback function for `addEntities`
  *
  * @callback ListRepositoriesCallback
