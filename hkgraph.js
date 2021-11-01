@@ -73,21 +73,21 @@ HKGraph.prototype.setEntity = function (entity)
 		oldEntity.className = entity.className;
 	}
 
-	if (entity.type === Types.NODE || entity.type === Types.REFERENCE)
+	if (entity.type === Types.NODE || entity.type === Types.REFERENCE || entity.type === Types.CONTEXT)
 	{
 
 		oldEntity.interfaces = entity.interfaces;
 
 	}
 
-  if (entity.type === Types.CONTEXT)
-  {
-    if(entity.endpoint !== undefined && entity.endpoint !== "")
-    {
-      oldEntity.endpoint = entity.endpoint;
-    }
-    oldEntity.interfaces = entity.interfaces;
-  }
+  // if (entity.type === Types.CONTEXT)
+  // {
+  //   if(entity.properties !== undefined &&  entity.properties.endpoint !== undefined && entity.properties.endpoint !== "")
+  //   {
+  //     oldEntity.endpoint = entity.endpoint;
+  //   }
+  //   oldEntity.interfaces = entity.interfaces;
+  // }
 
 	// Update parent
 

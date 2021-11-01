@@ -15,7 +15,6 @@ function VirtualContext(id, endpoint=null, parent=null)
 		let vContext = arguments[0];
 		this.id = vContext.id || null;
 		this.parent = vContext.parent || null;
-		this.endpoint = vContext.endpoint || null;
 		if (vContext.properties)
 		{
 			this.properties = vContext.properties;
@@ -32,7 +31,6 @@ function VirtualContext(id, endpoint=null, parent=null)
 	else
 	{
 		this.id = id || null;
-		this.endpoint = endpoint || null;
 		this.parent = parent || null;
 		this.properties = {"readonly": true, "endpoint": endpoint};
 	}
@@ -51,7 +49,7 @@ function isValid(entity)
 	{
 		if (entity.hasOwnProperty('type') && entity.type === Types.CONTEXT &&
 			entity.hasOwnProperty('id') && entity.hasOwnProperty('parent') &&
-			entity.hasOwnProperty('endpoint'))
+			entity.properties !== undefined && entity.properties.hasOwnProperty('endpoint'))
 		{
 			isValid = true;
 		}
