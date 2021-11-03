@@ -80,15 +80,6 @@ HKGraph.prototype.setEntity = function (entity)
 
 	}
 
-  // if (entity.type === Types.CONTEXT)
-  // {
-  //   if(entity.properties !== undefined &&  entity.properties.endpoint !== undefined && entity.properties.endpoint !== "")
-  //   {
-  //     oldEntity.endpoint = entity.endpoint;
-  //   }
-  //   oldEntity.interfaces = entity.interfaces;
-  // }
-
 	// Update parent
 
 	// Clean old entity

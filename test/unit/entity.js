@@ -45,7 +45,6 @@ describe("Contexts unit tests:", () => {
 
 		console.log(vContext);
 		HKDatasource.saveEntities([vContext], (err, data)=> {
-			console.log(data);
 			if (err) throw err;
 			done();
 
