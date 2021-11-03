@@ -8,7 +8,7 @@
 const Types = require("./types");
 const Context = require("./context");
 
-function VirtualContext(id, endpoint=null, parent=null)
+function VirtualContext(id, src=null, parent=null)
 {
 	if (arguments[0] && typeof arguments[0] === "object")
 	{
@@ -32,7 +32,7 @@ function VirtualContext(id, endpoint=null, parent=null)
 	{
 		this.id = id || null;
 		this.parent = parent || null;
-		this.properties = {"readonly": true, "endpoint": endpoint};
+		this.properties = {"readonly": true, "src": src};
 	}
 
 	this.type = Types.CONTEXT;
@@ -49,7 +49,7 @@ function isValid(entity)
 	{
 		if (entity.hasOwnProperty('type') && entity.type === Types.CONTEXT &&
 			entity.hasOwnProperty('id') && entity.hasOwnProperty('parent') &&
-			entity.properties !== undefined && entity.properties.hasOwnProperty('endpoint'))
+			entity.properties !== undefined && entity.properties.hasOwnProperty('src'))
 		{
 			isValid = true;
 		}
