@@ -31,6 +31,10 @@
     {
       "name": "Sandro Rama Fiorini",
       "email": "srfiorini@ibm.com"
+    },
+    {
+      "name": "Henrique Chaves Magalhães de Menezes",
+      "email": "h.chaves@ibm.com"
     }
   ],
   "dependencies": {
