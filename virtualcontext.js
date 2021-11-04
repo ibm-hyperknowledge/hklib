@@ -32,7 +32,7 @@ function VirtualContext(id, src=null, parent=null)
 	{
 		this.id = id || null;
 		this.parent = parent || null;
-		this.properties = {"readonly": true, "src": src};
+		this.properties = {"readonly": true, "virtualSrc": src};
 	}
 
 	this.type = Types.CONTEXT;
@@ -49,7 +49,7 @@ function isValid(entity)
 	{
 		if (entity.hasOwnProperty('type') && entity.type === Types.CONTEXT &&
 			entity.hasOwnProperty('id') && entity.hasOwnProperty('parent') &&
-			entity.properties !== undefined && entity.properties.hasOwnProperty('src'))
+			entity.properties !== undefined && entity.properties.hasOwnProperty('virtualSrc'))
 		{
 			isValid = true;
 		}
