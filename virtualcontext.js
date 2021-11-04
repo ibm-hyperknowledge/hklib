@@ -35,6 +35,8 @@ function VirtualContext(id, virtualSrc=null, parent=null)
 		this.properties = {"readonly": true, "virtualsrc": virtualSrc};
 	}
 
+  this.type = Types.CONTEXT;
+
 }
 
 VirtualContext.prototype = Object.create(Context.prototype);
