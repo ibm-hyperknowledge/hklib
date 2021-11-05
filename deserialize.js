@@ -5,38 +5,38 @@
 
 "use strict";
 
-const Node            = require("./node");
-const Context         = require("./context");
-const Connector       = require("./connector");
-const Reference       = require("./reference");
-const Link            = require("./link");
-const Trail           = require("./trail");
+const Node = require("./node");
+const Context = require("./context");
+const Connector = require("./connector");
+const Reference = require("./reference");
+const Link = require("./link");
+const Trail = require("./trail");
 const VirtualContext = require("./virtualcontext");
 
 function _deserialize(input)
 {
-    if( !input || !input.type)
-    {
-        return null;
-    }
-    switch(input.type)
-    {
-        case Node.type:
-            return new Node(input);
-        case Context.type:
-			if(input.endpoint) return new VirtualContext(input);
-            return new Context(input);
-        case Link.type:
-            return new Link(input);
-        case Reference.type:
-            return new Reference(input);
-        case Connector.type:
-            return new Connector(input);
-        case Trail.type:
-            return new Trail(input);
-        default:
-            return null;
-    }
+  if (!input || !input.type)
+  {
+    return null;
+  }
+  switch (input.type)
+  {
+    case Node.type:
+      return new Node(input);
+    case Context.type:
+      if (input.properties !== undefined && input.properties.virtualsrc !== undefined) return new VirtualContext(input);
+      return new Context(input);
+    case Link.type:
+      return new Link(input);
+    case Reference.type:
+      return new Reference(input);
+    case Connector.type:
+      return new Connector(input);
+    case Trail.type:
+      return new Trail(input);
+    default:
+      return null;
+  }
 }
 
 /**
@@ -47,30 +47,30 @@ function _deserialize(input)
  */
 function deserialize(serialized)
 {
-    if(typeof serialized === "string")
-    {
-        serialized = JSON.parse(serialized);
-    }
+  if (typeof serialized === "string")
+  {
+    serialized = JSON.parse(serialized);
+  }
 
-    if(Array.isArray(serialized))
-    {
-        let out = [];
+  if (Array.isArray(serialized))
+  {
+    let out = [];
 
-        for(let i = 0; i < serialized.length; i++)
-        {
-            let e = _deserialize(serialized[i]);
-            if(e)
-            {
-                out.push(e);
-            }
-        }
-        return out;
-    }
-    else if(typeof serialized === "object")
+    for (let i = 0; i < serialized.length; i++)
     {
-        return _deserialize(serialized);
+      let e = _deserialize(serialized[i]);
+      if (e)
+      {
+        out.push(e);
+      }
     }
-    return null;
+    return out;
+  }
+  else if (typeof serialized === "object")
+  {
+    return _deserialize(serialized);
+  }
+  return null;
 }
 
 module.exports = deserialize;
