@@ -7,6 +7,9 @@
 
 const ObserverClient = require ('./observerclient')
 const amqp           = require ('amqp-connection-manager');
+const request        = require("request");
+const Promisify      = require("ninja-util/promisify");
+
 
 async function createChannel ()
 {
@@ -62,8 +65,10 @@ class RabbitMQObserverClient extends ObserverClient
 		this._exchangeName      = info.exchangeName;
 		this._exchangeOptions   = info.exchangeOptions;
 		this._certificate       = info.certificate || options.certificate;
+		this._hkbaseObserverUrl = info.hkbaseObserverUrl;
 		this._connectionManager = null;
 		this._channelWrapper    = null;
+		this._hkbaseObserverConfiguration = options.hkbaseObserverConfiguration;
 	}
 
 	static getType ()
@@ -75,11 +80,26 @@ class RabbitMQObserverClient extends ObserverClient
 	{
 		try
 		{
+			let queueName = '';
+			
+			// if specialized configuration is setup
+			if(this._hkbaseObserverUrl  && this._hkbaseObserverConfiguration)
+			{
+				// get specialized queueName
+				let params =
+				{
+					headers: {"content-type": "application/json"},
+					body: JSON.stringify(this._hkbaseObserverConfiguration)
+				}
+				let response = await Promisify.exec(request, request.post, this._hkbaseObserverUrl, params);
+				queueName = response.observerId;
+			}
+
 			await connect.call (this);
 			this._channelWrapper.addSetup(async (channel) =>
 			{
-				const q = await channel.assertQueue ('', {exclusive: true});
-				channel.bindQueue (q.queue, this._exchangeName, '');
+				const q = await channel.assertQueue (queueName, {exclusive: true});
+				channel.bindQueue (q.queue, this._exchangeName, queueName);
 				console.log(`Bound to exchange "${this._exchangeName}"`);
 				console.log(" [*] Waiting for messages in %s.", q.queue);
 
