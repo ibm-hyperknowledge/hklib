@@ -65,10 +65,10 @@ class RabbitMQObserverClient extends ObserverClient
 		this._exchangeName      = info.exchangeName;
 		this._exchangeOptions   = info.exchangeOptions;
 		this._certificate       = info.certificate || options.certificate;
-		this._hkbaseObserverUrl = info.hkbaseObserverUrl;
+		this._hkbaseObserverServiceUrl = info.hkbaseObserverServiceUrl;
 		this._connectionManager = null;
 		this._channelWrapper    = null;
-		this._hkbaseObserverConfiguration = options.hkbaseObserverConfiguration;
+		this._hkbaseObserverConfiguration = info.hkbaseObserverConfiguration || options.hkbaseObserverConfiguration;
 	}
 
 	static getType ()
@@ -83,7 +83,7 @@ class RabbitMQObserverClient extends ObserverClient
 			let queueName = '';
 			
 			// if specialized configuration is setup
-			if(this._hkbaseObserverUrl  && this._hkbaseObserverConfiguration)
+			if(this._hkbaseObserverServiceUrl  && this._hkbaseObserverConfiguration)
 			{
 				// get specialized queueName
 				let params =
@@ -91,14 +91,13 @@ class RabbitMQObserverClient extends ObserverClient
 					headers: {"content-type": "application/json"},
 					body: JSON.stringify(this._hkbaseObserverConfiguration)
 				}
-				let response = await Promisify.exec(request, request.post, this._hkbaseObserverUrl, params);
-				queueName = response.observerId;
+				let response = await Promisify.exec(request, request.post, this._hkbaseObserverServiceUrl + '/observer', params);
+				queueName = JSON.parse(response.body).observerId;
 			}
-
 			await connect.call (this);
 			this._channelWrapper.addSetup(async (channel) =>
 			{
-				const q = await channel.assertQueue (queueName, {exclusive: true});
+				const q = await channel.assertQueue (queueName, {exclusive: false});
 				channel.bindQueue (q.queue, this._exchangeName, queueName);
 				console.log(`Bound to exchange "${this._exchangeName}"`);
 				console.log(" [*] Waiting for messages in %s.", q.queue);
