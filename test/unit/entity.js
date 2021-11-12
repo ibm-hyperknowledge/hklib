@@ -61,7 +61,7 @@ describe("Contexts unit tests:", () => {
 			if (err) throw err;
 
       const payload = {
-        "specificTypes": [],
+        "hkTypes": [],
         "nested": false,
         "includeContextOnResults": true
       }
@@ -85,7 +85,7 @@ describe("Contexts unit tests:", () => {
       if (err) throw err;
 
       const payload = {
-        "specificTypes": [],
+        "hkTypes": [],
         "nested": false,
         "includeContextOnResults": false
       }
@@ -109,7 +109,7 @@ describe("Contexts unit tests:", () => {
       if (err) throw err;
 
       const payload = {
-        "specificTypes": ["node"],
+        "hkTypes": ["node"],
         "nested": false,
         "includeContextOnResults": false
       }
