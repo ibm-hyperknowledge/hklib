@@ -504,6 +504,56 @@ HKDatasource.prototype.fetchContext = function(context, callback = () => {})
 }
 
 /**
+ * Fetch entities from a context
+ *
+ * @param {string} context The context id to retrieve their nested entities. May be null to get the `body` context.
+ * @param {object} payload A dictionary containing options when returning the entities from the context.
+ * @param {GetEntitiesCallback} callback Callback with the entities
+ */
+
+ HKDatasource.prototype.getContextChildrenLazy = function(context, payload, callback = () => {})
+ {
+   let url = `${this.url}repository/${this.graphName}/context/${context}/lazy`;
+   
+   Object.assign(payload, this.options);
+   const options = {
+    method: 'POST',
+    url: url,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: payload,
+    json: true
+  };
+   
+   request(options, (err, res) =>
+   { 
+     if(!err)
+     {
+       if(requestCompletedWithSuccess (res.statusCode))
+       {
+         try
+         {
+           callback(null, res.body);
+         }
+         catch(exp)
+         {
+           callback(exp);
+         }
+       }
+       else
+       {
+         callback(`Server responded with ${res.statusCode}. ${res.body}`);
+       }
+     }
+     else
+     {
+       callback(err);
+     }
+   });
+ }
+
+/**
  * Filter entities using CSS pattern `(TODO: document it better)`
  *
  * Examples:
