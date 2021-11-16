@@ -114,7 +114,7 @@ class RestObserverClient extends ObserverClient
 								console.log('options', options);
 								let response = await request (`${this._hkbaseObserverServiceUrl}/observer`, options);
 								console.log('response', response);
-								this._observerId = JSON.parse(response.body).observerId;
+								this._observerId = JSON.parse(response).observerId;
 								console.log('observerId', this._observerId);
 							}
 							else
