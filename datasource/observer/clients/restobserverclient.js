@@ -104,6 +104,7 @@ class RestObserverClient extends ObserverClient
 							console.log('hkbaseObserverConfiguration', this._hkbaseObserverConfiguration);
 							if(this._hkbaseObserverServiceUrl && this._hkbaseObserverConfiguration)
 							{
+								this._hkbaseObserverConfiguration.callbackEndpoint = listeningPath;
 								let options = {
 									method: 'POST',
 									body: JSON.stringify(this._hkbaseObserverConfiguration),
