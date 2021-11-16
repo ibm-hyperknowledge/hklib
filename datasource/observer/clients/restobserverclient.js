@@ -69,6 +69,9 @@ class RestObserverClient extends ObserverClient
 		this._webServer = express ();
 		this._port      = options.port || 0;
 		this._address   = options.address || DEFAULT_ADDR;
+		this._hkbaseObserverServiceUrl = info.hkbaseObserverServiceUrl || options.hkbaseObserverConfiguration;
+		this._hkbaseObserverConfiguration = info.hkbaseObserverConfiguration || options.hkbaseObserverConfiguration;
+		this._observerId = null;
 
 		if (!this._baseUrl.endsWith('/'))
 		{
@@ -95,7 +98,24 @@ class RestObserverClient extends ObserverClient
 						try
 						{
 							let listeningPath = encodeURIComponent(`${this._address}:${this._port}`);
-							await request (`${this._baseUrl}observer/${listeningPath}`, {method: 'put'})
+							if(this._hkbaseObserverServiceUrl && this._hkbaseObserverConfiguration)
+							{
+								let options = {
+									method: 'POST',
+									body: JSON.stringify(this._hkbaseObserverConfiguration),
+									headers: {"content-type": "application/json"},
+								};
+								console.log('url', `${this._hkbaseObserverServiceUrl}/observer`);
+								console.log('options', options);
+								let response = await request (`${this._hkbaseObserverServiceUrl}/observer`, options);
+								console.log('response', response);
+								this._observerId = JSON.parse(response.body).observerId;
+								console.log('observerId', this._observerId);
+							}
+							else
+							{
+								await request (`${this._baseUrl}observer/${listeningPath}`, {method: 'put'});
+							}
 							resolve ();
 						}
 						catch (err)
