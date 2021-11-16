@@ -46,16 +46,16 @@ function setupEndpoints ()
 		res.sendStatus(200);
 	}
 
-	this._webServer.put ('/repository/:repoName',
+	this._webServer.post ('/repository/:repoName',
 		(req, res) => repoCb (req, res, Notification.action.CREATE));
 
 	this._webServer.delete ('/repository/:repoName',
 		(req, res) => repoCb (req, res, Notification.action.DELETE));
 
-	this._webServer.put ('/repository/:repoName/entity',
+	this._webServer.post ('/repository/:repoName/entity',
 		(req, res) => entitiesCb (req, res, Notification.action.CREATE));
 
-	this._webServer.post ('/repository/:repoName/entity',
+	this._webServer.put ('/repository/:repoName/entity',
 		(req, res) => entitiesCb (req, res, Notification.action.UPDATE));
 
 	this._webServer.delete ('/repository/:repoName/entity',
