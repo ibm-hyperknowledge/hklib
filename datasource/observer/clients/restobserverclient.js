@@ -73,7 +73,7 @@ class RestObserverClient extends ObserverClient
 		this._address   = options.address || DEFAULT_ADDR;
 		console.log('info', info);
 		console.log('options', options);
-		this._hkbaseObserverServiceUrl = options.hkbaseObserverConfiguration;
+		this._hkbaseObserverServiceUrl = info.hkbaseObserverConfiguration;
 		this._hkbaseObserverConfiguration = info.hkbaseObserverConfiguration || options.hkbaseObserverConfiguration;
 		this._observerId = null;
 
