@@ -99,7 +99,7 @@ class RestObserverClient extends ObserverClient
 						this._port = server.address().port;
 						try
 						{
-							let listeningPath = encodeURIComponent(`${this._address}:${this._port}`);
+							let listeningPath = `${this._address}:${this._port}`;
 							console.log('hkbaseObserverServiceUrl', this._hkbaseObserverServiceUrl);
 							console.log('hkbaseObserverConfiguration', this._hkbaseObserverConfiguration);
 							if(this._hkbaseObserverServiceUrl && this._hkbaseObserverConfiguration)
@@ -119,7 +119,7 @@ class RestObserverClient extends ObserverClient
 							}
 							else
 							{
-								await request (`${this._baseUrl}observer/${listeningPath}`, {method: 'put'});
+								await request (`${this._baseUrl}observer/${encodeURIComponent(listeningPath)}`, {method: 'put'});
 							}
 							resolve ();
 						}
