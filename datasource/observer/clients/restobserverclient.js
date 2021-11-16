@@ -24,6 +24,7 @@ function setupEndpoints ()
 				repository: req.params.repoName
 			}
 		};
+		console.log('notification', notification);
 		this.notify (notification);
 
 		res.sendStatus(200);
@@ -39,6 +40,7 @@ function setupEndpoints ()
 				entities: req.body
 			}
 		};
+		console.log('notification', notification);
 		this.notify (notification);
 
 		res.sendStatus(200);
