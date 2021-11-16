@@ -69,6 +69,8 @@ class RestObserverClient extends ObserverClient
 		this._webServer = express ();
 		this._port      = options.port || 0;
 		this._address   = options.address || DEFAULT_ADDR;
+		console.log('info', info);
+		console.log('options', options);
 		this._hkbaseObserverServiceUrl = info.hkbaseObserverServiceUrl || options.hkbaseObserverConfiguration;
 		this._hkbaseObserverConfiguration = info.hkbaseObserverConfiguration || options.hkbaseObserverConfiguration;
 		this._observerId = null;
@@ -98,6 +100,8 @@ class RestObserverClient extends ObserverClient
 						try
 						{
 							let listeningPath = encodeURIComponent(`${this._address}:${this._port}`);
+							console.log('hkbaseObserverServiceUrl', this._hkbaseObserverServiceUrl);
+							console.log('hkbaseObserverConfiguration', this._hkbaseObserverConfiguration);
 							if(this._hkbaseObserverServiceUrl && this._hkbaseObserverConfiguration)
 							{
 								let options = {
