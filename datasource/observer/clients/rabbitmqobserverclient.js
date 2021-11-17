@@ -65,8 +65,9 @@ class RabbitMQObserverClient extends ObserverClient
 		this._exchangeName      = info.exchangeName;
 		this._exchangeOptions   = info.exchangeOptions;
 		this._certificate       = info.certificate || options.certificate;
-		this._hkbaseObserverServiceUrl = info.hkbaseObserverServiceUrl;
-		this._hkbaseObserverConfiguration = info.hkbaseObserverConfiguration || options.hkbaseObserverConfiguration;
+		let isObserverService = options.isObserverService || false;
+		this._hkbaseObserverServiceUrl = !isObserverService ? info.hkbaseObserverServiceUrl : undefined;
+		this._hkbaseObserverConfiguration = !isObserverService ? info.hkbaseObserverConfiguration || options.hkbaseObserverConfiguration : undefined;
 		this._connectionManager = null;
 		this._channelWrapper    = null;
 	}
