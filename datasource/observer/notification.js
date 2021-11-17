@@ -15,3 +15,9 @@ module.exports.action = {
 	DELETE: 'delete',
 	UPDATE: 'update'
 };
+
+let httpMethodByAction = {};
+httpMethodByAction[CREATE] = 'POST'; 
+httpMethodByAction[DELETE] = 'DELETE'; 
+httpMethodByAction[UPDATE] = 'PUT';
+module.exports.httpMethodByAction;
