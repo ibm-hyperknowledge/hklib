@@ -18,7 +18,8 @@ async function createChannel ()
 		this._channelWrapper = this._connectionManager.createChannel ();
 		this._channelWrapper.addSetup((channel) =>
 		{
-			channel.assertQueue(this._exchangeName, this._exchangeOptions);
+			const q = await channel.assertQueue ('', {exclusive: false});
+			this._queueName = q.queue;
 			channel.on ('error', console.error);
 			channel.on ('close', () => this.init());
 		});
@@ -63,6 +64,7 @@ class RabbitMQObserverClient extends ObserverClient
 		super ();
 		this._broker            = info.broker;
 		this._exchangeName      = info.exchangeName;
+		this._queueName 				= info.queueName;
 		this._exchangeOptions   = info.exchangeOptions;
 		this._certificate       = info.certificate || options.certificate;
 		let isObserverService = options.isObserverService || false;
@@ -81,7 +83,7 @@ class RabbitMQObserverClient extends ObserverClient
 	{
 		try
 		{
-			let queueName = this._exchangeName;
+			let queueName = this._queueName;
 			
 			// if specialized configuration is set up
 			if(this._hkbaseObserverServiceUrl  && this._hkbaseObserverConfiguration)
@@ -109,7 +111,7 @@ class RabbitMQObserverClient extends ObserverClient
 					try
 					{
 						let notification = JSON.parse (msg.content.toString());
-						if(queueName === '' || msg.fields.routingKey === queueName) 
+						if(queueName === this._queueName || msg.fields.routingKey === queueName) 
 						{
 							this.notify (notification);
 						}
