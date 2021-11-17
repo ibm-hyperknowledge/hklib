@@ -65,10 +65,11 @@ class RabbitMQObserverClient extends ObserverClient
 		this._exchangeName      = info.exchangeName;
 		this._exchangeOptions   = info.exchangeOptions;
 		this._certificate       = info.certificate || options.certificate;
-		this._hkbaseObserverServiceUrl = info.hkbaseObserverServiceUrl;
+		let ignoreHKBaseObserverService = info.usesHKbaseObserverService || options.usesHKbaseObserverService || false;
+		this._hkbaseObserverServiceUrl = !ignoreHKBaseObserverService ? info.hkbaseObserverServiceUrl : null;
+		this._hkbaseObserverConfiguration = !ignoreHKBaseObserverService ? info.hkbaseObserverConfiguration || options.hkbaseObserverConfiguration : null;
 		this._connectionManager = null;
 		this._channelWrapper    = null;
-		this._hkbaseObserverConfiguration = info.hkbaseObserverConfiguration || options.hkbaseObserverConfiguration;
 	}
 
 	static getType ()
@@ -92,6 +93,7 @@ class RabbitMQObserverClient extends ObserverClient
 					body: JSON.stringify(this._hkbaseObserverConfiguration)
 				}
 				let response = await Promisify.exec(request, request.post, this._hkbaseObserverServiceUrl + '/observer', params);
+				if(response.statusCode > 300 || response.statusCode < 200) throw response.body;				
 				queueName = JSON.parse(response.body).observerId;
 			}
 			await connect.call (this);

@@ -69,9 +69,10 @@ class RestObserverClient extends ObserverClient
 		this._webServer = express ();
 		this._port      = options.port || 0;
 		this._address   = options.address || DEFAULT_ADDR;
-		this._hkbaseObserverServiceUrl = info.hkbaseObserverServiceUrl;
-		this._hkbaseObserverConfiguration = info.hkbaseObserverConfiguration || options.hkbaseObserverConfiguration;
 		this._observerId = null;
+		let ignoreHKBaseObserverService = info.usesHKbaseObserverService || options.usesHKbaseObserverService || false;
+		this._hkbaseObserverServiceUrl = !ignoreHKBaseObserverService ? info.hkbaseObserverServiceUrl : null;
+		this._hkbaseObserverConfiguration = !ignoreHKBaseObserverService ? info.hkbaseObserverConfiguration || options.hkbaseObserverConfiguration : null;
 
 		if (!this._baseUrl.endsWith('/'))
 		{
