@@ -16,7 +16,7 @@ async function createChannel ()
 	try
 	{
 		this._channelWrapper = this._connectionManager.createChannel ();
-		this._channelWrapper.addSetup((channel) =>
+		this._channelWrapper.addSetup(async (channel) =>
 		{
 			const q = await channel.assertQueue ('', {exclusive: false});
 			this._queueName = q.queue;
