@@ -86,6 +86,7 @@ class RabbitMQObserverClient extends ObserverClient
 			// if specialized configuration is set up
 			if(this._hkbaseObserverServiceUrl  && this._hkbaseObserverConfiguration)
 			{
+				console.info('registering as observer of hkbase observer service ...');
 				// get specialized queueName
 				let params =
 				{
@@ -95,6 +96,10 @@ class RabbitMQObserverClient extends ObserverClient
 				let response = await Promisify.exec(request, request.post, this._hkbaseObserverServiceUrl + '/observer', params);
 				if(response.statusCode > 300 || response.statusCode < 200) throw response.body;				
 				queueName = JSON.parse(response.body).observerId;
+			}
+			else
+			{
+				console.info('registering as observer of hkbase ...');
 			}
 			await connect.call (this);
 			this._channelWrapper.addSetup(async (channel) =>

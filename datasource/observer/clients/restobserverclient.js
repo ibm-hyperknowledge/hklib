@@ -107,11 +107,13 @@ class RestObserverClient extends ObserverClient
 									body: JSON.stringify(this._hkbaseObserverConfiguration),
 									headers: {"content-type": "application/json"},
 								};
+								console.info('registering as observer of hkbase observer service ...');
 								let response = await request (`${this._hkbaseObserverServiceUrl}/observer`, options);
 								this._observerId = JSON.parse(response).observerId;
 							}
 							else
 							{
+								console.info('registering as observer of hkbase ...');
 								await request (`${this._baseUrl}observer/${encodeURIComponent(listeningPath)}`, {method: 'put'});
 							}
 							resolve ();
