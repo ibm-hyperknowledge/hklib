@@ -9,17 +9,17 @@ const object = {
 	REPOSITORY: 'repository',
 	ENTITIES: 'entities'
 };
-module.exports.object;
+module.exports.object = object;
 
 const action = {
 	CREATE: 'create',
 	DELETE: 'delete',
 	UPDATE: 'update'
 };
-module.exports.action;
+module.exports.action = action;
 
 const httpMethodByAction = {};
 httpMethodByAction[action.CREATE] = 'POST';
 httpMethodByAction[action.DELETE] = 'DELETE';
 httpMethodByAction[action.UPDATE] = 'PUT';
-module.exports.httpMethodByAction;
+module.exports.httpMethodByAction = httpMethodByAction;
