@@ -24,7 +24,7 @@ function setupEndpoints ()
 				repository: req.params.repoName
 			}
 		};
-		console.log(notification);
+		// console.debug(notification);
 		this.notify (notification);
 		res.sendStatus(200);
 	}
@@ -39,7 +39,7 @@ function setupEndpoints ()
 				entities: req.body
 			}
 		};
-		console.log(notification);
+		// console.log(notification);
 		this.notify (notification);
 		res.sendStatus(200);
 	}
@@ -107,13 +107,13 @@ class RestObserverClient extends ObserverClient
 									body: JSON.stringify(this._hkbaseObserverConfiguration),
 									headers: {"content-type": "application/json"},
 								};
-								console.info('registering as observer of hkbase observer service ...');
+								console.info('registering as observer of hkbase observer service');
 								let response = await request (`${this._hkbaseObserverServiceUrl}/observer`, options);
 								this._observerId = JSON.parse(response).observerId;
 							}
 							else
 							{
-								console.info('registering as observer of hkbase ...');
+								console.info('registering as observer of hkbase');
 								await request (`${this._baseUrl}observer/${encodeURIComponent(listeningPath)}`, {method: 'put'});
 							}
 							resolve ();
