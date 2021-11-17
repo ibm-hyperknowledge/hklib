@@ -24,7 +24,6 @@ function setupEndpoints ()
 				repository: req.params.repoName
 			}
 		};
-		console.log('notification', notification);
 		this.notify (notification);
 
 		res.sendStatus(200);
@@ -40,7 +39,6 @@ function setupEndpoints ()
 				entities: req.body
 			}
 		};
-		console.log('notification', notification);
 		this.notify (notification);
 
 		res.sendStatus(200);
@@ -71,8 +69,6 @@ class RestObserverClient extends ObserverClient
 		this._webServer = express ();
 		this._port      = options.port || 0;
 		this._address   = options.address || DEFAULT_ADDR;
-		console.log('info', info);
-		console.log('options', options);
 		this._hkbaseObserverServiceUrl = info.hkbaseObserverConfiguration;
 		this._hkbaseObserverConfiguration = info.hkbaseObserverConfiguration || options.hkbaseObserverConfiguration;
 		this._observerId = null;
@@ -102,8 +98,6 @@ class RestObserverClient extends ObserverClient
 						try
 						{
 							let listeningPath = `${this._address}:${this._port}`;
-							console.log('hkbaseObserverServiceUrl', this._hkbaseObserverServiceUrl);
-							console.log('hkbaseObserverConfiguration', this._hkbaseObserverConfiguration);
 							if(this._hkbaseObserverServiceUrl && this._hkbaseObserverConfiguration)
 							{
 								this._hkbaseObserverConfiguration.callbackEndpoint = listeningPath;
@@ -112,12 +106,8 @@ class RestObserverClient extends ObserverClient
 									body: JSON.stringify(this._hkbaseObserverConfiguration),
 									headers: {"content-type": "application/json"},
 								};
-								console.log('url', `${this._hkbaseObserverServiceUrl}/observer`);
-								console.log('options', options);
 								let response = await request (`${this._hkbaseObserverServiceUrl}/observer`, options);
-								console.log('response', response);
 								this._observerId = JSON.parse(response).observerId;
-								console.log('observerId', this._observerId);
 							}
 							else
 							{
@@ -129,12 +119,12 @@ class RestObserverClient extends ObserverClient
 						{
 							if (err.statusCode && err.statusCode >= 400 && err.statusCode < 500)
 							{
-								console.log('observer already registered');
+								console.warn('observer already registered');
 								resolve ();
 							}
 							else
 							{
-								console.log(err);
+								console.error(err);
 								reject (err);
 							}
 						}

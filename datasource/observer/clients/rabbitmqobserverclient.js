@@ -19,14 +19,14 @@ async function createChannel ()
 		this._channelWrapper.addSetup((channel) =>
 		{
 			channel.assertQueue(this._exchangeName, this._exchangeOptions);
-			channel.on ('error', console.log);
+			channel.on ('error', console.error);
 			channel.on ('close', () => this.init());
 		});
 		return Promise.resolve ();
 	}
 	catch (err)
 	{
-		console.log(err);
+		console.error(err);
 		return Promise.reject();
 	}
 }
@@ -43,13 +43,13 @@ async function connect ()
 
 		this._connectionManager = amqp.connect (this._broker, {connectionOptions: options});
 		await this._connectionManager._connectPromise;
-		this._connectionManager._currentConnection.connection.on ('error', console.log);
+		this._connectionManager._currentConnection.connection.on ('error', console.error);
 
 		await createChannel.call(this);
 	}
 	catch (err)
 	{
-		console.log(err);
+		console.error(err);
 		this._connectionManager = null;
 		return Promise.reject(err);
 	}
@@ -109,20 +109,19 @@ class RabbitMQObserverClient extends ObserverClient
 						let notification = JSON.parse (msg.content.toString());
 						if(queueName === '' || msg.fields.routingKey === queueName) 
 						{
-							console.log(notification);
 							this.notify (notification);
 						}
 					}
 					catch (err)
 					{
-						console.log (err);
+						console.error (err);
 					}
 				}, {noAck: true});
 			});
 		}			
 		catch (err)
 		{
-			console.log(err);
+			console.error(err);
 		}
 	}
 }
