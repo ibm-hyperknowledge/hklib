@@ -81,7 +81,7 @@ class RabbitMQObserverClient extends ObserverClient
 	{
 		try
 		{
-			let queueName = '';
+			let queueName = this._exchangeName;
 			
 			// if specialized configuration is set up
 			if(this._hkbaseObserverServiceUrl  && this._hkbaseObserverConfiguration)
