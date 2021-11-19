@@ -1497,4 +1497,6 @@ function requestCompletedWithSuccess (code)
 	return '';
  }
 
+HKDatasource.prototype.getAuthToken = HKDatasource.getAuthToken;
+
 module.exports = HKDatasource;
