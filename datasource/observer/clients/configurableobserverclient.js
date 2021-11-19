@@ -48,6 +48,7 @@ class ConfigurableObserverClient extends ObserverClient
       {
         let response = await Promisify.exec(request, request.post, `${this._observerServiceUrl}/observer/${observerId}/heartbeat`);
         if (response.statusCode > 300 || response.statusCode < 200) throw response.body;
+        this.setHeartbeat(observerId);
       }, this.heartbeatInterval);
     }
   }
