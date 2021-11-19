@@ -8,7 +8,7 @@
 const express        = require ('express');
 const bodyParser     = require ('body-parser');
 const request        = require ('request-promise-native');
-const ObserverClient = require ('./observerclient')
+const ObserverClient = require ('./configurableobserverclient')
 const Notification   = require ('../notification');
 
 const DEFAULT_ADDR   = 'http://localhost';
@@ -62,17 +62,15 @@ function setupEndpoints ()
 
 class RestObserverClient extends ObserverClient
 {
-	constructor (info, options)
+	constructor (info, options, observerServiceParams)
 	{
-		super ();
+		super (observerServiceParams);
 		this._baseUrl   = options.baseUrl;
 		this._webServer = express ();
 		this._port      = options.port || 0;
 		this._address   = options.address || DEFAULT_ADDR;
 		this._observerId = null;
-		let isObserverService = options.isObserverService || false;
-		this._hkbaseObserverServiceUrl = !isObserverService ? info.hkbaseObserverServiceUrl : undefined;
-		this._hkbaseObserverConfiguration = !isObserverService ? info.hkbaseObserverConfiguration || options.hkbaseObserverConfiguration : undefined;
+		
 
 		if (!this._baseUrl.endsWith('/'))
 		{
@@ -99,17 +97,10 @@ class RestObserverClient extends ObserverClient
 						try
 						{
 							let listeningPath = `${this._address}:${this._port}`;
-							if(this._hkbaseObserverServiceUrl && this._hkbaseObserverConfiguration)
+							if(this.usesSpecializedObserver())
 							{
-								this._hkbaseObserverConfiguration.callbackEndpoint = listeningPath;
-								let options = {
-									method: 'POST',
-									body: JSON.stringify(this._hkbaseObserverConfiguration),
-									headers: {"content-type": "application/json"},
-								};
-								console.info('registering as observer of hkbase observer service');
-								let response = await request (`${this._hkbaseObserverServiceUrl}/observer`, options);
-								this._observerId = JSON.parse(response).observerId;
+								this._observerConfiguration.callbackEndpoint = listeningPath;
+								this._observerId = await this.registerObserver();
 							}
 							else
 							{

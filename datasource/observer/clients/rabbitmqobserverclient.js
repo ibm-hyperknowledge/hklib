@@ -5,7 +5,7 @@
 
 'use strict';
 
-const ObserverClient = require ('./observerclient')
+const ObserverClient = require ('./configurableobserverclient')
 const amqp           = require ('amqp-connection-manager');
 const request        = require("request");
 const Promisify      = require("ninja-util/promisify");
@@ -58,16 +58,13 @@ async function connect ()
 
 class RabbitMQObserverClient extends ObserverClient
 {
-	constructor (info, options)
+	constructor (info, options, observerServiceParams)
 	{
-		super ();
+		super (observerServiceParams);
 		this._broker            = info.broker;
 		this._exchangeName      = info.exchangeName;
 		this._exchangeOptions   = info.exchangeOptions;
 		this._certificate       = info.certificate || options.certificate;
-		let isObserverService = options.isObserverService || false;
-		this._hkbaseObserverServiceUrl = !isObserverService ? info.hkbaseObserverServiceUrl : undefined;
-		this._hkbaseObserverConfiguration = !isObserverService ? info.hkbaseObserverConfiguration || options.hkbaseObserverConfiguration : undefined;
 		this._connectionManager = null;
 		this._channelWrapper    = null;
 	}
@@ -83,19 +80,11 @@ class RabbitMQObserverClient extends ObserverClient
 		{
 			let queueName = '';
 			
-			// if specialized configuration is set up
-			if(this._hkbaseObserverServiceUrl  && this._hkbaseObserverConfiguration)
+			// if specialized configuration is set up, get specialized queueName
+			if(this.usesSpecializedObserver())
 			{
 				console.info('registering as observer of hkbase observer service');
-				// get specialized queueName
-				let params =
-				{
-					headers: {"content-type": "application/json"},
-					body: JSON.stringify(this._hkbaseObserverConfiguration)
-				}
-				let response = await Promisify.exec(request, request.post, this._hkbaseObserverServiceUrl + '/observer', params);
-				if(response.statusCode > 300 || response.statusCode < 200) throw response.body;				
-				queueName = JSON.parse(response.body).observerId;
+				queueName = await this.registerObserver();
 			}
 			else
 			{
