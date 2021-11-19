@@ -6,6 +6,8 @@
 'use strict';
 
 const ObserverClient = require ('./observerclient');
+const request        = require("request");
+const Promisify      = require("ninja-util/promisify");
 
 class ConfigurableObserverClient extends ObserverClient
 {

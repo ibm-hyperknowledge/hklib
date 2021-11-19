@@ -7,8 +7,6 @@
 
 const ObserverClient = require ('./configurableobserverclient')
 const amqp           = require ('amqp-connection-manager');
-const request        = require("request");
-const Promisify      = require("ninja-util/promisify");
 
 
 async function createChannel ()
