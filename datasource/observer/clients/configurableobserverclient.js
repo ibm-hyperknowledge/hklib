@@ -5,6 +5,8 @@
 
 'use strict';
 
+const ObserverClient = require ('./observerclient');
+
 class ConfigurableObserverClient extends ObserverClient
 {
   constructor(observerServiceParams)
