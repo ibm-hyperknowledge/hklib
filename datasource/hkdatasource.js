@@ -40,7 +40,7 @@ function HKDatasource(url, repository, options = {})
 	}
 	else if(options.authSecret)
 	{
-		this.options.auth = {bearer: HKDatasource.getAuthToken(authSecret, null)};
+		this.options.auth = {bearer: HKDatasource.getAuthToken(options.authSecret, null)};
 	}
 
 
