@@ -39,7 +39,7 @@ async function createObserver (basePath, observerOptions = {}, hkbaseOptions = {
 
 		const isObserverService = observerOptions.isObserverService || false;
 		const observerServiceParams = {};
-		observerServiceParams.url = !isObserverService ? info.hkbaseObserverServiceUrl : undefined;
+		observerServiceParams.url = !isObserverService ? info.hkbaseObserverServiceUrl || observerOptions.hkbaseObserverServiceUrl : undefined;
 		observerServiceParams.observerConfiguration = !isObserverService ? info.hkbaseObserverConfiguration || observerOptions.hkbaseObserverConfiguration : undefined;
 		if(observerServiceParams.url)
 		{
