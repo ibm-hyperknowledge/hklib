@@ -7,6 +7,7 @@
 
 const request = require("request");
 const fs      = require("fs");
+const jwt     = require("jsonwebtoken");
 
 const HKEntity    = require("../hkentity");
 const deserialize = require("../deserialize");
@@ -36,6 +37,10 @@ function HKDatasource(url, repository, options = {})
 	if(options.authToken)
 	{
 		this.options.auth = {bearer: options.authToken};
+	}
+	else if(options.authSecret)
+	{
+		this.options.auth = {bearer: HKDatasource.getAuthToken(authSecret, null)};
 	}
 
 
@@ -1468,5 +1473,28 @@ function requestCompletedWithSuccess (code)
 {
 	return code >= 200 && code < 300;
 }
+
+/**
+ * If the authSecret is passed, this method generates a signed jwt token for acessing the datasource
+ * Otherwise, it retrieves an empty token
+ * @param authSecret secret used to sign the jwt token (must be the same as the one used in the server)
+ * @param expiresIn token expiration expressed in seconds or a string describing a time span zeit/m
+ * Eg: 60, "2 days", "10h", "7d". A numeric value is interpreted as a seconds count. 
+ * If you use a string be sure you provide the time units (days, hours, etc), 
+ * otherwise milliseconds unit is used by default ("120" is equal to "120ms").
+ * If !expiresIn, the generated token never expires.
+ */ 
+ HKDatasource.getAuthToken = function (authSecret, expiresIn = 2 * 60)
+ {
+	if (authSecret)
+	{
+		if(!expiresIn)
+		{
+			return jwt.sign({}, authSecret, {})
+		}
+		return jwt.sign({}, authSecret, {expiresIn: expiresIn})
+	}
+	return '';
+ }
 
 module.exports = HKDatasource;
