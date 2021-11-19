@@ -11,9 +11,10 @@ const Promisify      = require("ninja-util/promisify");
 
 class ConfigurableObserverClient extends ObserverClient
 {
-  constructor(observerServiceParams)
+  constructor(hkbaseOptions, observerServiceParams)
   {
     super();
+    this._hkbaseOptions = hkbaseOptions;
     this._observerServiceUrl = observerServiceParams.url;
     this._observerConfiguration = observerServiceParams.observerConfiguration;
     this._observerServiceHeartbeatInterval = observerServiceParams.heartbeatInterval;
@@ -32,6 +33,7 @@ class ConfigurableObserverClient extends ObserverClient
       headers: { "content-type": "application/json" },
       body: JSON.stringify(this._observerConfiguration)
     }
+    this.setHKBaseOptions(params);
     let response = await Promisify.exec(request, request.post, this._observerServiceUrl + '/observer', params);
     if (response.statusCode > 300 || response.statusCode < 200) throw response.body;
     const observerId = JSON.parse(response.body).observerId;
@@ -46,11 +48,19 @@ class ConfigurableObserverClient extends ObserverClient
       if (this._heartbeatTimeout) clearTimeout(this._heartbeatTimeout);
       this._heartbeatTimeout = setTimeout(async () =>
       {
-        let response = await Promisify.exec(request, request.post, `${this._observerServiceUrl}/observer/${observerId}/heartbeat`);
+        let params = {};
+        this.setHKBaseOptions(params);
+        let response = await Promisify.exec(request, request.post, `${this._observerServiceUrl}/observer/${observerId}/heartbeat`, params);
         if (response.statusCode > 300 || response.statusCode < 200) throw response.body;
         this.setHeartbeat(observerId);
       }, this._observerServiceHeartbeatInterval);
     }
+  }
+
+  setHKBaseOptions(params)
+  {
+    if (this._hkbaseOptions)
+      Object.assign(params, this._hkbaseOptions);
   }
 }
 

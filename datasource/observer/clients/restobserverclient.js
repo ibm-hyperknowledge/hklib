@@ -62,9 +62,9 @@ function setupEndpoints ()
 
 class RestObserverClient extends ObserverClient
 {
-	constructor (info, options, observerServiceParams)
+	constructor (info, options, hkbaseOptions, observerServiceParams)
 	{
-		super (observerServiceParams);
+		super (hkbaseOptions, observerServiceParams);
 		this._baseUrl   = options.baseUrl;
 		this._webServer = express ();
 		this._port      = options.port || 0;
@@ -105,7 +105,9 @@ class RestObserverClient extends ObserverClient
 							else
 							{
 								console.info('registering as observer of hkbase');
-								await request (`${this._baseUrl}observer/${encodeURIComponent(listeningPath)}`, {method: 'put'});
+								let params = {method: 'put'};
+								this.setHKBaseOptions(params);
+								await request (`${this._baseUrl}observer/${encodeURIComponent(listeningPath)}`, );
 							}
 							resolve ();
 						}

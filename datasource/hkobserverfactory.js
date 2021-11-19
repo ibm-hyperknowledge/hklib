@@ -48,7 +48,7 @@ async function createObserver (basePath, observerOptions = {}, hkbaseOptions = {
 		}
 		
 
-		return new Klass (info, observerOptions, observerServiceParams);
+		return new Klass (info, observerOptions, hkbaseOptions, observerServiceParams);
 	}
 	catch (err)
 	{

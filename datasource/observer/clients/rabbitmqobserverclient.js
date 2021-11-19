@@ -56,9 +56,9 @@ async function connect ()
 
 class RabbitMQObserverClient extends ObserverClient
 {
-	constructor (info, options, observerServiceParams)
+	constructor (info, options, hkbaseOptions, observerServiceParams)
 	{
-		super (observerServiceParams);
+		super (hkbaseOptions, observerServiceParams);
 		this._broker            = info.broker;
 		this._exchangeName      = info.exchangeName;
 		this._exchangeOptions   = info.exchangeOptions;
