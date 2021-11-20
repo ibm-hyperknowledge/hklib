@@ -34,9 +34,11 @@ class ConfigurableObserverClient extends ObserverClient
       body: JSON.stringify(this._observerConfiguration)
     }
     this.setHKBaseOptions(params);
+    console.info('registering specialized observer');
     let response = await Promisify.exec(request, request.post, this._observerServiceUrl + '/observer', params);
     if (response.statusCode > 300 || response.statusCode < 200) throw response.body;
     const observerId = JSON.parse(response.body).observerId;
+    console.info('registering with observerId:', observerId);
     this.setHeartbeat(observerId);
     return observerId;
   }
