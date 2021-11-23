@@ -104,7 +104,7 @@ class RabbitMQObserverClient extends ObserverClient
 						{
 							this.notify(message.notification);
 						}
-						else
+						else if(!this._observerId)
 						{
 							this.notify (message);
 						}
