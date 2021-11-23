@@ -19,6 +19,7 @@ class ConfigurableObserverClient extends ObserverClient
     this._observerConfiguration = observerServiceParams.observerConfiguration;
     this._observerServiceHeartbeatInterval = observerServiceParams.heartbeatInterval;
     this._heartbeatTimeout = null;
+    this._observerId = '';
   }
 
   usesSpecializedObserver()
@@ -40,7 +41,7 @@ class ConfigurableObserverClient extends ObserverClient
     const observerId = JSON.parse(response.body).observerId;
     console.info('registering with observerId:', observerId);
     this.setHeartbeat(observerId);
-    return observerId;
+    this._observerId = observerId;
   }
 
   setHeartbeat(observerId)

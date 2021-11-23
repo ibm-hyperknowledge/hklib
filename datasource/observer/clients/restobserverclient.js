@@ -100,7 +100,7 @@ class RestObserverClient extends ObserverClient
 							if(this.usesSpecializedObserver())
 							{
 								this._observerConfiguration.callbackEndpoint = listeningPath;
-								this._observerId = await this.registerObserver();
+								await this.registerObserver();
 							}
 							else
 							{

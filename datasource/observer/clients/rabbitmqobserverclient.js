@@ -75,16 +75,12 @@ class RabbitMQObserverClient extends ObserverClient
 	async init  ()
 	{
 		try
-		{
-			let queueName = '';
-			let isDefaultQueue = true;
-			
+		{			
 			// if specialized configuration is set up, get specialized queueName
 			if(this.usesSpecializedObserver())
 			{
 				console.info('registering as observer of hkbase observer service');
-				queueName = await this.registerObserver();
-				isDefaultQueue = false;
+				await this.registerObserver();
 			}
 			else
 			{
@@ -93,24 +89,20 @@ class RabbitMQObserverClient extends ObserverClient
 			await connect.call (this);
 			this._channelWrapper.addSetup(async (channel) =>
 			{
-				const q = await channel.assertQueue (queueName, {exclusive: false});
-				channel.bindQueue (q.queue, this._exchangeName, queueName);
+				const q = await channel.assertQueue ('', {exclusive: false});
+				let queueName = q.queue;
+				channel.bindQueue (queueName, this._exchangeName, queueName);
 				console.info(`Bound to exchange "${this._exchangeName}"`);
-				console.info(" [*] Waiting for messages in %s.", q.queue);
+				console.info(" [*] Waiting for messages in %s.", queueName);
 
-				channel.consume (q.queue, (msg) =>
+				channel.consume (queueName, (msg) =>
 				{
 					try
 					{
-						let message = JSON.parse (msg.content.toString());
-						let observerId = message.observerId || '';
-						if(isDefaultQueue && observerId == '') 
+						let notification = JSON.parse (msg.content.toString());
+						if(msg.fields.routingKey === this._observerId) 
 						{
-							this.notify (message);
-						}
-						else if(observerId == queueName)
-						{
-							this.notify(message.notification)
+							this.notify (notification);
 						}
 					}
 					catch (err)
