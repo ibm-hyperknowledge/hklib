@@ -77,12 +77,14 @@ class RabbitMQObserverClient extends ObserverClient
 		try
 		{
 			let queueName = '';
+			let isDefaultQueue = true;
 			
 			// if specialized configuration is set up, get specialized queueName
 			if(this.usesSpecializedObserver())
 			{
 				console.info('registering as observer of hkbase observer service');
 				queueName = await this.registerObserver();
+				isDefaultQueue = false;
 			}
 			else
 			{
@@ -101,11 +103,12 @@ class RabbitMQObserverClient extends ObserverClient
 					try
 					{
 						let message = JSON.parse (msg.content.toString());
-						if(queueName === '') 
+						let observerId = message.observerId || '';
+						if(isDefaultQueue && obseverId == '') 
 						{
 							this.notify (message);
 						}
-						else if(message.observerId == queueName)
+						else if(obseverId == queueName)
 						{
 							this.notify(message.notification)
 						}
