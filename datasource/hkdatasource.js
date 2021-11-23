@@ -1488,7 +1488,7 @@ HKDatasource.prototype.getAllStoredQueries = function (options, callback = () =>
 		params.headers['transactionId'] = transactionId;
 	}
 
-	request.post(url, params, (err, res) => {
+	request.get(url, params, (err, res) => {
 		if (err) {
 			callback(err);
 			return;
@@ -1531,7 +1531,7 @@ HKDatasource.prototype.getStoredQuery = function(queryId, options, callback = ()
 		params.headers['transactionId'] = transactionId;
 	}
 
-	request.post(url, params, (err, res) => {
+	request.get(url, params, (err, res) => {
 		if (err) {
 			callback(err);
 			return;
