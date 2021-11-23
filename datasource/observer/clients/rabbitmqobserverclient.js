@@ -104,11 +104,11 @@ class RabbitMQObserverClient extends ObserverClient
 					{
 						let message = JSON.parse (msg.content.toString());
 						let observerId = message.observerId || '';
-						if(isDefaultQueue && obseverId == '') 
+						if(isDefaultQueue && observerId == '') 
 						{
 							this.notify (message);
 						}
-						else if(obseverId == queueName)
+						else if(observerId == queueName)
 						{
 							this.notify(message.notification)
 						}
