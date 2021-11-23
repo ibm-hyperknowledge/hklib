@@ -28,6 +28,8 @@ exports.BIND_TYPE = Types.BIND;
 exports.INTERFACE = Types.INTERFACE;
 exports.TRAIL_TYPE = Types.TRAIL;
 
+exports.VIRTUAL_SOURCE_PROPERTY = "virtualsrc";
+
 const RolesTypes = require("./roletypes");
 
 exports.RolesTypes = RolesTypes;
