@@ -42,6 +42,7 @@ class ConfigurableObserverClient extends ObserverClient
     console.info('registering with observerId:', observerId);
     this.setHeartbeat(observerId);
     this._observerId = observerId;
+    return observerId;
   }
 
   setHeartbeat(observerId)
