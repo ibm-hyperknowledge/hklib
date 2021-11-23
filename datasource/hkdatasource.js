@@ -1633,6 +1633,7 @@ HKDatasource.prototype.storeQuery = function(storedQuery, options, callback = ()
 
 /**
  * Run a stored query using a configuration
+ * @param {string} queryId
  * @param {StoredQueryRunConfiguration} runConfiguration 
  * @param {object} options 
  * @param {string} [options."content-type"] an option content type
@@ -1640,7 +1641,7 @@ HKDatasource.prototype.storeQuery = function(storedQuery, options, callback = ()
  * @param {string} [options.transactionId] 
  * @param {QueryResultsCallback} [callback] response callback 
  */
-HKDatasource.prototype.runStoredQuery = function(runConfiguration, options, callback = () => {}) {
+HKDatasource.prototype.runStoredQuery = function(queryId, runConfiguration, options, callback = () => {}) {
 	let url = `${this.url}repository/${this.graphName}/stored-query/${queryId}/run`;
 
 	if (!options || typeof (options) === 'function') {
