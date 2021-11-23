@@ -100,11 +100,14 @@ class RabbitMQObserverClient extends ObserverClient
 				{
 					try
 					{
-						let notification = JSON.parse (msg.content.toString());
-						if(queueName === '' || msg.fields.routingKey === queueName) 
+						let message = JSON.parse (msg.content.toString());
+						if(queueName === '') 
 						{
-							// console.debug(notification);
-							this.notify (notification);
+							this.notify (message);
+						}
+						else if(message.observerId == queueName)
+						{
+							this.notify(message.notification)
 						}
 					}
 					catch (err)
