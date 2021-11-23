@@ -75,12 +75,13 @@ class RabbitMQObserverClient extends ObserverClient
 	async init  ()
 	{
 		try
-		{			
+		{
+			let queueName = '';
 			// if specialized configuration is set up, get specialized queueName
 			if(this.usesSpecializedObserver())
 			{
 				console.info('registering as observer of hkbase observer service');
-				await this.registerObserver();
+				queueName = await this.registerObserver();
 			}
 			else
 			{
@@ -89,7 +90,7 @@ class RabbitMQObserverClient extends ObserverClient
 			await connect.call (this);
 			this._channelWrapper.addSetup(async (channel) =>
 			{
-				const q = await channel.assertQueue ('', {exclusive: false});
+				const q = await channel.assertQueue (queueName, {exclusive: false});
 				let queueName = q.queue;
 				channel.bindQueue (queueName, this._exchangeName, queueName);
 				console.info(`Bound to exchange "${this._exchangeName}"`);
