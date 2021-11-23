@@ -99,14 +99,14 @@ class RabbitMQObserverClient extends ObserverClient
 				{
 					try
 					{
-						let notification = JSON.parse (msg.content.toString());
-						console.debug('msg', JSON.stringify(msg));
-						if(
-							msg.fields.routingKey === this._observerId || 
-							(msg.fields.arguments && msg.fields.arguments.observerId == this._observerId) 
-						)
+						let message = JSON.parse (msg.content.toString());
+						if(this._observerId && message.observerId == this._observerId)
 						{
-							this.notify (notification);
+							this.notify(message.notification);
+						}
+						else
+						{
+							this.notify (message);
 						}
 					}
 					catch (err)

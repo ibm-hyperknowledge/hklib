@@ -19,7 +19,7 @@ class ConfigurableObserverClient extends ObserverClient
     this._observerConfiguration = observerServiceParams.observerConfiguration;
     this._observerServiceHeartbeatInterval = observerServiceParams.heartbeatInterval;
     this._heartbeatTimeout = null;
-    this._observerId = '';
+    this._observerId = null;
   }
 
   usesSpecializedObserver()
