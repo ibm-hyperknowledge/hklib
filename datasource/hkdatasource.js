@@ -1585,7 +1585,7 @@ HKDatasource.prototype.deleteStoredQuery = function(queryId, options, callback =
 };
 
 /**
- * Deletes a stored query
+ * Saves a stored query
  * @param {StoredQuery} storedQuery the stored query
  * @param {object} options a set of options to constumise the request
  * @param {string} [options.transactionId] an optional transaction id
