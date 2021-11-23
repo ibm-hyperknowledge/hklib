@@ -107,7 +107,7 @@ class RestObserverClient extends ObserverClient
 								console.info('registering as observer of hkbase');
 								let params = {method: 'put'};
 								this.setHKBaseOptions(params);
-								await request (`${this._baseUrl}observer/${encodeURIComponent(listeningPath)}`, );
+								await request (`${this._baseUrl}observer/${encodeURIComponent(listeningPath)}`, params);
 							}
 							resolve ();
 						}
