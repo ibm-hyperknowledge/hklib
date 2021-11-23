@@ -91,7 +91,7 @@ class RabbitMQObserverClient extends ObserverClient
 			this._channelWrapper.addSetup(async (channel) =>
 			{
 				const q = await channel.assertQueue (queueName, {exclusive: false});
-				let queueName = q.queue;
+				queueName = q.queue;
 				channel.bindQueue (queueName, this._exchangeName, queueName);
 				console.info(`Bound to exchange "${this._exchangeName}"`);
 				console.info(" [*] Waiting for messages in %s.", queueName);
