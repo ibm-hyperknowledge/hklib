@@ -9,10 +9,11 @@ const Connector 	= require("./connector");
 const Context 		= require("./context");
 const Link 			= require("./link");
 const Node 			= require("./node");
-const Reference 	= require("./reference");
+const Reference 	= require("./reference"); 
 const Trail 		= require("./trail");
 const Types 		= require("./types");
 const shortid 		= require('shortid');
+const { Action }    = require("./trail");
 
 function HKGraph()
 {
@@ -22,6 +23,7 @@ function HKGraph()
 	this.connectors = {};
 	this.refs = {};
 	this.trails = {};
+	this.actions = {};
 
 	// Auxiliar maps
 	this.bindsMap = {};
@@ -43,7 +45,8 @@ HKGraph.prototype.hasId = function(id)
 		this.links.hasOwnProperty(id) ||
 		this.connectors.hasOwnProperty(id) ||
 		this.refs.hasOwnProperty(id) ||
-		this.trails.hasOwnProperty(id);
+		this.trails.hasOwnProperty(id) ||
+		this.actions.hasOwnProperty(id);
 };
 
 
@@ -72,7 +75,7 @@ HKGraph.prototype.setEntity = function(entity)
 		oldEntity.className = entity.className;
     }
 
-    if(entity.type === Types.NODE || entity.type === Types.TRAIL || entity.type === Types.REFERENCE || entity.type === Types.CONTEXT)
+    if(entity.type === Types.NODE || entity.type === Types.TRAIL || entity.type === Types.REFERENCE || entity.type === Types.CONTEXT || entity.type === Types.ACTION)
     {
         
         oldEntity.interfaces = entity.interfaces;
@@ -190,6 +193,15 @@ HKGraph.prototype.addEntity = function(entity)
                 }
                 break;
             }
+			case Types.ACTION:
+			{
+				if(entity instanceof Trail.Action)
+				{
+					newEntity = entity;
+					this.actions[entity.id] = newEntity;
+				}
+				break;
+			}
 			case Types.LINK:
             {
                 if (Link.isValid(entity))
@@ -350,6 +362,10 @@ HKGraph.prototype.removeEntity = function(id)
 				delete this.compositeNodeMap[entity.id];
                 break;
             }
+			case Action.type:
+			{
+				delete this.actions[id];
+			}
 		}
 
         if(this.orphans.hasOwnProperty(entity.parent))
@@ -480,7 +496,7 @@ HKGraph.prototype.getEntity = function(id)
 		c.id = null;
 		return c;
 	}
-	return this.nodes[id] || this.contexts[id] || this.links[id] || this.connectors[id] || this.refs[id] || this.trails[id] || null;
+	return this.nodes[id] || this.contexts[id] || this.links[id] || this.connectors[id] || this.refs[id] || this.trails[id] || this.actions[id] || null;
 };
 
 HKGraph.prototype.getEntities = function()

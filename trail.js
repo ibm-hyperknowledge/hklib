@@ -325,6 +325,11 @@ Trail.prototype.loadActions = function (actions = null)
       // we got event's id and timestamp
       actionArray.push(new Action({event: {"id": i, "timestamp": new Date(this.actions[i].event.timestamp)}}));
     }
+    else if(Array.isArray(this.actions))
+    {
+      // all we got is an Array with the event's id
+      actionIds.push(this.actions[i]);
+    }
     else 
     {
        // all we got is event's id
@@ -457,7 +462,7 @@ class Action extends Item {
       this.to = to;
       this.agent = agent;
       this.event = event;
-
+      this.type = Types.ACTION;
 
       // create timestamp if needed
       // if(!this.event['timestamp'])

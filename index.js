@@ -26,6 +26,7 @@ exports.CONNECTOR_TYPE = Types.CONNECTOR;
 exports.BIND_TYPE      = Types.BIND;
 exports.INTERFACE      = Types.INTERFACE;
 exports.TRAIL_TYPE     = Types.TRAIL;
+exports.ACTION_TYPE    = Types.ACTION;
 
 const RolesTypes       = require("./roletypes");
 
