@@ -14,6 +14,7 @@ exports.REFERENCE = 'ref';
 exports.INTERFACE = 'interface';
 exports.BIND      = 'bind';
 exports.TRAIL     = 'trail';
+exports.ACTION    = 'action';
 
 exports.isValidType = function (type)
 {
