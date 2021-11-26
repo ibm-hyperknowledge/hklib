@@ -1,6 +1,6 @@
 {
   "name": "hklib",
-  "version": "2.10.0",
+  "version": "3.1.0",
   "main": "index.js",
   "author": "IBM Research",
   "contributors": [
