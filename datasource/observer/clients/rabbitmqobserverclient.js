@@ -39,7 +39,21 @@ async function connect ()
 			options.ca = [Buffer.from (this._certificate, 'base64')];
 		}
 
-		this._connectionManager = amqp.connect (this._broker, {connectionOptions: options});
+		try
+		{
+			this._connectionManager = amqp.connect (this._broker, {connectionOptions: options});
+		}
+		catch(err)
+		{
+			if(this._brokerExternal)
+			{
+				this._connectionManager = amqp.connect (this._brokerExternal, {connectionOptions: options});
+			}
+			else
+			{
+				throw err;
+			}
+		}
 		await this._connectionManager._connectPromise;
 		this._connectionManager._currentConnection.connection.on ('error', console.error);
 
@@ -60,6 +74,7 @@ class RabbitMQObserverClient extends ObserverClient
 	{
 		super (hkbaseOptions, observerServiceParams);
 		this._broker            = info.broker;
+		this._brokerExternal    = info.brokerExternal;
 		this._exchangeName      = info.exchangeName;
 		this._exchangeOptions   = info.exchangeOptions;
 		this._certificate       = info.certificate || options.certificate;
