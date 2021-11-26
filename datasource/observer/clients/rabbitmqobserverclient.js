@@ -8,7 +8,6 @@
 const ObserverClient = require ('./configurableobserverclient')
 const amqp           = require ('amqp-connection-manager');
 const ping					 = require ('ping');
-const Promisify      = require("ninja-util/promisify");
 
 
 async function createChannel ()
@@ -42,8 +41,8 @@ async function connect ()
 		}
 
 		let brokerHost = new URL(this._broker).hostname;
-		let brokerReachable = await Promisify.exec(ping.sys, ping.sys.probe, brokerHost);
-		if(brokerReachable)
+		let pingResult = await ping.promise.probe(brokerHost, {timeout: 10});
+		if(pingResult.alive)
 		{
 			this._connectionManager = amqp.connect (this._broker, {connectionOptions: options});
 		}
