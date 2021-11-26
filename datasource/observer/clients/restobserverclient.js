@@ -8,7 +8,7 @@
 const express        = require ('express');
 const bodyParser     = require ('body-parser');
 const request        = require ('request-promise-native');
-const ObserverClient = require ('./observerclient')
+const ObserverClient = require ('./configurableobserverclient')
 const Notification   = require ('../notification');
 
 const DEFAULT_ADDR   = 'http://localhost';
@@ -24,8 +24,8 @@ function setupEndpoints ()
 				repository: req.params.repoName
 			}
 		};
+		// console.debug(notification);
 		this.notify (notification);
-
 		res.sendStatus(200);
 	}
 
@@ -39,21 +39,21 @@ function setupEndpoints ()
 				entities: req.body
 			}
 		};
+		// console.log(notification);
 		this.notify (notification);
-
 		res.sendStatus(200);
 	}
 
-	this._webServer.put ('/repository/:repoName',
+	this._webServer.post ('/repository/:repoName',
 		(req, res) => repoCb (req, res, Notification.action.CREATE));
 
 	this._webServer.delete ('/repository/:repoName',
 		(req, res) => repoCb (req, res, Notification.action.DELETE));
 
-	this._webServer.put ('/repository/:repoName/entity',
+	this._webServer.post ('/repository/:repoName/entity',
 		(req, res) => entitiesCb (req, res, Notification.action.CREATE));
 
-	this._webServer.post ('/repository/:repoName/entity',
+	this._webServer.put ('/repository/:repoName/entity',
 		(req, res) => entitiesCb (req, res, Notification.action.UPDATE));
 
 	this._webServer.delete ('/repository/:repoName/entity',
@@ -62,13 +62,15 @@ function setupEndpoints ()
 
 class RestObserverClient extends ObserverClient
 {
-	constructor (info, options)
+	constructor (info, options, hkbaseOptions, observerServiceParams)
 	{
-		super ();
+		super (hkbaseOptions, observerServiceParams);
 		this._baseUrl   = options.baseUrl;
 		this._webServer = express ();
 		this._port      = options.port || 0;
 		this._address   = options.address || DEFAULT_ADDR;
+		this._observerId = null;
+		
 
 		if (!this._baseUrl.endsWith('/'))
 		{
@@ -94,20 +96,31 @@ class RestObserverClient extends ObserverClient
 						this._port = server.address().port;
 						try
 						{
-							let listeningPath = encodeURIComponent(`${this._address}:${this._port}`);
-							await request (`${this._baseUrl}observer/${listeningPath}`, {method: 'put'})
+							let listeningPath = `${this._address}:${this._port}`;
+							if(this.usesSpecializedObserver())
+							{
+								this._observerConfiguration.callbackEndpoint = listeningPath;
+								await this.registerObserver();
+							}
+							else
+							{
+								console.info('registering as observer of hkbase');
+								let params = {method: 'put'};
+								this.setHKBaseOptions(params);
+								await request (`${this._baseUrl}observer/${encodeURIComponent(listeningPath)}`, params);
+							}
 							resolve ();
 						}
 						catch (err)
 						{
 							if (err.statusCode && err.statusCode >= 400 && err.statusCode < 500)
 							{
-								console.log('observer already registered');
+								console.warn('observer already registered');
 								resolve ();
 							}
 							else
 							{
-								console.log(err);
+								console.error(err);
 								reject (err);
 							}
 						}

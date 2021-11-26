@@ -37,7 +37,18 @@ async function createObserver (basePath, observerOptions = {}, hkbaseOptions = {
 
 		observerOptions.baseUrl = basePath;
 
-		return new Klass (info, observerOptions);
+		const isObserverService = observerOptions.isObserverService || false;
+		const observerServiceParams = {};
+		observerServiceParams.url = !isObserverService ? info.hkbaseObserverServiceUrl || observerOptions.hkbaseObserverServiceUrl : undefined;
+		observerServiceParams.observerConfiguration = !isObserverService ? info.hkbaseObserverConfiguration || observerOptions.hkbaseObserverConfiguration : undefined;
+		if(observerServiceParams.url)
+		{
+			let observerServiceInfo = JSON.parse(await request (`${observerServiceParams.url}/observer/info`));
+			observerServiceParams.heartbeatInterval = observerServiceInfo.heartbeat;
+		}
+		
+
+		return new Klass (info, observerOptions, hkbaseOptions, observerServiceParams);
 	}
 	catch (err)
 	{

@@ -5,8 +5,10 @@
 
 'use strict';
 
-const ObserverClient = require ('./observerclient')
+const ObserverClient = require ('./configurableobserverclient')
 const amqp           = require ('amqp-connection-manager');
+const ping					 = require ('ping');
+
 
 async function createChannel ()
 {
@@ -16,14 +18,14 @@ async function createChannel ()
 		this._channelWrapper.addSetup((channel) =>
 		{
 			channel.assertQueue(this._exchangeName, this._exchangeOptions);
-			channel.on ('error', console.log);
+			channel.on ('error', console.error);
 			channel.on ('close', () => this.init());
 		});
 		return Promise.resolve ();
 	}
 	catch (err)
 	{
-		console.log(err);
+		console.error(err);
 		return Promise.reject();
 	}
 }
@@ -38,15 +40,29 @@ async function connect ()
 			options.ca = [Buffer.from (this._certificate, 'base64')];
 		}
 
-		this._connectionManager = amqp.connect (this._broker, {connectionOptions: options});
+		let brokerHost = new URL(this._broker).hostname;
+		let pingResult = await ping.promise.probe(brokerHost, {timeout: 10});
+		if(pingResult.alive)
+		{
+			this._connectionManager = amqp.connect (this._broker, {connectionOptions: options});
+		}
+		else if(this._brokerExternal)
+		{
+			this._connectionManager = amqp.connect (this._brokerExternal, {connectionOptions: options});
+		}
+		else
+		{
+			throw `Cannot reach broker host ${brokerHost} from ${this._broker}`;
+		}
+		
 		await this._connectionManager._connectPromise;
-		this._connectionManager._currentConnection.connection.on ('error', console.log);
+		this._connectionManager._currentConnection.connection.on ('error', console.error);
 
 		await createChannel.call(this);
 	}
 	catch (err)
 	{
-		console.log(err);
+		console.error(err);
 		this._connectionManager = null;
 		return Promise.reject(err);
 	}
@@ -55,10 +71,11 @@ async function connect ()
 
 class RabbitMQObserverClient extends ObserverClient
 {
-	constructor (info, options)
+	constructor (info, options, hkbaseOptions, observerServiceParams)
 	{
-		super ();
+		super (hkbaseOptions, observerServiceParams);
 		this._broker            = info.broker;
+		this._brokerExternal    = info.brokerExternal;
 		this._exchangeName      = info.exchangeName;
 		this._exchangeOptions   = info.exchangeOptions;
 		this._certificate       = info.certificate || options.certificate;
@@ -75,31 +92,50 @@ class RabbitMQObserverClient extends ObserverClient
 	{
 		try
 		{
+			let queueName = '';
+			// if specialized configuration is set up, get specialized queueName
+			if(this.usesSpecializedObserver())
+			{
+				console.info('registering as observer of hkbase observer service');
+				queueName = await this.registerObserver();
+			}
+			else
+			{
+				console.info('registering as observer of hkbase');
+			}
 			await connect.call (this);
 			this._channelWrapper.addSetup(async (channel) =>
 			{
-				const q = await channel.assertQueue ('', {exclusive: true});
-				channel.bindQueue (q.queue, this._exchangeName, '');
-				console.log(`Bound to exchange "${this._exchangeName}"`);
-				console.log(" [*] Waiting for messages in %s.", q.queue);
+				const q = await channel.assertQueue (queueName, {exclusive: false});
+				queueName = q.queue;
+				channel.bindQueue (queueName, this._exchangeName, queueName);
+				console.info(`Bound to exchange "${this._exchangeName}"`);
+				console.info(" [*] Waiting for messages in %s.", queueName);
 
-				channel.consume (q.queue, (msg) =>
+				channel.consume (queueName, (msg) =>
 				{
 					try
 					{
-						let notification = JSON.parse (msg.content.toString());
-						this.notify (notification);
+						let message = JSON.parse (msg.content.toString());
+						if(this._observerId && message.observerId == this._observerId)
+						{
+							this.notify(message.notification);
+						}
+						else if(!this._observerId)
+						{
+							this.notify (message);
+						}
 					}
 					catch (err)
 					{
-						console.log (err);
+						console.error (err);
 					}
 				}, {noAck: true});
 			});
 		}			
 		catch (err)
 		{
-			console.log(err);
+			console.error(err);
 		}
 	}
 }
