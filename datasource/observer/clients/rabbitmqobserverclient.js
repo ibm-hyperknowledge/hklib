@@ -7,6 +7,8 @@
 
 const ObserverClient = require ('./configurableobserverclient')
 const amqp           = require ('amqp-connection-manager');
+const ping					 = require ('ping');
+const Promisify      = require("ninja-util/promisify");
 
 
 async function createChannel ()
@@ -39,21 +41,21 @@ async function connect ()
 			options.ca = [Buffer.from (this._certificate, 'base64')];
 		}
 
-		try
+		let brokerHost = new URL(this._broker).hostname;
+		let brokerReachable = await Promisify.exec(ping.sys, ping.sys.probe, brokerHost);
+		if(brokerReachable)
 		{
 			this._connectionManager = amqp.connect (this._broker, {connectionOptions: options});
 		}
-		catch(err)
+		else if(this._brokerExternal)
 		{
-			if(this._brokerExternal)
-			{
-				this._connectionManager = amqp.connect (this._brokerExternal, {connectionOptions: options});
-			}
-			else
-			{
-				throw err;
-			}
+			this._connectionManager = amqp.connect (this._brokerExternal, {connectionOptions: options});
 		}
+		else
+		{
+			throw `Cannot reach broker host ${brokerHost} from ${this._broker}`;
+		}
+		
 		await this._connectionManager._connectPromise;
 		this._connectionManager._currentConnection.connection.on ('error', console.error);
 
