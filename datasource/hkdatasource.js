@@ -112,7 +112,7 @@ HKDatasource.prototype.getInfo = function (callback = () => {})
 			}
 			else
 			{
-				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+				callback(stringifyResponseLog(res));
 			}
 		}
 		else
@@ -151,7 +151,7 @@ HKDatasource.prototype.getInfo = function (callback = () => {})
 			 }
 			 else
 			 {
-				 callback(`Server responded with ${res.statusCode}. ${res.body}`);
+				 callback(stringifyResponseLog(res));
 			 }
 		 }
 		 else
@@ -197,7 +197,7 @@ HKDatasource.prototype.getRepositories = function( callback = () => {})
 			}
 			else
 			{
-				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+				callback(stringifyResponseLog(res));
 			}
 		}
 		else
@@ -231,7 +231,7 @@ HKDatasource.prototype.createRepository = function(callback = () => {})
 			}
 			else
 			{
-				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+				callback(stringifyResponseLog(res));
 			}
 		}
 		else
@@ -265,7 +265,7 @@ HKDatasource.prototype.dropRepository = function(callback = () =>{})
 			}
 			else
 			{
-				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+				callback(stringifyResponseLog(res));
 			}
 		}
 		else
@@ -343,7 +343,7 @@ HKDatasource.prototype.saveEntities = function(entities, callback)
 			}
 			else
 			{
-				callback(`Server responde with ${res.statusCode}. ${res.body}`);
+				callback(stringifyResponseLog(res));
 			}
 		}
 		else
@@ -398,7 +398,7 @@ HKDatasource.prototype.removeEntities = function(ids, callback)
 			}
 			else
 			{
-				callback(`Server responde with ${res.statusCode}. ${res.body}`);
+				callback(stringifyResponseLog(res));
 			}
 		}
 		else
@@ -451,7 +451,7 @@ HKDatasource.prototype.getEntities = function(ids, callback = () => {})
 			}
 			else
 			{
-				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+				callback(stringifyResponseLog(res));
 			}
 		}
 		else
@@ -497,7 +497,7 @@ HKDatasource.prototype.fetchContext = function(context, callback = () => {})
 			}
 			else
 			{
-				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+				callback(stringifyResponseLog(res));
 			}
 
 		}
@@ -507,8 +507,7 @@ HKDatasource.prototype.fetchContext = function(context, callback = () => {})
 		}
 	});
 }
-
-/**
+ /**
  * Fetch entities from a context
  *
  * @param {string} context The context id to retrieve their nested entities. May be null to get the `body` context.
@@ -516,12 +515,12 @@ HKDatasource.prototype.fetchContext = function(context, callback = () => {})
  * @param {GetEntitiesCallback} callback Callback with the entities
  */
 
- HKDatasource.prototype.getContextChildrenLazy = function(context, payload, callback = () => {})
- {
-   let url = `${this.url}repository/${this.graphName}/context/${context}/lazy`;
-   
-   Object.assign(payload, this.options);
-   const options = {
+HKDatasource.prototype.getContextChildren = function(context, payload, callback = () => {})
+{
+  let url = `${this.url}repository/${this.graphName}/context/${context}`;
+  
+  Object.assign(payload, this.options);
+  const options = {
     method: 'POST',
     url: url,
     headers: {
@@ -530,33 +529,33 @@ HKDatasource.prototype.fetchContext = function(context, callback = () => {})
     body: payload,
     json: true
   };
-   
-   request(options, (err, res) =>
-   { 
-     if(!err)
-     {
-       if(requestCompletedWithSuccess (res.statusCode))
-       {
-         try
-         {
-           callback(null, res.body);
-         }
-         catch(exp)
-         {
-           callback(exp);
-         }
-       }
-       else
-       {
-         callback(`Server responded with ${res.statusCode}. ${res.body}`);
-       }
-     }
-     else
-     {
-       callback(err);
-     }
-   });
- }
+  
+  request(options, (err, res) =>
+  { 
+    if(!err)
+    {
+      if(requestCompletedWithSuccess (res.statusCode))
+      {
+        try
+        {
+          callback(null, res.body);
+        }
+        catch(exp)
+        {
+          callback(exp);
+        }
+      }
+      else
+      {
+        callback(`Server responded with ${res.statusCode}. ${res.body}`);
+      }
+    }
+    else
+    {
+      callback(err);
+    }
+  });
+}
 
 /**
  * Filter entities using CSS pattern `(TODO: document it better)`
@@ -615,7 +614,7 @@ HKDatasource.prototype.filterEntities = function(filter, callback = () => {})
 			}
 			else
 			{
-				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+				callback(stringifyResponseLog(res));
 			}
 
 		}
@@ -680,7 +679,7 @@ HKDatasource.prototype.filterEntitiesLazy = function(filter, callback = () => {}
 			}
 			else
 			{
-				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+				callback(stringifyResponseLog(res));
 			}
 
 		}
@@ -790,7 +789,7 @@ HKDatasource.prototype.query = function(query, options, callback = () => {})
 			}
 			else
 			{
-				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+				callback(stringifyResponseLog(res));
 			}
 
 		}
@@ -855,7 +854,7 @@ HKDatasource.prototype.sparqlQuery = function(query, options, callback = () => {
 			}
 			else
 			{
-				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+				callback(stringifyResponseLog(res));
 			}
 
 		}
@@ -907,7 +906,7 @@ HKDatasource.prototype.getLinks = function(ids, callback = () => {})
 			}
 			else
 			{
-				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+				callback(stringifyResponseLog(res));
 			}
 
 		}
@@ -1015,7 +1014,7 @@ HKDatasource.prototype.importRDF = function(data, options, callback = () => {})
 			}
 			else
 			{
-				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+				callback(stringifyResponseLog(res));
 			}
 		}
 		else
@@ -1071,7 +1070,7 @@ HKDatasource.prototype.importFrom = function(data, options, callback = () => {})
 			}
 			else
 			{
-				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+				callback(stringifyResponseLog(res));
 			}
 		}
 		else
@@ -1133,7 +1132,7 @@ HKDatasource.prototype.importFrom = function(data, options, callback = () => {})
 			}
 			else
 			{
-				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+				callback(stringifyResponseLog(res));
 			}
 		}
 		else
@@ -1201,7 +1200,7 @@ HKDatasource.prototype.searchEntitiesFromExternalDataSource = function(searchCri
 			}
 			else
 			{
-				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+				callback(stringifyResponseLog(res));
 			}
 		}
 		else
@@ -1264,7 +1263,7 @@ HKDatasource.prototype.getPropertiesFromExternalDataSource = function(externalDS
 			}
 			else
 			{
-				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+				callback(stringifyResponseLog(res));
 			}
 		}
 		else
@@ -1318,7 +1317,7 @@ HKDatasource.prototype.getEntityFromExternalDataSource = function(externalDSEnti
 			}
 			else
 			{
-				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+				callback(stringifyResponseLog(res));
 			}
 		}
 		else
@@ -1370,7 +1369,7 @@ HKDatasource.prototype.getEntityFromExternalDataSource = function(externalDSEnti
 			}
 			else
 			{
-				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+				callback(stringifyResponseLog(res));
 			}
 		}
 		else
@@ -1442,7 +1441,7 @@ HKDatasource.prototype.exportRDF = function(filter, options, callback = () => {}
 			}
 			else
 			{
-				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+				callback(stringifyResponseLog(res));
 			}
 		}
 		else
@@ -1452,26 +1451,236 @@ HKDatasource.prototype.exportRDF = function(filter, options, callback = () => {}
 	});
 }
 
-function toQueryString(options)
-{
-	let optionsKeys = Object.keys(options);
+// STORED QUERIES
 
-	let queryString = "?";
+/**
+ *	@typedef {Object} StoredQuery
+ *	@property {string} [id] the stored query's identifier
+ *	@property {string} queryText the query
+ *	@property {array}  colums the set of variables in the projection
+ *	@property {string} queryLanguage queryText's query language
+ *	@property {array}  [parameters] an array of parameters of the query 
+ */
 
-	if(optionsKeys.length > 0)
-	{
-		for(let i = 0; i < optionsKeys.length; i++)
-		{
-			let k = optionsKeys[i]
-			queryString += `${k}=${encodeURIComponent(options[k])}&`;
+
+/**
+ * @callback StoredQueryGetAllCallback
+ * @param err An error object that indicates if the operation was successful or not
+ * @param {StoredQuery[]} [data] The array of stored queries 
+ */
+/**
+ * Returns all stored queries
+ * @param {object} options a set of options to constumise the request
+ * @param {string} [options.transactionId] an optional transaction id
+ * @param {StoredQueryGetAllCallback} [callback] Response callback
+ */
+HKDatasource.prototype.getAllStoredQueries = function (options, callback = () => {}) {
+	let url = `${this.url}repository/${this.graphName}/stored-query`;
+
+	if (!options || typeof (options) === 'function') {
+		callback = options;
+		options = {};
+	}
+
+	let params = {
+		headers: {
+			"content-type": "application/json"
 		}
 	}
-	return queryString;
+
+	if (options.transactionId) {
+		params.headers['transactionId'] = transactionId;
+	}
+
+	request.get(url, params, (err, res) => {
+		if (err) {
+			callback(err);
+			return;
+		}
+		if(requestCompletedWithSuccess(res.statusCode)) {
+			callback(null, res.body);
+		} else {
+			callback(stringifyResponseLog(res));
+		}
+	});
+};
+
+/**
+ * @callback StoredQueryGetCallback
+ * @param err An error object that indicates if the operation was successful or not
+ * @param {StoredQuery} [data] The array of stored queries 
+ */
+/**
+ * Returns a stored query
+ * @param {string} queryId the stored query's id 
+ * @param {object} options a set of options to constumise the request
+ * @param {string} [options.transactionId] an optional transaction id
+ * @param {StoredQueryGetCallback} [callback] Response callback
+ */
+HKDatasource.prototype.getStoredQuery = function(queryId, options, callback = () => {}) {
+	let url = `${this.url}repository/${this.graphName}/stored-query/${queryId}`;
+
+	if (!options || typeof (options) === 'function') {
+		callback = options;
+		options = {};
+	}
+
+	let params = {
+		headers: {
+			"content-type": "application/json"
+		}
+	}
+
+	if (options.transactionId) {
+		params.headers['transactionId'] = transactionId;
+	}
+
+	request.get(url, params, (err, res) => {
+		if (err) {
+			callback(err);
+			return;
+		}
+		if(requestCompletedWithSuccess(res.statusCode)) {
+			callback(null, res.body);
+		} else {
+			callback(stringifyResponseLog(res));
+		}
+	});
+};
+
+
+/**
+ * Deletes a stored query
+ * @param {string} queryId a stored query identifier
+ * @param {object} options a set of options to constumise the request
+ * @param {string} [options.transactionId] an optional transaction id
+ * @param {StoredQueryGetCallback} [callback] Response callback's returns the deleted query
+ */
+HKDatasource.prototype.deleteStoredQuery = function(queryId, options, callback = () => {}) {
+	let url = `${this.url}repository/${this.graphName}/stored-query/${queryId}`;
+
+	if (!options || typeof (options) === 'function') {
+		callback = options;
+		options = {};
+	}
+
+	let params = {
+		headers: {
+			"content-type": "application/json"
+		}
+	}
+
+	if (options.transactionId) {
+		params.headers['transactionId'] = transactionId;
+	}
+
+	request.delete(url, params, (err, res) => {
+		if (err) {
+			callback(err);
+			return;
+		}
+
+		if (requestCompletedWithSuccess(res.statusCode)) {
+			callback(null, res.body);
+		} else {
+			callback(stringifyResponseLog(res));
+		}
+	});
+};
+
+/**
+ * Saves a stored query
+ * @param {StoredQuery} storedQuery the stored query
+ * @param {object} options a set of options to constumise the request
+ * @param {string} [options.transactionId] an optional transaction id
+ * @param {StoredQueryGetCallback} [callback] Response callback's returns the deleted query
+ */
+HKDatasource.prototype.storeQuery = function(storedQuery, options, callback = () => {}) {
+	let url = `${this.url}repository/${this.graphName}/stored-query`;
+
+	if (!options || typeof (options) == 'function') {
+		callback = options;
+		options = {};
+	}
+
+	let params = {
+		headers: {
+			"content-type": "application/json"
+		}, 
+		body: JSON.stringify(storedQuery)
+	};
+
+	if (options.transactionId) {
+		params.headers['transactionId'] = options.transactionId;
+	}
+
+	request.post(url, params, (err, res) => {
+		if (err) {
+			callback(err);
+			return;
+		}
+
+		if (requestCompletedWithSuccess(res.statusCode)) {
+			callback(null, res.body);
+			return;
+		} else {
+			callback(stringifyResponseLog(res));
+		}
+	});
 }
 
-function requestCompletedWithSuccess (code)
-{
-	return code >= 200 && code < 300;
+/**
+ * @typedef {object} StoredQueryRunConfiguration
+ * @property {object} [parameters] a key value bind of stored query parameters to values
+ * @property {object} [options] run options
+ */
+
+/**
+ * Run a stored query using a configuration
+ * @param {string} queryId
+ * @param {StoredQueryRunConfiguration} runConfiguration 
+ * @param {object} options 
+ * @param {string} [options."content-type"] an option content type
+ * @param {string} [options.mimeType] return's mime type
+ * @param {string} [options.transactionId] 
+ * @param {QueryResultsCallback} [callback] response callback 
+ */
+HKDatasource.prototype.runStoredQuery = function(queryId, runConfiguration, options, callback = () => {}) {
+	let url = `${this.url}repository/${this.graphName}/stored-query/${queryId}/run`;
+
+	if (!options || typeof (options) === 'function') {
+		callback = options;
+		options = {};
+	}
+
+	let params = {
+		headers: {
+			"content-type": options["content-type"] || "application/json"
+		}, 
+		body: JSON.stringify(runConfiguration)
+	};
+
+	if (options.mimeType) {
+		params.headers['Accept'] = options.mimeType;
+	}
+
+	if (options.transactionId) {
+		params.headers['transactionId'] = options.transactionId;
+	}
+
+	request.post(url, params, (err, res) => {
+		if (err) {
+			callback(err);
+			return;
+		}
+
+		if (requestCompletedWithSuccess(res.statusCode)) {
+			callback(null, res.body);
+			return;
+		} else {
+			callback(stringifyResponseLog(res));
+		}
+	});
 }
 
 /**
@@ -1498,5 +1707,33 @@ function requestCompletedWithSuccess (code)
  }
 
 HKDatasource.prototype.getAuthToken = HKDatasource.getAuthToken;
+
+// ---- 
+
+function toQueryString(options)
+{
+	let optionsKeys = Object.keys(options);
+
+	let queryString = "?";
+
+	if(optionsKeys.length > 0)
+	{
+		for(let i = 0; i < optionsKeys.length; i++)
+		{
+			let k = optionsKeys[i]
+			queryString += `${k}=${encodeURIComponent(options[k])}&`;
+		}
+	}
+	return queryString;
+}
+
+function requestCompletedWithSuccess (code)
+{
+	return code >= 200 && code < 300;
+}
+
+function stringifyResponseLog(res) {
+	return `Server responded with ${res.statusCode}. ${res.body}`;
+}
 
 module.exports = HKDatasource;
