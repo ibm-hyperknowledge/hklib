@@ -65,6 +65,7 @@ class RestObserverClient extends ObserverClient
 	constructor (info, options, hkbaseOptions, observerServiceParams)
 	{
 		super (hkbaseOptions, observerServiceParams);
+		this._baseUrl   = options.baseUrl;
 		this._webServer = express ();
 		this._port      = options.port || 0;
 		this._address   = options.address || DEFAULT_ADDR;
