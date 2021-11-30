@@ -90,18 +90,18 @@ class RabbitMQObserverClient extends ObserverClient
 
 	async init  ()
 	{
+		console.info(`initializing RabbitMQ observer client`);
 		try
 		{
 			let queueName = '';
 			// if specialized configuration is set up, get specialized queueName
 			if(this.usesSpecializedObserver())
 			{
-				console.info('registering as observer of hkbase observer service');
 				queueName = await this.registerObserver();
 			}
 			else
 			{
-				console.info('registering as observer of hkbase');
+				console.info(`registered as observer of hkbase`);
 			}
 			await connect.call (this);
 			this._channelWrapper.addSetup(async (channel) =>

@@ -65,7 +65,6 @@ class RestObserverClient extends ObserverClient
 	constructor (info, options, hkbaseOptions, observerServiceParams)
 	{
 		super (hkbaseOptions, observerServiceParams);
-		this._baseUrl   = options.baseUrl;
 		this._webServer = express ();
 		this._port      = options.port || 0;
 		this._address   = options.address || DEFAULT_ADDR;
@@ -87,6 +86,7 @@ class RestObserverClient extends ObserverClient
 
 	init ()
 	{
+		console.info(`initializing REST observer client`);
 		return new Promise ((resolve, reject) =>
 			{
 				setupEndpoints.call (this);
@@ -94,6 +94,7 @@ class RestObserverClient extends ObserverClient
 					async () =>
 					{
 						this._port = server.address().port;
+						console.info(`Express Server initialized at port ${this._port} for receiving callback requests of HKBase notifications`);
 						try
 						{
 							let listeningPath = `${this._address}:${this._port}`;
@@ -104,10 +105,10 @@ class RestObserverClient extends ObserverClient
 							}
 							else
 							{
-								console.info('registering as observer of hkbase');
 								let params = {method: 'put'};
 								this.setHKBaseOptions(params);
 								await request (`${this._baseUrl}observer/${encodeURIComponent(listeningPath)}`, params);
+								console.info('registered as observer of hkbase');
 							}
 							resolve ();
 						}
