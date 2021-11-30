@@ -7,6 +7,7 @@
 
 const classes = require ('./observer/clients/');
 const request = require ('request-promise-native');
+const ping		= require ('ping');
 
 const CONNECTION_REFUSED_ERROR = 'ECONNREFUSED';
 
@@ -39,10 +40,20 @@ async function createObserver (basePath, observerOptions = {}, hkbaseOptions = {
 
 		const isObserverService = observerOptions.isObserverService || false;
 		const observerServiceParams = {};
-		observerServiceParams.url = !isObserverService ? info.hkbaseObserverServiceUrl || observerOptions.hkbaseObserverServiceUrl : undefined;
+		observerServiceParams.defaultUrl = !isObserverService ? info.hkbaseObserverServiceUrl || observerOptions.hkbaseObserverServiceUrl : undefined;
+		observerServiceParams.externalUrl = !isObserverService ? info.hkbaseObserverServiceExternalUrl || observerOptions.hkbaseObserverServiceExternalUrl : undefined;
 		observerServiceParams.observerConfiguration = !isObserverService ? info.hkbaseObserverConfiguration || observerOptions.hkbaseObserverConfiguration : undefined;
-		if(observerServiceParams.url && observerServiceParams.observerConfiguration)
+		if(observerServiceParams.defaultUrl && observerServiceParams.observerConfiguration)
 		{
+			let pingResult = await ping.promise.probe(observerServiceParams.defaultUrl, {timeout: 10});
+			if(pingResult.alive || !observerServiceParams.externalUrl)
+			{
+				observerServiceParams.url = observerServiceParams.defaultUrl;
+			}
+			else
+			{
+				observerServiceParams.url = observerServiceParams.externalUrl
+			}
 			let observerServiceInfo = JSON.parse(await request (`${observerServiceParams.url}/observer/info`));
 			observerServiceParams.heartbeatInterval = observerServiceInfo.heartbeat;
 		}
