@@ -36,7 +36,7 @@ class ConfigurableObserverClient extends ObserverClient
     }
     this.setHKBaseOptions(params);
     console.info(`registered as observer of hkbase observer service (${this._observerServiceUrl}) with configuration:`);
-		console.info(this._observerConfiguration);
+		console.info(JSON.stringify(this._observerConfiguration));
     let response = await Promisify.exec(request, request.post, this._observerServiceUrl + '/observer', params);
     if (response.statusCode > 300 || response.statusCode < 200) throw response.body;
     const observerId = JSON.parse(response.body).observerId;
