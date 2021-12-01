@@ -99,7 +99,7 @@ class RabbitMQObserverClient extends ObserverClient
 			{
 				console.info(`registered as observer of hkbase`);
 			}
-			queueName = await this._init(queueName);
+			await this._init(queueName);
 		}			
 		catch (err)
 		{
@@ -121,6 +121,7 @@ class RabbitMQObserverClient extends ObserverClient
 
 			channel.consume(queueName, (msg) =>
 			{
+				if(!msg) return;
 				try
 				{
 					let message = JSON.parse(msg.content.toString());
@@ -141,37 +142,47 @@ class RabbitMQObserverClient extends ObserverClient
 		}
 		this._channelWrapper.addSetup(this._setupFunction);
 		this._isInitialized = true;
-		return queueName;
 	}
 
 	async deinit ()
 	{
-		console.info("Deiniting observer");
-		
-		if(this._observerId)
+		let _deinit = () => setTimeout( async () =>
 		{
-			await this.unregisterObserver();
-		}
-		if(this._setupFunction)
-		{
+			if(this._isInitialized && !this._queueName) return _deinit();
+			console.info("Deiniting observer");
 			await this._channelWrapper.cancelAll();
-			await this._channelWrapper.deleteQueue(this._queueName);
-			this._channelWrapper.removeSetup(this._setupFunction, (c) => c.close(), async () => 
+			console.info('canceled AMQP consumer');
+			if(this._observerId)
+			{
+				await this.unregisterObserver();
+			}
+			else
+			{
+				await this._channelWrapper.deleteQueue(this._queueName);
+				console.info(`removed queue ${this._queueName}`);
+			}
+			if(this._setupFunction)
+			{
+				this._channelWrapper.removeSetup(this._setupFunction, (c) => c.close(), async () => 
+				{
+					await this._channelWrapper.close();
+					await this._connectionManager.close();
+					this._setupFunction = null;
+					this._channelWrapper = null;
+					this._connectionManager = null;
+					this._isInitialized = false;
+					console.info("Observer deinited!");
+				});
+			}
+			else
 			{
 				await this._channelWrapper.close();
 				await this._connectionManager.close();
-				this._setupFunction = null;
-				this._channelWrapper = null;
-				this._connectionManager = null;
-				this._isInitialized = false;
 				console.info("Observer deinited!");
-			});
+			}
+		}, 1000);
+		_deinit();
 		
-		}
-		else
-		{
-			console.info("Observer deinited!");
-		}
 	}
 }
 
