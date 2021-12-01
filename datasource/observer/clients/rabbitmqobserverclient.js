@@ -160,6 +160,7 @@ class RabbitMQObserverClient extends ObserverClient
 			{
 				await this._channelWrapper.deleteQueue(this._queueName);
 				console.info(`removed queue ${this._queueName}`);
+				this._queueName = null;
 			}
 			if(this._setupFunction)
 			{
