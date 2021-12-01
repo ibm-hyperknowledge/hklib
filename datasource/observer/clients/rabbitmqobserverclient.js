@@ -15,12 +15,6 @@ async function createChannel ()
 	try
 	{
 		this._channelWrapper = this._connectionManager.createChannel ();
-		this._channelWrapper.addSetup((channel) =>
-		{
-			channel.assertQueue(this._exchangeName, this._exchangeOptions);
-			channel.on ('error', console.error);
-			channel.on ('close', () => this.init());
-		});
 		return Promise.resolve ();
 	}
 	catch (err)
@@ -81,6 +75,8 @@ class RabbitMQObserverClient extends ObserverClient
 		this._certificate       = info.certificate || options.certificate;
 		this._connectionManager = null;
 		this._channelWrapper    = null;
+		this._setupFunction     = null;
+		this._queueName         = null;
 	}
 
 	static getType ()
@@ -103,35 +99,7 @@ class RabbitMQObserverClient extends ObserverClient
 			{
 				console.info(`registered as observer of hkbase`);
 			}
-			await connect.call (this);
-			this._channelWrapper.addSetup(async (channel) =>
-			{
-				const q = await channel.assertQueue (queueName, {exclusive: false});
-				queueName = q.queue;
-				channel.bindQueue (queueName, this._exchangeName, queueName);
-				console.info(`Bound to exchange "${this._exchangeName}"`);
-				console.info(" [*] Waiting for messages in %s.", queueName);
-
-				channel.consume (queueName, (msg) =>
-				{
-					try
-					{
-						let message = JSON.parse (msg.content.toString());
-						if(this._observerId && message.observerId == this._observerId)
-						{
-							this.notify(message.notification);
-						}
-						else if(!this._observerId)
-						{
-							this.notify (message);
-						}
-					}
-					catch (err)
-					{
-						console.error (err);
-					}
-				}, {noAck: true});
-			});
+			queueName = await this._init(queueName);
 		}			
 		catch (err)
 		{
@@ -139,13 +107,71 @@ class RabbitMQObserverClient extends ObserverClient
 		}
 	}
 
+	async _init(queueName)
+	{
+		await connect.call(this);
+		this._setupFunction = async (channel) =>
+		{
+			const q = await channel.assertQueue(queueName, { exclusive: false });
+			queueName = q.queue;
+			this._queueName = queueName;
+			channel.bindQueue(queueName, this._exchangeName, queueName);
+			console.info(`Bound to exchange "${this._exchangeName}"`);
+			console.info(" [*] Waiting for messages in %s.", queueName);
+
+			channel.consume(queueName, (msg) =>
+			{
+				try
+				{
+					let message = JSON.parse(msg.content.toString());
+					if (this._observerId && message.observerId == this._observerId)
+					{
+						this.notify(message.notification);
+					}
+					else if (!this._observerId)
+					{
+						this.notify(message);
+					}
+				}
+				catch (err)
+				{
+					console.error(err);
+				}
+			}, { noAck: true });
+		}
+		this._channelWrapper.addSetup(this._setupFunction);
+		this._isInitialized = true;
+		return queueName;
+	}
+
 	async deinit ()
 	{
+		console.info("Deiniting observer");
+		
 		if(this._observerId)
 		{
-			this.unregisterObserver();
+			await this.unregisterObserver();
 		}
-		await this._channelWrapper.close();
+		if(this._setupFunction)
+		{
+			await this._channelWrapper.cancelAll();
+			await this._channelWrapper.deleteQueue(this._queueName);
+			this._channelWrapper.removeSetup(this._setupFunction, (c) => c.close(), async () => 
+			{
+				await this._channelWrapper.close();
+				await this._connectionManager.close();
+				this._setupFunction = null;
+				this._channelWrapper = null;
+				this._connectionManager = null;
+				this._isInitialized = false;
+				console.info("Observer deinited!");
+			});
+		
+		}
+		else
+		{
+			console.info("Observer deinited!");
+		}
 	}
 }
 
