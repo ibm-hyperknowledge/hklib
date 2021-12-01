@@ -150,6 +150,8 @@ class RestObserverClient extends ObserverClient
 		if(this._server)
 		{
 			await this._server.close();
+			console.info(`Express Server at port ${this._port} was stopped`);
+			this._port = null;
 		}
 		this._server = null;
 		this._app = null;	
