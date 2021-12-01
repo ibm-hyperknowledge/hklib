@@ -138,6 +138,15 @@ class RabbitMQObserverClient extends ObserverClient
 			console.error(err);
 		}
 	}
+
+	async deinit ()
+	{
+		if(this._observerId)
+		{
+			this.unregisterObserver();
+		}
+		await this._channelWrapper.close();
+	}
 }
 
 module.exports = RabbitMQObserverClient;

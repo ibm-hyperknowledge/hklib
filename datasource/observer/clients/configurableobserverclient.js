@@ -46,6 +46,21 @@ class ConfigurableObserverClient extends ObserverClient
     return observerId;
   }
 
+  async unregisterObserver()
+  {
+    if(!this._observerId) return;
+    let params =
+    {
+      headers: { "content-type": "application/json" },
+    }
+    this.setHKBaseOptions(params);
+    console.info(`unregistering observer ${observerId}`);
+    let response = await Promisify.exec(request, request.delete,`${this._observerServiceUrl}/observer/${observerId}`, params);
+    if (response.statusCode > 300 || response.statusCode < 200) throw response.body;
+    console.info(`unregistered observer ${observerId}`);
+    this._observerId = null;
+  }
+
   setHeartbeat(observerId)
   {
     if (this._observerServiceHeartbeatInterval >= 0)

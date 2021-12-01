@@ -22,6 +22,11 @@ class ObserverClient
 		return Promise.resolve();
 	}
 
+	async deinit()
+	{
+		return Promise.resolve();
+	}
+
 	addHandler (cb)
 	{
 		if (typeof (cb) === 'function')

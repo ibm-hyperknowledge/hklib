@@ -85,7 +85,7 @@ class RestObserverClient extends ObserverClient
 		return 'rest';
 	}
 
-	init ()
+	async init ()
 	{
 		console.info(`initializing REST observer client`);
 		return new Promise ((resolve, reject) =>
@@ -129,6 +129,21 @@ class RestObserverClient extends ObserverClient
 
 					});
 			});
+	}
+
+	async deinit ()
+	{
+		if(this._observerId)
+		{
+			this.unregisterObserver();
+		}
+		else
+		{
+			let params = {method: 'delete'};
+			this.setHKBaseOptions(params);
+			await request (`${this._baseUrl}observer/${encodeURIComponent(this._observerConfiguration.callbackEndpoint)}`, params);
+		}
+		await this._webServer.close();
 	}
 
 }
