@@ -139,7 +139,7 @@ class RestObserverClient extends ObserverClient
 		{
 			this.unregisterObserver();
 		}
-		else
+		else if (this._listeningPath)
 		{
 			let params = {method: 'delete'};
 			this.setHKBaseOptions(params);
@@ -147,9 +147,12 @@ class RestObserverClient extends ObserverClient
 			console.info(`unregistered ${this._listeningPath} as observer of hkbase`);
 		}
 		this._listeningPath = null;
-		await this._server.close();
+		if(this._server)
+		{
+			await this._server.close();
+		}
 		this._server = null;
-		this._app = null;
+		this._app = null;	
 		console.info('Observer deinited');
 	}
 
