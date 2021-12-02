@@ -34,8 +34,8 @@ for (let key in classes)
  * and the desired notification format. The definition of ObserverConfiguration fields and possible filters is provided in OpenAPI/Swagger format at: 
  * "https://github.ibm.com/keg-core/hkbase-observer/blob/main/docs/spec.yml" or acessing the hkbaseObserverServiceUrl through a browser (Swagger UI)
  * @param {string} observerOptions.certificate if hkbase uses RabbitMQ notification, the AMQP connection certificate can be passed if needed
- * @param {number} options.port if hkbase uses REST notification, the port te be used when instantiating express server for receiving callback requests can be passed
- * @param {string} options.address if hkbase uses REST notification, the address to be used when instantiating express server for receiving callback requests can be passed
+ * @param {number} observerOptions.port if hkbase uses REST notification, the port te be used when instantiating express server for receiving callback requests can be passed
+ * @param {string} observerOptions.address if hkbase uses REST notification, the address to be used when instantiating express server for receiving callback requests can be passed
  * @param {Object} hkbaseOptions options that sould be passed when making requests to hkbase (e.g., authentication)
  * @returns {Promise<ObserverClient>} instance of ObserverClient or one of its subclasses
  */
