@@ -60,6 +60,16 @@ function setupEndpoints ()
 
 class RestObserverClient extends ObserverClient
 {
+	/**
+	 * 
+	 * @param {Object} info observer info from hkbase
+	 * @param {Object} options observer initialization options
+	 * @param {string} options.baseUrl base URL of hkbase to be used for registering observer
+	 * @param {number} options.port port te be used when instantiating express server for receiving callback requests
+	 * @param {string} options.address address to be used when instantiating express server for receiving callback requests
+	 * @param {Object} hkbaseOptions options to be used when communicating with hkbase
+	 * @param {Object} observerServiceParams observer service parameters (if using specialized observer)
+	 */
 	constructor (info, options, hkbaseOptions, observerServiceParams)
 	{
 		super (hkbaseOptions, observerServiceParams);

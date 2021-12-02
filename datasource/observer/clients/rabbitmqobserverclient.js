@@ -65,6 +65,18 @@ async function connect ()
 
 class RabbitMQObserverClient extends ObserverClient
 {
+	/**
+	 * @param {Object} info observer info from hkbase
+	 * @param {string} info.broker amqp broker default address
+	 * @param {string} info.brokerExternal amqp broker external address to be used if default address is not accessible
+	 * @param {string} info.exchangeName name of the RabbitMQ exchange where hkbase will publish messages
+	 * @param {Object} info.exchangeOptions additional options to be used when connecting to hkbase echange
+	 * @param {string} info.certificate RabbitMQ connection certificate (if needed)
+	 * @param {Object} options observer initialization options
+	 * @param {string} options.certificate RabbitMQ connection certificate (if needed)
+	 * @param {Object} hkbaseOptions options to be used when communicating with hkbase
+	 * @param {Object} observerServiceParams observer service parameters (if using specialized observer)
+	 */
 	constructor (info, options, hkbaseOptions, observerServiceParams)
 	{
 		super (hkbaseOptions, observerServiceParams);
