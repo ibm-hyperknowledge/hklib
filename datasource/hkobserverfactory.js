@@ -21,7 +21,7 @@ for (let key in classes)
 
 /**
  * Instantiate an observer client.
- * This method will the target HKBase which observer configuration it supports (REST or RabbitMQ)
+ * This method will ask the target HKBase which observer configuration it supports (REST or RabbitMQ)
  * and will instantiate the appropriate client with the provided configurations.
  * @param {string} basePath HKBase basePath that is used to communicate with the server
  * @param {Object} observerOptions Observer options that are used to initialize the observer client
