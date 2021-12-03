@@ -93,8 +93,7 @@ async function createObserver (basePath, observerOptions = {}, hkbaseOptions = {
 		else
 		{
 			console.error (err);
-			console.error ('Creating a default client');
-			return new clients['default']();
+			console.error ('Could not initialize observer client');
 		}
 	}
 }
