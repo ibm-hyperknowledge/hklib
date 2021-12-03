@@ -160,8 +160,18 @@ class RabbitMQObserverClient extends ConfigurableObserverClient
 	{
 		let _deinit = () => setTimeout( async () =>
 		{
-			if(this._isInitialized && !this._queueName) return _deinit();
+			if(this._isInitialized && !this._queueName) 
+			{
+				_deinit();
+				return;
+			}
 			console.info("Deiniting observer");
+			
+			if(!this._channelWrapper)
+			{
+				console.warn('Observer already deinited!');
+				return;
+			} 
 			await this._channelWrapper.cancelAll();
 			console.info('canceled AMQP consumer');
 			if(this._observerId)
