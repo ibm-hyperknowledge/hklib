@@ -36,6 +36,11 @@ class ConfigurableObserverClient extends ObserverClient
     this._observerId = null;
   }
 
+  static getType ()
+	{
+		return 'configurable';
+	}
+
   usesSpecializedObserver()
   {
     return this._observerServiceUrl && this._observerConfiguration;
