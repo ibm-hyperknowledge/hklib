@@ -76,6 +76,7 @@ class ConfigurableObserverClient extends ObserverClient
     console.info(`unregistering observer ${this._observerId}`);
     let response = await Promisify.exec(request, request.delete,`${this._observerServiceUrl}/observer/${this._observerId}`, params);
     if (response.statusCode > 300 || response.statusCode < 200) throw response.body;
+    if (this._heartbeatTimeout) clearTimeout(this._heartbeatTimeout);
     console.info(`unregistered observer ${this._observerId}`);
     this._observerId = null;
   }
