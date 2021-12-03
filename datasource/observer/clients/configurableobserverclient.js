@@ -28,6 +28,9 @@ class ConfigurableObserverClient extends ObserverClient
   constructor(hkbaseOptions, observerServiceParams)
   {
     super();
+    if (this.constructor == ConfigurableObserverClient) {
+      throw new Error("Abstract classes can't be instantiated.");
+    }
     this._hkbaseOptions = hkbaseOptions;
     this._observerServiceUrl = observerServiceParams.url;
     this._observerConfiguration = observerServiceParams.observerConfiguration;

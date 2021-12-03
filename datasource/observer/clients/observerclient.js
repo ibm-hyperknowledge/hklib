@@ -4,11 +4,16 @@
  */
 
 'use strict';
-
+/**
+ * Abstract class with basic behaviour and API of an observer client
+ */
 class ObserverClient
 {
 	constructor ()
 	{
+		if (this.constructor == ObserverClient) {
+      throw new Error("Abstract classes can't be instantiated.");
+    }
 		this._handlers = [];
 	}
 
@@ -27,7 +32,7 @@ class ObserverClient
 	 */
 	async init ()
 	{
-		return Promise.resolve();
+		throw new Error("Abstract Method has no implementation");
 	}
 
 	/**
@@ -36,7 +41,7 @@ class ObserverClient
 	 */
 	async deinit()
 	{
-		return Promise.resolve();
+		throw new Error("Abstract Method has no implementation");
 	}
 
 	/**
