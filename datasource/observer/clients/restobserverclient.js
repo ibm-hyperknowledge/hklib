@@ -5,11 +5,11 @@
 
 'use strict';
 
-const express        = require ('express');
-const bodyParser     = require ('body-parser');
-const request        = require ('request-promise-native');
-const ObserverClient = require ('./configurableobserverclient')
-const Notification   = require ('../notification');
+const express                    = require ('express');
+const bodyParser                 = require ('body-parser');
+const request                    = require ('request-promise-native');
+const ConfigurableObserverClient = require ('./configurableobserverclient')
+const Notification               = require ('../notification');
 
 const DEFAULT_ADDR   = 'http://localhost';
 
@@ -58,7 +58,7 @@ function setupEndpoints ()
 		(req, res) => entitiesCb (req, res, Notification.action.DELETE));
 }
 
-class RestObserverClient extends ObserverClient
+class RestObserverClient extends ConfigurableObserverClient
 {
 	/**
 	 * 

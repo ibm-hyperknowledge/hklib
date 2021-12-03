@@ -5,9 +5,9 @@
 
 'use strict';
 
-const ObserverClient = require ('./configurableobserverclient')
-const amqp           = require ('amqp-connection-manager');
-const ping					 = require ('ping');
+const ConfigurableObserverClient = require ('./configurableobserverclient')
+const amqp                       = require ('amqp-connection-manager');
+const ping					             = require ('ping');
 
 
 async function createChannel ()
@@ -63,7 +63,7 @@ async function connect ()
 }
 
 
-class RabbitMQObserverClient extends ObserverClient
+class RabbitMQObserverClient extends ConfigurableObserverClient
 {
 	/**
 	 * @param {Object} info observer info from hkbase
