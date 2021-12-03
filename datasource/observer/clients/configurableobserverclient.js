@@ -9,6 +9,9 @@ const ObserverClient = require ('./observerclient');
 const request        = require("request");
 const Promisify      = require("ninja-util/promisify");
 
+/**
+ * Abstract class that defines the behaviour of a configurable observer client
+ */
 class ConfigurableObserverClient extends ObserverClient
 {
   /**
