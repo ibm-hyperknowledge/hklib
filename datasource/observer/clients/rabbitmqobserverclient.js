@@ -80,15 +80,16 @@ class RabbitMQObserverClient extends ConfigurableObserverClient
 	constructor (info, options, hkbaseOptions, observerServiceParams)
 	{
 		super (hkbaseOptions, observerServiceParams);
-		this._broker            = info.broker;
-		this._brokerExternal    = info.brokerExternal;
-		this._exchangeName      = info.exchangeName;
-		this._exchangeOptions   = info.exchangeOptions;
-		this._certificate       = info.certificate || options.certificate;
-		this._connectionManager = null;
-		this._channelWrapper    = null;
-		this._setupFunction     = null;
-		this._queueName         = null;
+		this._broker              = info.broker;
+		this._brokerExternal      = info.brokerExternal;
+		this._exchangeName        = info.exchangeName;
+		this._defaultExchangeName = info.exchangeName;
+		this._exchangeOptions     = info.exchangeOptions;
+		this._certificate         = info.certificate || options.certificate;
+		this._connectionManager   = null;
+		this._channelWrapper      = null;
+		this._setupFunction       = null;
+		this._queueName           = null;
 	}
 
 	static getType ()
@@ -101,17 +102,17 @@ class RabbitMQObserverClient extends ConfigurableObserverClient
 		console.info(`initializing RabbitMQ observer client`);
 		try
 		{
-			let queueName = '';
+			let exchangeName = this._exchangeName;
 			// if specialized configuration is set up, get specialized queueName
 			if(this.usesSpecializedObserver())
 			{
-				queueName = await this.registerObserver();
+				exchangeName = await this.registerObserver();
 			}
 			else
 			{
 				console.info(`registered as observer of hkbase`);
 			}
-			await this._init(queueName);
+			await this._init(exchangeName);
 		}			
 		catch (err)
 		{
@@ -119,19 +120,19 @@ class RabbitMQObserverClient extends ConfigurableObserverClient
 		}
 	}
 
-	async _init(queueName)
+	async _init(exchangeName)
 	{
 		await connect.call(this);
 		this._setupFunction = async (channel) =>
 		{
-			const q = await channel.assertQueue(queueName, { exclusive: false });
-			queueName = q.queue;
-			this._queueName = queueName;
-			channel.bindQueue(queueName, this._exchangeName, queueName);
+			this._exchangeName = exchangeName;
+			const q = await channel.assertQueue('', { exclusive: true, autoDelete: true });
+			this._queueName = q.queue;
+			channel.bindQueue(this._queueName, this._exchangeName, 'create');
 			console.info(`Bound to exchange "${this._exchangeName}"`);
-			console.info(" [*] Waiting for messages in %s.", queueName);
+			console.info(" [*] Waiting for messages in %s.", this._queueName);
 
-			channel.consume(queueName, (msg) =>
+			channel.consume(this._queueName, (msg) =>
 			{
 				if(!msg) return;
 				try
@@ -178,12 +179,11 @@ class RabbitMQObserverClient extends ConfigurableObserverClient
 			{
 				await this.unregisterObserver();
 			}
-			else
-			{
-				await this._channelWrapper.deleteQueue(this._queueName);
-				console.info(`removed queue ${this._queueName}`);
-				this._queueName = null;
-			}
+			
+			await this._channelWrapper.deleteQueue(this._queueName);
+			console.info(`removed queue ${this._queueName}`);
+			this._queueName = null;
+
 			if(this._setupFunction)
 			{
 				this._channelWrapper.removeSetup(this._setupFunction, (c) => c.close(), async () => 
@@ -194,6 +194,7 @@ class RabbitMQObserverClient extends ConfigurableObserverClient
 					this._channelWrapper = null;
 					this._connectionManager = null;
 					this._isInitialized = false;
+					this._exchangeName = this._defaultExchangeName;
 					console.info("Observer deinited!");
 				});
 			}
