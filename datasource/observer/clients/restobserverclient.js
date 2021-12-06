@@ -5,11 +5,11 @@
 
 'use strict';
 
-const express        = require ('express');
-const bodyParser     = require ('body-parser');
-const request        = require ('request-promise-native');
-const ObserverClient = require ('./observerclient')
-const Notification   = require ('../notification');
+const express                    = require ('express');
+const bodyParser                 = require ('body-parser');
+const request                    = require ('request-promise-native');
+const ConfigurableObserverClient = require ('./configurableobserverclient')
+const Notification               = require ('../notification');
 
 const DEFAULT_ADDR   = 'http://localhost';
 
@@ -25,7 +25,6 @@ function setupEndpoints ()
 			}
 		};
 		this.notify (notification);
-
 		res.sendStatus(200);
 	}
 
@@ -40,42 +39,55 @@ function setupEndpoints ()
 			}
 		};
 		this.notify (notification);
-
 		res.sendStatus(200);
 	}
 
-	this._webServer.put ('/repository/:repoName',
+	this._app.post ('/repository/:repoName',
 		(req, res) => repoCb (req, res, Notification.action.CREATE));
 
-	this._webServer.delete ('/repository/:repoName',
+	this._app.delete ('/repository/:repoName',
 		(req, res) => repoCb (req, res, Notification.action.DELETE));
 
-	this._webServer.put ('/repository/:repoName/entity',
+	this._app.post ('/repository/:repoName/entity',
 		(req, res) => entitiesCb (req, res, Notification.action.CREATE));
 
-	this._webServer.post ('/repository/:repoName/entity',
+	this._app.put ('/repository/:repoName/entity',
 		(req, res) => entitiesCb (req, res, Notification.action.UPDATE));
 
-	this._webServer.delete ('/repository/:repoName/entity',
+	this._app.delete ('/repository/:repoName/entity',
 		(req, res) => entitiesCb (req, res, Notification.action.DELETE));
 }
 
-class RestObserverClient extends ObserverClient
+class RestObserverClient extends ConfigurableObserverClient
 {
-	constructor (info, options)
+	/**
+	 * 
+	 * @param {Object} info observer info from hkbase
+	 * @param {Object} options observer initialization options
+	 * @param {string} options.baseUrl base URL of hkbase to be used for registering observer
+	 * @param {number} options.port port te be used when instantiating express server for receiving callback requests
+	 * @param {string} options.address address to be used when instantiating express server for receiving callback requests
+	 * @param {Object} hkbaseOptions options to be used when communicating with hkbase
+	 * @param {Object} observerServiceParams observer service parameters (if using specialized observer)
+	 */
+	constructor (info, options, hkbaseOptions, observerServiceParams)
 	{
-		super ();
+		super (hkbaseOptions, observerServiceParams);
 		this._baseUrl   = options.baseUrl;
-		this._webServer = express ();
+		this._app = express ();
 		this._port      = options.port || 0;
 		this._address   = options.address || DEFAULT_ADDR;
+		this._observerId = null;
+		this._listeningPath = null;
+		this._server = null;
+		
 
 		if (!this._baseUrl.endsWith('/'))
 		{
 			this._baseUrl = `${this._baseUrl}/`;
 		}
 
-		this._webServer.use (bodyParser.json());
+		this._app.use (bodyParser.json());
 	}
 
 	static getType ()
@@ -83,37 +95,77 @@ class RestObserverClient extends ObserverClient
 		return 'rest';
 	}
 
-	init ()
+	async init ()
 	{
+		console.info(`initializing REST observer client`);
 		return new Promise ((resolve, reject) =>
 			{
 				setupEndpoints.call (this);
-				let server = this._webServer.listen (this._port,
+				this._server = this._app.listen (this._port,
 					async () =>
 					{
-						this._port = server.address().port;
+						this._port = this._server.address().port;
+						console.info(`Express Server initialized at port ${this._port} for receiving callback requests of HKBase notifications`);
 						try
 						{
-							let listeningPath = encodeURIComponent(`${this._address}:${this._port}`);
-							await request (`${this._baseUrl}observer/${listeningPath}`, {method: 'put'})
+							let listeningPath = `${this._address}:${this._port}`;
+							this._listeningPath = listeningPath;
+							if(this.usesSpecializedObserver())
+							{
+								this._observerConfiguration.callbackEndpoint = listeningPath;
+								await this.registerObserver();
+							}
+							else
+							{
+								let params = {method: 'put'};
+								this.setHKBaseOptions(params);
+								await request (`${this._baseUrl}observer/${encodeURIComponent(listeningPath)}`, params);
+								console.info(`registered ${listeningPath} as observer of hkbase`);
+							}
 							resolve ();
 						}
 						catch (err)
 						{
 							if (err.statusCode && err.statusCode >= 400 && err.statusCode < 500)
 							{
-								console.log('observer already registered');
+								console.warn('observer already registered');
 								resolve ();
 							}
 							else
 							{
-								console.log(err);
+								console.error(err);
 								reject (err);
 							}
 						}
 
 					});
 			});
+	}
+
+	async deinit ()
+	{
+		console.info('Deiniting observer');
+		if(this._observerId)
+		{
+			this.unregisterObserver();
+		}
+		else if (this._listeningPath)
+		{
+			let params = {method: 'delete'};
+			this.setHKBaseOptions(params);
+			await request (`${this._baseUrl}observer/${encodeURIComponent(this._listeningPath)}`, params);
+			console.info(`unregistered ${this._listeningPath} as observer of hkbase`);
+		}
+		this._listeningPath = null;
+		if(this._server)
+		{
+			await this._server.close();
+			console.info(`Express Server at port ${this._port} was stopped`);
+			this._port = null;
+		}
+		this._server = null;
+		this._app = null;	
+		console.info('Observer deinited');
 	}
 
 }

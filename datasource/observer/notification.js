@@ -5,13 +5,21 @@
 
 'use strict';
 
-module.exports.object = {
+const object = {
 	REPOSITORY: 'repository',
 	ENTITIES: 'entities'
 };
+module.exports.object = object;
 
-module.exports.action = {
+const action = {
 	CREATE: 'create',
 	DELETE: 'delete',
 	UPDATE: 'update'
 };
+module.exports.action = action;
+
+const httpMethodByAction = {};
+httpMethodByAction[action.CREATE] = 'POST';
+httpMethodByAction[action.DELETE] = 'DELETE';
+httpMethodByAction[action.UPDATE] = 'PUT';
+module.exports.httpMethodByAction = httpMethodByAction;

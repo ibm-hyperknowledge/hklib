@@ -5,6 +5,7 @@
 
 'use strict';
 
-module.exports.DefaultObserverClient  = require('./observerclient');
-module.exports.RestObserverClient     = require('./restobserverclient');
-module.exports.RabbitMQObserverClient = require('./rabbitmqobserverclient')
+module.exports.DefaultObserverClient       = require('./observerclient');
+module.exports.ConfigurableObserverClient  = require('./configurableobserverclient');
+module.exports.RestObserverClient          = require('./restobserverclient');
+module.exports.RabbitMQObserverClient      = require('./rabbitmqobserverclient')
