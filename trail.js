@@ -422,13 +422,23 @@ Trail.prototype.toJSON = function ()
 
 Trail.prototype.serialize = function ()
 {
+  let actions;
+  if(this.actions instanceof Array)
+  {
+    actions = this.actions;
+  }
+  else
+  {
+    actions = this.actions.toArray();
+  }
+
   return {
       id: this.id,
       parent: this.parent,
       properties: this.properties,
       metaproperties: this.metaproperties,
       interfaces: this.interfaces,
-      actions: this.actions.toArray(),
+      actions: actions,
       type: this.type
   };
 }
