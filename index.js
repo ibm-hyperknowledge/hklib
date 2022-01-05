@@ -23,7 +23,7 @@ exports.HKLink         = require("./link");
 exports.Trail          = require("./trail");
 exports.HKTrail        = require("./trail");
 exports.HKEntity       = require("./hkentity");
-
+exports.HKGraph        = require("./hkgraph")
 
 exports.Types          = require("./types");
 exports.HKTypes        = require("./types");
