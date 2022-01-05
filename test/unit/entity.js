@@ -65,7 +65,7 @@ describe("Contexts unit tests:", () => {
         "includeContextOnResults": true
       }
       
-      HKDatasource.getContextChildrenLazy(context.id, payload, (err, data)=>{
+      HKDatasource.getContextChildren(context.id, payload, (err, data)=>{
         if (err) throw err;
         
         expect([context.id, node.id].sort()).to.be.deep.equal(Object.keys(data).sort());
@@ -89,7 +89,7 @@ describe("Contexts unit tests:", () => {
         "includeContextOnResults": false
       }
       
-      HKDatasource.getContextChildrenLazy(context.id, payload, (err, data)=>{
+      HKDatasource.getContextChildren(context.id, payload, (err, data)=>{
         if (err) throw err;
         
         expect([node.id]).to.be.deep.equal(Object.keys(data));
@@ -113,7 +113,7 @@ describe("Contexts unit tests:", () => {
         "includeContextOnResults": false
       }
       
-      HKDatasource.getContextChildrenLazy(context.id, payload, (err, data)=>{
+      HKDatasource.getContextChildren(context.id, payload, (err, data)=>{
         if (err) throw err;
         
         expect([node.id]).to.be.deep.equal(Object.keys(data));
@@ -137,7 +137,7 @@ describe("Contexts unit tests:", () => {
         "fieldsToInclude": { "fields": ["id", "parent"], "properties": ["virtualsrc"]}
       }
       
-      HKDatasource.getContextChildrenLazy(context.id, payload, (err, data)=>{
+      HKDatasource.getContextChildren(context.id, payload, (err, data)=>{
         if (err) throw err;
         expect(vContext.id).to.be.deep.equal(Object.values(data)[0].id);
         expect(vContext.parent).to.be.deep.equal(Object.values(data)[0].parent);

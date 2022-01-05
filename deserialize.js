@@ -12,6 +12,7 @@ const Reference = require("./reference");
 const Link = require("./link");
 const Trail = require("./trail");
 const VirtualContext = require("./virtualcontext");
+const HKEntity = require("./hkentity");
 
 function _deserialize(input)
 {
@@ -43,7 +44,7 @@ function _deserialize(input)
  * Deserialize objects to create instances of HKEntity
  *
  * @param {object} serialized an object or an array of objects to create Hyperknowledge entities
- * @returns An entity or an array of entities that are instance of HKEntity. Or returns null if the input is not valid
+ * @returns {HKEntity | HKEntity[] | null} An entity or an array of entities that are instance of HKEntity. Or returns null if the input is not valid
  */
 function deserialize(serialized)
 {

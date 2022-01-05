@@ -15,7 +15,9 @@ const Types = require("./types");
 const shortid = require('shortid');
 const VirtualContext = require("./virtualcontext");
 
-function HKGraph()
+class HKGraph
+{
+constructor()
 {
 	this.nodes = {};
 	this.contexts = {};
@@ -36,8 +38,7 @@ function HKGraph()
 
 	this.generateId = generateId;
 }
-
-HKGraph.prototype.hasId = function (id)
+hasId(id)
 {
 	return this.nodes.hasOwnProperty(id) ||
 		this.contexts.hasOwnProperty(id) ||
@@ -45,15 +46,13 @@ HKGraph.prototype.hasId = function (id)
 		this.connectors.hasOwnProperty(id) ||
 		this.refs.hasOwnProperty(id) ||
 		this.trails.hasOwnProperty(id);
-};
-
-
+}
 /**
- * Update an entity 
+ * Update an entity
  * @param {object} entity an entity with an id and ALL updated properties (including intrinsecs properties)
  * @returns {object} the new entity
  */
-HKGraph.prototype.setEntity = function (entity)
+setEntity(entity)
 {
 	let oldEntity = this.getEntity(entity.id);
 
@@ -81,9 +80,8 @@ HKGraph.prototype.setEntity = function (entity)
 	}
 
 	// Update parent
-
 	// Clean old entity
-	if (oldEntity.hasOwnProperty('parent')) 
+	if (oldEntity.hasOwnProperty('parent'))
 	{
 		let oldParent = this.getEntity(oldEntity.parent);
 		if (oldParent)
@@ -120,14 +118,13 @@ HKGraph.prototype.setEntity = function (entity)
 	oldEntity.properties = entity.properties;
 
 	return oldEntity;
-};
-
+}
 /**
  * Add a new entity to the graph
  * @param {object} entity The entity object to be added.
  * @returns {object} The entity added, if the input object does not have an id, the returned will have.
  */
-HKGraph.prototype.addEntity = function (entity)
+addEntity(entity)
 {
 	let newEntity = null;
 
@@ -144,6 +141,7 @@ HKGraph.prototype.addEntity = function (entity)
 			id = this.generateId(this);
 			entity.id = id;
 		}
+
 		else
 		{
 			id = entity.id;
@@ -164,18 +162,19 @@ HKGraph.prototype.addEntity = function (entity)
 				{
 					const validVirtualContext = VirtualContext.isValid(entity);
 					const validContext = Context.isValid(entity);
-					
+
 					if (validVirtualContext || validContext)
 					{
-						if(validVirtualContext) 
+						if (validVirtualContext)
 						{
 							newEntity = new VirtualContext(entity);
 						}
+
 						else
 						{
 							newEntity = new Context(entity);
-						}	
-						
+						}
+
 						this.contexts[entity.id] = newEntity;
 						this.contextMap[entity.id] = {};
 
@@ -220,7 +219,7 @@ HKGraph.prototype.addEntity = function (entity)
 								this.bindsMap[comp] = new Set();
 							}
 							this.bindsMap[comp].add(newEntity.id);
-						})
+						});
 					}
 					break;
 				}
@@ -258,13 +257,14 @@ HKGraph.prototype.addEntity = function (entity)
 		}
 
 		// Set parent
-		if (entity.type !== Types.CONNECTOR) 
+		if (entity.type !== Types.CONNECTOR)
 		{
 			if (this.contextMap.hasOwnProperty(newEntity.parent))
 			{
 				this.contextMap[newEntity.parent][newEntity.id] = newEntity;
 			}
-			else 
+
+			else
 			{
 				if (!this.orphans.hasOwnProperty(newEntity.parent))
 				{
@@ -283,13 +283,12 @@ HKGraph.prototype.addEntity = function (entity)
 
 	}
 	return newEntity;
-};
-
+}
 /**
  * @param {string} id the id of entity to be removed
  * @returns {object} the removed entity
  */
-HKGraph.prototype.removeEntity = function (id)
+removeEntity(id)
 {
 	let entity = this.getEntity(id);
 	if (entity)
@@ -379,14 +378,14 @@ HKGraph.prototype.removeEntity = function (id)
 			delete this.bindsMap[entity.id];
 		}
 	}
+
 	else
 	{
 		return null;
 	}
 	return entity;
-};
-
-HKGraph.prototype.hasBind = function (connectorId, bind)
+}
+hasBind(connectorId, bind)
 {
 	if (this.linkMap.hasOwnProperty(connectorId))
 	{
@@ -402,8 +401,7 @@ HKGraph.prototype.hasBind = function (connectorId, bind)
 	}
 	return false;
 }
-
-HKGraph.prototype.getReferences = function (id)
+getReferences(id)
 {
 	if (this.refMap.hasOwnProperty(id))
 	{
@@ -411,8 +409,7 @@ HKGraph.prototype.getReferences = function (id)
 	}
 	return [];
 }
-
-HKGraph.prototype.hasReference = function (id, parent)
+hasReference(id, parent)
 {
 	if (this.refMap.hasOwnProperty(id))
 	{
@@ -428,8 +425,7 @@ HKGraph.prototype.hasReference = function (id, parent)
 	}
 	return false;
 }
-
-HKGraph.prototype.getReference = function (id, parent)
+getReference(id, parent)
 {
 	if (this.refMap.hasOwnProperty(id))
 	{
@@ -445,20 +441,19 @@ HKGraph.prototype.getReference = function (id, parent)
 	}
 	return null;
 }
-
-HKGraph.prototype.getChildren = function (contextId)
+getChildren(contextId)
 {
 	if (this.contextMap.hasOwnProperty(contextId))
 	{
 		return this.contextMap[contextId];
 	}
+
 	else
 	{
 		return {};
 	}
 }
-
-HKGraph.prototype.getNeighbors = function (entityId)
+getNeighbors(entityId)
 {
 	let out = [];
 	if (this.bindsMap.hasOwnProperty(entityId))
@@ -476,8 +471,7 @@ HKGraph.prototype.getNeighbors = function (entityId)
 	}
 	return out;
 }
-
-HKGraph.prototype.getEntity = function (id)
+getEntity(id)
 {
 	if (id === null)
 	{
@@ -486,9 +480,8 @@ HKGraph.prototype.getEntity = function (id)
 		return c;
 	}
 	return this.nodes[id] || this.contexts[id] || this.links[id] || this.connectors[id] || this.refs[id] || this.trails[id] || null;
-};
-
-HKGraph.prototype.getEntities = function ()
+}
+getEntities()
 {
 	let out = {};
 
@@ -501,9 +494,7 @@ HKGraph.prototype.getEntities = function ()
 
 	return out;
 }
-
-
-HKGraph.prototype.serialize = function ()
+serialize()
 {
 	let out = {
 		nodes: this.nodes,
@@ -512,12 +503,11 @@ HKGraph.prototype.serialize = function ()
 		connectors: this.connectors,
 		refs: this.refs,
 		trails: this.trails
-	}
+	};
 	return JSON.stringify(out);
-};
+}
 
-
-function deserialize(str)
+deserialize(str)
 {
 	let model = new HKGraph();
 	let serialized = str ? JSON.parse(str) : {};
@@ -531,7 +521,7 @@ function deserialize(str)
 	if (serialized.hasOwnProperty('trails')) model.trails = serialized.trails;
 	return model;
 }
-
+}
 /* private functions */
 function generateId(model, length)
 {
@@ -550,4 +540,3 @@ HKGraph.CONTEXT_TYPE = Types.CONTEXT;
 HKGraph.LINK_TYPE = Types.LINK;
 HKGraph.CONNECTOR_TYPE = Types.CONNECTOR;
 HKGraph.INTERFACE = Types.INTERFACE;
-HKGraph.deserialize = deserialize;

@@ -2,15 +2,18 @@
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
-
+//test
 "use strict";
 
-const Types 		= require("./types");
-const HKEntity 		= require("./hkentity");
-const RoleType 		= require("./roletypes");
+const Types = require("./types");
+const HKEntity = require("./hkentity");
+const RoleType = require("./roletypes");
 
-function Connector(id, className, roles)
+class Connector extends HKEntity
 {
+constructor(id, className, roles)
+{
+	super();
 	if (arguments[0] && typeof arguments[0] === "object")
 	{
 		let connector = arguments[0];
@@ -35,49 +38,45 @@ function Connector(id, className, roles)
 	this.type = Types.CONNECTOR;
 }
 
-Connector.prototype = Object.create(HKEntity.prototype);
-Connector.prototype.constructor = Connector;
-
-Connector.prototype.addRole = function(role, type = RoleType.NONE)
+addRole(role, type = RoleType.NONE)
 {
-    if(!role.hasOwnProperty(role))
-    {
-        this.roles[role] = type;
-    }
+	if (!role.hasOwnProperty(role))
+	{
+		this.roles[role] = type;
+	}
 }
 
-
-Connector.prototype.hasRole = function(role)
+hasRole(role)
 {
-    return this.roles.hasOwnProperty(role);
+	return this.roles.hasOwnProperty(role);
 }
 
-Connector.prototype.getRoleType = function(role)
+getRoleType(role)
 {
-    return this.roles[role] || null;
+	return this.roles[role] || null;
 }
 
-Connector.prototype.setRoleType = function(role, type)
+setRoleType(role, type)
 {
-    if(this.roles.hasOwnProperty(role))
-    {
-        this.roles[role] = type;
-    }
+	if (this.roles.hasOwnProperty(role))
+	{
+		this.roles[role] = type;
+	}
 }
 
-Connector.prototype.getRoles = function()
+getRoles()
 {
-    return Object.keys(this.roles);
+	return Object.keys(this.roles);
 }
 
-Connector.prototype.serialize = function()
+serialize()
 {
 	let connector = {
 		id: this.id,
 		type: Types.CONNECTOR,
 		className: this.className,
 		roles: this.roles
-	}
+	};
 	if (this.properties)
 	{
 		connector.properties = this.serializeProperties();
@@ -89,16 +88,16 @@ Connector.prototype.serialize = function()
 	return connector;
 }
 
-function isValid(entity)
+static isValid(entity)
 {
 
 	let isValid = false;
-	if (entity && typeof(entity) === 'object' && !Array.isArray(entity))
+	if (entity && typeof (entity) === 'object' && !Array.isArray(entity))
 	{
-		if (entity.hasOwnProperty('type') && 
+		if (entity.hasOwnProperty('type') &&
 			entity.type === Types.CONNECTOR &&
-			entity.hasOwnProperty('id') && 
-			entity.hasOwnProperty('className') && 
+			entity.hasOwnProperty('id') &&
+			entity.hasOwnProperty('className') &&
 			entity.hasOwnProperty('roles'))
 		{
 			isValid = true;
@@ -107,7 +106,8 @@ function isValid(entity)
 	return isValid;
 }
 
-Connector.type = Types.CONNECTOR;
-Connector.isValid = isValid;
+}
 
+Connector.type = Types.CONNECTOR;
+const isValid = Connector.isValid
 module.exports = Connector;
