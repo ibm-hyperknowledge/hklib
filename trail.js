@@ -117,12 +117,22 @@ Trail.prototype.in = function(from = null) {
 }
 
 Trail.prototype.out = function(to = null) {
+  if(this.actions.tail)
+  {
+    if (to)
+    {
+      this.actions.tail.to = to;
+    }
+      
+    return this.actions.tail.to;
+  }
+
   if (to)
   {
-    this.actions.tail.to = to;
+    this.actions.head.to = to;
   }
     
-  return this.actions.tail.to;
+  return this.actions.head.to;
 }
 
 Trail.prototype.size = function()
