@@ -1,10 +1,6 @@
 /*
- * copyright: IBM Confidential
- * copyright: OCO Source Materials
- * copyright: © IBM Corp. All Rights Reserved
- * date: 2020
- *
- * IBM Certificate of Originality
+ * Copyright (c) 2016-present, IBM Research
+ * Licensed under The MIT License [see LICENSE for details]
  */
 
 
