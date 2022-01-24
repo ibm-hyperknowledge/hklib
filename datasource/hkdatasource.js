@@ -6,15 +6,18 @@
 "use strict";
 
 const request = require("request");
-const fs      = require("fs");
-const jwt     = require("jsonwebtoken");
+const fs = require("fs");
+const jwt = require("jsonwebtoken");
 
-const HKEntity    = require("../hkentity");
+const HKEntity = require("../hkentity");
 const deserialize = require("../deserialize");
 
-const PARSE_FAILED_MESSAGE =  "Failed to parse server response";
+const PARSE_FAILED_MESSAGE = "Failed to parse server response";
 const UNEXPECTED_NULL_DATA = "Unexpected empty data on parsing";
 
+
+class HKDatasource
+{
 /**
  * Creates a datasource connected to a hkbase
  *
@@ -24,9 +27,9 @@ const UNEXPECTED_NULL_DATA = "Unexpected empty data on parsing";
  * @param {object} options Additional setup for the hkbase connection
  * @param {string} options.authToken JWT Token to authentication to the HKBase
  */
-function HKDatasource(url, repository, options = {})
+constructor(url, repository, options = {})
 {
-	if(!url)
+	if (!url)
 	{
 		let err = "Url can not be null";
 		throw err;
@@ -34,52 +37,16 @@ function HKDatasource(url, repository, options = {})
 	this.url = url.endsWith("/") ? url : (url + "/");
 
 	this.options = {};
-	if(options.authToken)
+	if (options.authToken)
 	{
-		this.options.auth = {bearer: options.authToken};
+		this.options.auth = { bearer: options.authToken };
 	}
-	else if(options.authSecret)
+	else if (options.authSecret)
 	{
-		this.options.auth = {bearer: HKDatasource.getAuthToken(options.authSecret, null)};
+		this.options.auth = { bearer: HKDatasource.getAuthToken(options.authSecret, null) };
 	}
-
 
 	this.graphName = repository;
-}
-
-function convertEntities(raw)
-{
-	let data = null;
-	try
-	{
-		data = JSON.parse(raw);
-	}
-	catch(exp)
-	{
-		throw PARSE_FAILED_MESSAGE;
-	}
-
-	if(!data)
-	{
-		throw UNEXPECTED_NULL_DATA;
-	}
-
-	let entities = {};
-
-	for(let k in data)
-	{
-		let entity = deserialize(data[k]);
-		if(entity)
-		{
-			entities[entity.id] = entity;
-		}
-		else
-		{
-			console.warn (`Warning: Error deserializing entity ${JSON.stringify(data[k])}`)
-		}
-	}
-
-	return entities;
 }
 
 /**
@@ -91,30 +58,31 @@ function convertEntities(raw)
  *
  * @param {OperationCallback} callback Response callback
  */
-
-HKDatasource.prototype.getInfo = function (callback = () => {})
+getInfo(callback = () => { })
 {
 	request.get(`${this.url}info`, this.options, (err, res) =>
 	{
-		if(!err)
+		if (!err)
 		{
-			if(requestCompletedWithSuccess (res.statusCode))
+			if (requestCompletedWithSuccess(res.statusCode))
 			{
 				try
 				{
 					let data = JSON.parse(res.body);
 					callback(null, data);
 				}
-				catch(exp)
+				catch (exp)
 				{
 					callback(exp);
 				}
 			}
+
 			else
 			{
 				callback(stringifyResponseLog(res));
 			}
 		}
+
 		else
 		{
 			callback(err);
@@ -131,36 +99,37 @@ HKDatasource.prototype.getInfo = function (callback = () => {})
  *
  * @param {OperationCallback} callback Response callback
  */
- HKDatasource.prototype.getVersion = function (callback = () => {})
- {
-	 request.get(`${this.url}version`, this.options, (err, res) =>
-	 {
-		 if(!err)
-		 {
-			 if(requestCompletedWithSuccess (res.statusCode))
-			 {
-				 try
-				 {
-					 let data = JSON.parse(res.body);
-					 callback(null, data);
-				 }
-				 catch(exp)
-				 {
-					 callback(exp);
-				 }
-			 }
-			 else
-			 {
-				 callback(stringifyResponseLog(res));
-			 }
-		 }
-		 else
-		 {
-			 callback(err);
-		 }
-	 });
- }
+getVersion(callback = () => { })
+{
+	request.get(`${this.url}version`, this.options, (err, res) =>
+	{
+		if (!err)
+		{
+			if (requestCompletedWithSuccess(res.statusCode))
+			{
+				try
+				{
+					let data = JSON.parse(res.body);
+					callback(null, data);
+				}
+				catch (exp)
+				{
+					callback(exp);
+				}
+			}
 
+			else
+			{
+				callback(stringifyResponseLog(res));
+			}
+		}
+
+		else
+		{
+			callback(err);
+		}
+	});
+}
 
 /**
  * Callback function for `addEntities`
@@ -169,37 +138,38 @@ HKDatasource.prototype.getInfo = function (callback = () => {})
  * @param {Error} err Error message/object (null in case of success)
  * @param {Array} repositories List of repositories
  */
-
 /**
  * List the repositories of the current hkbase
  *
  * @param {ListRepositoriesCallback} callback Callback function with the list of repositories
  */
-HKDatasource.prototype.getRepositories = function( callback = () => {})
+getRepositories(callback = () => { })
 {
 	let url = this.url + "repository/";
 
 	request.get(url, this.options, (err, res) =>
 	{
-		if(!err)
+		if (!err)
 		{
-			if(requestCompletedWithSuccess (res.statusCode))
+			if (requestCompletedWithSuccess(res.statusCode))
 			{
 				try
 				{
 					let data = JSON.parse(res.body);
 					callback(null, data);
 				}
-				catch(exp)
+				catch (exp)
 				{
 					callback(exp);
 				}
 			}
+
 			else
 			{
 				callback(stringifyResponseLog(res));
 			}
 		}
+
 		else
 		{
 			callback(err);
@@ -216,24 +186,25 @@ HKDatasource.prototype.getRepositories = function( callback = () => {})
  *
  * @param {OperationCallback} callback Response callback
  */
-
-HKDatasource.prototype.createRepository = function(callback = () => {})
+createRepository(callback = () => { })
 {
-	let url = this.url + "repository/"+ this.graphName;
+	let url = this.url + "repository/" + this.graphName;
 
 	request.put(url, this.options, (err, res) =>
 	{
-		if(!err)
+		if (!err)
 		{
-			if(requestCompletedWithSuccess (res.statusCode))
+			if (requestCompletedWithSuccess(res.statusCode))
 			{
 				callback(null);
 			}
+
 			else
 			{
 				callback(stringifyResponseLog(res));
 			}
 		}
+
 		else
 		{
 			callback(err);
@@ -250,24 +221,25 @@ HKDatasource.prototype.createRepository = function(callback = () => {})
  *
  * @param {OperationCallback} callback Response callback
  */
-
-HKDatasource.prototype.dropRepository = function(callback = () =>{})
+dropRepository(callback = () => { })
 {
-	let url = this.url + "repository/"+ this.graphName;
+	let url = this.url + "repository/" + this.graphName;
 
 	request.delete(url, this.options, (err, res) =>
 	{
-		if(!err)
+		if (!err)
 		{
-			if(requestCompletedWithSuccess (res.statusCode))
+			if (requestCompletedWithSuccess(res.statusCode))
 			{
 				callback(null);
 			}
+
 			else
 			{
 				callback(stringifyResponseLog(res));
 			}
 		}
+
 		else
 		{
 			callback(err);
@@ -283,69 +255,68 @@ HKDatasource.prototype.dropRepository = function(callback = () =>{})
  * @param {Error} err Error message/object (null in case of success)
  * @param {Array} entities repository metadata
  */
-
 /**
  * Save hyperknowledge entities to a hkbase
  *
  * @param {Array} entities array of entities to be added or updated
  * @param {AddEntitiesCallback} callback Response callback
  */
-
-HKDatasource.prototype.saveEntities = function(entities, callback)
+saveEntities(entities, callback)
 {
 	let url = this.url + "repository/" + this.graphName + "/entity/";
 
-	if(!Array.isArray(entities))
+	if (!Array.isArray(entities))
 	{
 		throw `Input entities must be an array. Received "${typeof entities}"`;
 	}
 
 	let inputEntities = [];
 
-	for(let i = 0; i < entities.length; i++)
+	for (let i = 0; i < entities.length; i++)
 	{
 		let e = entities[i];
 
-		if(e && e.constructor === HKEntity)
+		if (e && e.constructor === HKEntity)
 		{
 			inputEntities.push(e.serialize());
 		}
-		else if(e && typeof(e) === "object")
+		else if (e && typeof (e) === "object")
 		{
 			inputEntities.push(e);
 		}
 	}
 
-	let params =
-	{
-		headers: {"content-type": "application/json"},
+	let params = {
+		headers: { "content-type": "application/json" },
 		body: JSON.stringify(inputEntities)
-	}
+	};
 
 	Object.assign(params, this.options);
 
 	request.put(url, params, (err, res) =>
 	{
-		if(!err)
+		if (!err)
 		{
-			if(requestCompletedWithSuccess (res.statusCode))
+			if (requestCompletedWithSuccess(res.statusCode))
 			{
 				let data = null;
 				try
 				{
-					data = JSON.parse(res.body)
+					data = JSON.parse(res.body);
 				}
-				catch(err)
+				catch (err)
 				{
 					console.log("Warning: Failed to parse response");
 				}
 				callback(null, data);
 			}
+
 			else
 			{
 				callback(stringifyResponseLog(res));
 			}
 		}
+
 		else
 		{
 			callback(err);
@@ -354,53 +325,46 @@ HKDatasource.prototype.saveEntities = function(entities, callback)
 }
 
 /**
- * Alias to `saveEntities`. Add entities may also update entities
- *
- * @param {Array} entities array of entities to be added or updated
- * @param {AddEntitiesCallback} callback Response callback
- */
-HKDatasource.prototype.addEntities = HKDatasource.prototype.saveEntities;
-/**
  * Remove entities from a hkbase
  *
  * @param {Array | object} params Array of ids or filter to math entities to be removed @see filterEntities
  * @param {OperationCallback} callback Response callback
  */
-
-HKDatasource.prototype.removeEntities = function(ids, callback)
+removeEntities(ids, callback)
 {
-	let url = this.url + "repository/"+ this.graphName + "/entity/";
+	let url = this.url + "repository/" + this.graphName + "/entity/";
 
-	let params =
-	{
-		headers: {"content-type": "application/json"},
+	let params = {
+		headers: { "content-type": "application/json" },
 		body: JSON.stringify(ids)
-	}
+	};
 
 	Object.assign(params, this.options);
 
 	request.delete(url, params, (err, res) =>
 	{
-		if(!err)
+		if (!err)
 		{
-			if(requestCompletedWithSuccess (res.statusCode))
+			if (requestCompletedWithSuccess(res.statusCode))
 			{
 				let data = null;
 				try
 				{
-					data = JSON.parse(res.body)
+					data = JSON.parse(res.body);
 				}
-				catch(err)
+				catch (err)
 				{
 					console.log("Warning: Failed to parse response");
 				}
 				callback(null, data);
 			}
+
 			else
 			{
 				callback(stringifyResponseLog(res));
 			}
 		}
+
 		else
 		{
 			callback(err);
@@ -420,40 +384,40 @@ HKDatasource.prototype.removeEntities = function(ids, callback)
  * @param {Array} ids Array of ids to retrieve their respective entities
  * @param {GetEntitiesCallback} callback Callback with the entities
  */
-
-HKDatasource.prototype.getEntities = function(ids, callback = () => {})
+getEntities(ids, callback = () => { })
 {
-	let url = this.url + "repository/"+ this.graphName + "/entity/";
+	let url = this.url + "repository/" + this.graphName + "/entity/";
 
-	let params =
-	{
-		headers: {"content-type": "application/json"},
+	let params = {
+		headers: { "content-type": "application/json" },
 		body: JSON.stringify(ids)
-	}
+	};
 
 	Object.assign(params, this.options);
 
 	request.post(url, params, (err, res) =>
 	{
-		if(!err)
+		if (!err)
 		{
-			if(requestCompletedWithSuccess (res.statusCode))
+			if (requestCompletedWithSuccess(res.statusCode))
 			{
 				try
 				{
 					let entities = convertEntities(res.body);
 					callback(null, entities);
 				}
-				catch(exp)
+				catch (exp)
 				{
-					callback(exp)
+					callback(exp);
 				}
 			}
+
 			else
 			{
 				callback(stringifyResponseLog(res));
 			}
 		}
+
 		else
 		{
 			callback(err);
@@ -467,12 +431,11 @@ HKDatasource.prototype.getEntities = function(ids, callback = () => {})
  * @param {string} context The context id to retrieve their nested entities. May be null to get the `body` context.
  * @param {GetEntitiesCallback} callback Callback with the entities
  */
-
-HKDatasource.prototype.fetchContext = function(context, callback = () => {})
+fetchContext(context, callback = () => { })
 {
 	let url = this.url + "repository/" + this.graphName + "/context/";
 
-	if(context)
+	if (context)
 	{
 		url += encodeURIComponent(context);
 	}
@@ -480,81 +443,85 @@ HKDatasource.prototype.fetchContext = function(context, callback = () => {})
 	request.get(url, this.options, (err, res) =>
 	{
 		// console.log(res.body);
-		if(!err)
+		if (!err)
 		{
-			if(requestCompletedWithSuccess (res.statusCode))
+			if (requestCompletedWithSuccess(res.statusCode))
 			{
 				try
 				{
 					let entities = convertEntities(res.body);
 					callback(null, entities);
 				}
-				catch(exp)
+				catch (exp)
 				{
 					console.log(exp);
 					callback(exp);
 				}
 			}
+
 			else
 			{
 				callback(stringifyResponseLog(res));
 			}
 
 		}
+
 		else
 		{
 			callback(err);
 		}
 	});
 }
- /**
+
+/**
  * Fetch entities from a context
  *
  * @param {string} context The context id to retrieve their nested entities. May be null to get the `body` context.
  * @param {object} payload A dictionary containing options when returning the entities from the context.
  * @param {GetEntitiesCallback} callback Callback with the entities
  */
-
-HKDatasource.prototype.getContextChildren = function(context, payload, callback = () => {})
+getContextChildren(context, payload, callback = () => { })
 {
-  let url = `${this.url}repository/${this.graphName}/context/${context}`;
-  
-  Object.assign(payload, this.options);
-  const options = {
-    method: 'POST',
-    url: url,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: payload,
-    json: true
-  };
-  
-  request(options, (err, res) =>
-  { 
-    if(!err)
-    {
-      if(requestCompletedWithSuccess (res.statusCode))
-      {
-        try
-        {
-          callback(null, res.body);
-        }
-        catch(exp)
-        {
-          callback(exp);
-        }
-      }
-      else
-      {
-        callback(`Server responded with ${res.statusCode}. ${res.body}`);
-      }
-    }
-    else
-    {
-      callback(err);
-    }
-  });
+	let url = `${this.url}repository/${this.graphName}/context/${context}`;
+
+	Object.assign(payload, this.options);
+	const options = {
+		method: 'POST',
+		url: url,
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: payload,
+		json: true
+	};
+
+	request(options, (err, res) =>
+	{
+		if (!err)
+		{
+			if (requestCompletedWithSuccess(res.statusCode))
+			{
+				try
+				{
+					callback(null, res.body);
+				}
+				catch (exp)
+				{
+					callback(exp);
+				}
+			}
+
+			else
+			{
+				callback(`Server responded with ${res.statusCode}. ${res.body}`);
+			}
+		}
+
+		else
+		{
+			callback(err);
+		}
+	});
 }
 
 /**
@@ -573,24 +540,23 @@ HKDatasource.prototype.getContextChildren = function(context, payload, callback 
  * @param {object} filter The CSS filter
  * @param {GetEntitiesCallback} callback Callback with the entities
  */
-HKDatasource.prototype.filterEntities = function(filter, callback = () => {})
+filterEntities(filter, callback = () => { })
 {
 	let url = this.url + "repository/" + this.graphName + "/entity/";
 
-	let params = {}
+	let params = {};
 	// {
 	//     // headers: {"content-type": "text/plain"},
 	//     body: filter
 	// }
-
-	if(typeof filter === "object")
+	if (typeof filter === "object")
 	{
-		params.headers = {"content-type": "application/json"};
+		params.headers = { "content-type": "application/json" };
 		params.body = JSON.stringify(filter);
 	}
-	else if(typeof filter === "string")
+	else if (typeof filter === "string")
 	{
-		params.headers = {"content-type": "text/plain"};
+		params.headers = { "content-type": "text/plain" };
 		params.body = filter;
 	}
 
@@ -598,26 +564,28 @@ HKDatasource.prototype.filterEntities = function(filter, callback = () => {})
 
 	request.post(url, params, (err, res) =>
 	{
-		if(!err)
+		if (!err)
 		{
-			if(requestCompletedWithSuccess (res.statusCode))
+			if (requestCompletedWithSuccess(res.statusCode))
 			{
 				try
 				{
 					let entities = convertEntities(res.body);
 					callback(null, entities);
 				}
-				catch(exp)
+				catch (exp)
 				{
 					callback(exp);
 				}
 			}
+
 			else
 			{
 				callback(stringifyResponseLog(res));
 			}
 
 		}
+
 		else
 		{
 			callback(err);
@@ -643,20 +611,20 @@ HKDatasource.prototype.filterEntities = function(filter, callback = () => {})
  * @param {object} filter The CSS filter
  * @param {GetEntitiesCallback} callback Callback with the entities ids
  */
-HKDatasource.prototype.filterEntitiesLazy = function(filter, callback = () => {})
+filterEntitiesLazy(filter, callback = () => { })
 {
 	let url = this.url + "repository/" + this.graphName + "/entity/lazy";
 
-	let params = {}
+	let params = {};
 
-	if(typeof filter === "object")
+	if (typeof filter === "object")
 	{
-		params.headers = {"content-type": "application/json"};
+		params.headers = { "content-type": "application/json" };
 		params.body = JSON.stringify(filter);
 	}
-	else if(typeof filter === "string")
+	else if (typeof filter === "string")
 	{
-		params.headers = {"content-type": "text/plain"};
+		params.headers = { "content-type": "text/plain" };
 		params.body = filter;
 	}
 
@@ -664,25 +632,27 @@ HKDatasource.prototype.filterEntitiesLazy = function(filter, callback = () => {}
 
 	request.post(url, params, (err, res) =>
 	{
-		if(!err)
+		if (!err)
 		{
-			if(requestCompletedWithSuccess (res.statusCode))
+			if (requestCompletedWithSuccess(res.statusCode))
 			{
 				try
 				{
 					callback(null, JSON.parse(res.body));
 				}
-				catch(exp)
+				catch (exp)
 				{
 					callback(exp);
 				}
 			}
+
 			else
 			{
 				callback(stringifyResponseLog(res));
 			}
 
 		}
+
 		else
 		{
 			callback(err);
@@ -707,33 +677,32 @@ HKDatasource.prototype.filterEntitiesLazy = function(filter, callback = () => {}
  * @param {boolean?} [options.header] If set true, will send the header from the query
  * @param {QueryResultsCallback} callback Callback with the entities
  */
-HKDatasource.prototype.query = function(query, options, callback = () => {})
+query(query, options, callback = () => { })
 {
 	let url = this.url + "repository/" + this.graphName + "/query/";
 
-	if(typeof(options) === "function")
+	if (typeof (options) === "function")
 	{
 		callback = options;
 	}
 
-	let params =
-	{
-		headers: {"content-type": "text/plain"},
+	let params = {
+		headers: { "content-type": "text/plain" },
 		body: query
-	}
+	};
 
 	Object.assign(params, this.options);
 
-	if(options)
+	if (options)
 	{
-		url += toQueryString (options);
+		url += toQueryString(options);
 	}
 
 	request.post(url, params, (err, res) =>
 	{
-		if(!err)
+		if (!err)
 		{
-			if(requestCompletedWithSuccess (res.statusCode))
+			if (requestCompletedWithSuccess(res.statusCode))
 			{
 				try
 				{
@@ -742,36 +711,38 @@ HKDatasource.prototype.query = function(query, options, callback = () => {})
 
 					let results = data;
 
-					if(!Array.isArray(data))
+					if (!Array.isArray(data))
 					{
-						if(data.results)
+						if (data.results)
 						{
 							results = data.results;
 						}
 						delete data.results;
 					}
-					for(let k in results)
+					for (let k in results)
 					{
 						let item = results[k];
-						if(Array.isArray(item))
+						if (Array.isArray(item))
 						{
 							items.push(item);
 							continue;
 						}
 
-						if(typeof item === "object")
+						if (typeof item === "object")
 						{
 							let entity = deserialize(item);
 
-							if(entity)
+							if (entity)
 							{
 								items.push(entity);
 							}
+
 							else
 							{
 								items.push(item);
 							}
 						}
+
 						else
 						{
 							items.push(item);
@@ -781,18 +752,20 @@ HKDatasource.prototype.query = function(query, options, callback = () => {})
 					callback(null, items, data);
 
 				}
-				catch(exp)
+				catch (exp)
 				{
 					console.log(exp);
 					callback(exp);
 				}
 			}
+
 			else
 			{
 				callback(stringifyResponseLog(res));
 			}
 
 		}
+
 		else
 		{
 			callback(err);
@@ -813,31 +786,30 @@ HKDatasource.prototype.query = function(query, options, callback = () => {})
  * @param {object?} [options] Options to be sent the query
  * @param {SparqlQueryResultsCallback} callback Callback with the entities
  */
-HKDatasource.prototype.sparqlQuery = function(query, options, callback = () => {})
+sparqlQuery(query, options, callback = () => { })
 {
 	let url = this.url + "repository/" + this.graphName + "/sparql/";
 
-	if(typeof(options) === "function")
+	if (typeof (options) === "function")
 	{
 		callback = options;
 	}
 
-	let params =
-	{
-		headers: {"content-type": "application/sparql-query"},
+	let params = {
+		headers: { "content-type": "application/sparql-query" },
 		body: query
-	}
+	};
 
-	if(options)
+	if (options)
 	{
-		url += toQueryString (options);
+		url += toQueryString(options);
 	}
 
 	request.post(url, params, (err, res) =>
 	{
-		if(!err)
+		if (!err)
 		{
-			if(requestCompletedWithSuccess (res.statusCode))
+			if (requestCompletedWithSuccess(res.statusCode))
 			{
 				try
 				{
@@ -846,18 +818,20 @@ HKDatasource.prototype.sparqlQuery = function(query, options, callback = () => {
 
 					callback(null, data);
 				}
-				catch(exp)
+				catch (exp)
 				{
 					console.log(exp);
 					callback(exp);
 				}
 			}
+
 			else
 			{
 				callback(stringifyResponseLog(res));
 			}
 
 		}
+
 		else
 		{
 			callback(err);
@@ -866,8 +840,6 @@ HKDatasource.prototype.sparqlQuery = function(query, options, callback = () => {
 
 }
 
-
-
 /**
  * Get links and connected related to a list entities. The ids can be the links or connector by themselves, or
  * entities that are connected to links.
@@ -875,45 +847,46 @@ HKDatasource.prototype.sparqlQuery = function(query, options, callback = () => {
  * @param {[string]} ids An array of id of entities to get related links
  * @param {GetEntitiesCallback} callback Callback with the entities
  */
-HKDatasource.prototype.getLinks = function(ids, callback = () => {})
+getLinks(ids, callback = () => { })
 {
 	let url = this.url + "repository/" + this.graphName + "/links/";
 
-	let params =
-	{
-		headers: {"content-type": "application/json"},
+	let params = {
+		headers: { "content-type": "application/json" },
 		body: JSON.stringify(ids)
-	}
+	};
 
 	Object.assign(params, this.options);
 
 	request.post(url, params, (err, res) =>
 	{
 		// console.log(res.body);
-		if(!err)
+		if (!err)
 		{
-			if(requestCompletedWithSuccess (res.statusCode))
+			if (requestCompletedWithSuccess(res.statusCode))
 			{
 				try
 				{
 					let entities = convertEntities(res.body);
 					callback(null, entities);
 				}
-				catch(exp)
+				catch (exp)
 				{
 					callback(exp);
 				}
 			}
+
 			else
 			{
 				callback(stringifyResponseLog(res));
 			}
 
 		}
+
 		else
 		{
 			callback(err);
-		 }
+		}
 	});
 }
 
@@ -925,7 +898,7 @@ HKDatasource.prototype.getLinks = function(ids, callback = () => {})
  * @param {string} options.context the target context to import the entities
  * @param {OperationCallback} callback Response callback
  */
-HKDatasource.prototype.importRDFFile = function(filePath, options, callback = () => {})
+importRDFFile(filePath, options, callback = () => { })
 {
 	if (!options || typeof (options) === 'function')
 	{
@@ -935,27 +908,29 @@ HKDatasource.prototype.importRDFFile = function(filePath, options, callback = ()
 
 	Object.assign(options, this.options);
 
-	fs.readFile (filePath, options.encoding || 'utf8', (err, data) =>
+	fs.readFile(filePath, options.encoding || 'utf8', (err, data) =>
 	{
 		if (err)
 		{
-			callback (err);
+			callback(err);
 		}
+
 		else
 		{
 			this.import(data, options, (err, out) =>
 			{
-				if(err)
+				if (err)
 				{
 					callback(err);
 				}
+
 				else
 				{
 					callback(null, out);
 				}
 			});
 		}
-	})
+	});
 }
 
 /**
@@ -966,8 +941,7 @@ HKDatasource.prototype.importRDFFile = function(filePath, options, callback = ()
  * @param {string} options.context the target context to import the entities
  * @param {OperationCallback} callback Response callback
  */
-
-HKDatasource.prototype.importRDF = function(data, options, callback = () => {})
+importRDF(data, options, callback = () => { })
 {
 	let url = `${this.url}repository/${this.graphName}/rdf/`;
 
@@ -977,11 +951,10 @@ HKDatasource.prototype.importRDF = function(data, options, callback = () => {})
 		options = {};
 	}
 
-	let params =
-	{
+	let params = {
 		headers: {
 			"Content-Type": options.contentType || 'application/rdf+xml',
-			"Content-Length": Buffer.byteLength (data)
+			"Content-Length": Buffer.byteLength(data)
 		},
 		body: data,
 		qs: options
@@ -997,9 +970,9 @@ HKDatasource.prototype.importRDF = function(data, options, callback = () => {})
 
 	request.put(url, params, (err, res) =>
 	{
-		if(!err)
+		if (!err)
 		{
-			if(requestCompletedWithSuccess (res.statusCode))
+			if (requestCompletedWithSuccess(res.statusCode))
 			{
 				let out;
 				try
@@ -1012,11 +985,13 @@ HKDatasource.prototype.importRDF = function(data, options, callback = () => {})
 				}
 				callback(null, out);
 			}
+
 			else
 			{
 				callback(stringifyResponseLog(res));
 			}
 		}
+
 		else
 		{
 			callback(err);
@@ -1032,14 +1007,12 @@ HKDatasource.prototype.importRDF = function(data, options, callback = () => {})
  * @param {string} options.base the identifier of the database where data will come from (e.g. "wordnet" indicate the WordNet dataset).
  * @param {OperationCallback} callback Response callback
  */
-
-HKDatasource.prototype.importFrom = function(data, options, callback = () => {})
+importFrom(data, options, callback = () => { })
 {
 	let url = `${this.url}repository/${this.graphName}/from/`;
 
-	let params =
-	{
-		headers: {"content-type": "application/json"},
+	let params = {
+		headers: { "content-type": "application/json" },
 		body: JSON.stringify(data),
 		qs: options
 	};
@@ -1053,9 +1026,9 @@ HKDatasource.prototype.importFrom = function(data, options, callback = () => {})
 
 	request.put(url, params, (err, res) =>
 	{
-		if(!err)
+		if (!err)
 		{
-			if(requestCompletedWithSuccess (res.statusCode))
+			if (requestCompletedWithSuccess(res.statusCode))
 			{
 				let out;
 				try
@@ -1068,11 +1041,13 @@ HKDatasource.prototype.importFrom = function(data, options, callback = () => {})
 				}
 				callback(null, out);
 			}
+
 			else
 			{
 				callback(stringifyResponseLog(res));
 			}
 		}
+
 		else
 		{
 			callback(err);
@@ -1082,12 +1057,13 @@ HKDatasource.prototype.importFrom = function(data, options, callback = () => {})
 
 /**
  * Will return a list of entities similar to the given entity
- * 
+ *
  * @param {string} entityId
- * @param {string} datasource 
+ * @param {string} datasource
  * @param {*} options
  */
- HKDatasource.prototype.getSimilarEntitiesFromExternalDataSource = function(entityId, datasource, options = {}, callback = () => {}) {
+getSimilarEntitiesFromExternalDataSource(entityId, datasource, options = {}, callback = () => { })
+{
 	let url = `${this.url}repository/${this.graphName}/external-data/entity/similar`;
 
 	if (!options || typeof (options) === 'function')
@@ -1101,8 +1077,7 @@ HKDatasource.prototype.importFrom = function(data, options, callback = () => {})
 		entityId: entityId
 	};
 
-	let params =
-	{
+	let params = {
 		headers: {
 			"content-type": "application/json",
 		},
@@ -1115,9 +1090,9 @@ HKDatasource.prototype.importFrom = function(data, options, callback = () => {})
 
 	request.post(url, params, (err, res) =>
 	{
-		if(!err)
+		if (!err)
 		{
-			if(requestCompletedWithSuccess (res.statusCode))
+			if (requestCompletedWithSuccess(res.statusCode))
 			{
 				let out;
 				try
@@ -1130,11 +1105,13 @@ HKDatasource.prototype.importFrom = function(data, options, callback = () => {})
 				}
 				callback(null, out);
 			}
+
 			else
 			{
 				callback(stringifyResponseLog(res));
 			}
 		}
+
 		else
 		{
 			callback(err);
@@ -1149,13 +1126,14 @@ HKDatasource.prototype.importFrom = function(data, options, callback = () => {})
  */
 /**
  * Will return a list of entities that match the search criteria.
- * 
+ *
  * @param {string} searchCriteria
- * @param {string} datasource 
+ * @param {string} datasource
  * @param {*} options
  * @param {ExternalDatasourceCallback} callback Response callback
  */
-HKDatasource.prototype.searchEntitiesFromExternalDataSource = function(searchCriteria, datasource, options = {}, callback = () => {}) {
+searchEntitiesFromExternalDataSource(searchCriteria, datasource, options = {}, callback = () => { })
+{
 	let url = `${this.url}repository/${this.graphName}/external-data/entity/search`;
 
 	if (!options || typeof (options) === 'function')
@@ -1169,8 +1147,7 @@ HKDatasource.prototype.searchEntitiesFromExternalDataSource = function(searchCri
 		searchCriteria: searchCriteria
 	};
 
-	let params =
-	{
+	let params = {
 		headers: {
 			"content-type": "application/json",
 		},
@@ -1183,9 +1160,9 @@ HKDatasource.prototype.searchEntitiesFromExternalDataSource = function(searchCri
 
 	request.post(url, params, (err, res) =>
 	{
-		if(!err)
+		if (!err)
 		{
-			if(requestCompletedWithSuccess (res.statusCode))
+			if (requestCompletedWithSuccess(res.statusCode))
 			{
 				let out;
 				try
@@ -1198,11 +1175,13 @@ HKDatasource.prototype.searchEntitiesFromExternalDataSource = function(searchCri
 				}
 				callback(null, out);
 			}
+
 			else
 			{
 				callback(stringifyResponseLog(res));
 			}
 		}
+
 		else
 		{
 			callback(err);
@@ -1212,13 +1191,14 @@ HKDatasource.prototype.searchEntitiesFromExternalDataSource = function(searchCri
 }
 
 /**
- * 
- * @param {string} externalDSEntityId 
- * @param {string} datasource 
- * @param {*} options 
+ *
+ * @param {string} externalDSEntityId
+ * @param {string} datasource
+ * @param {*} options
  * @param {ExternalDatasourceCallback} callback
  */
-HKDatasource.prototype.getPropertiesFromExternalDataSource = function(externalDSEntityId, datasource, options = {}, callback = () => {}) {
+getPropertiesFromExternalDataSource(externalDSEntityId, datasource, options = {}, callback = () => { })
+{
 	// let url = `${this.url}repository/${this.graphName}/external-data/entity/${externalDSEntityId}/properties`;
 	let url = `${this.url}repository/${this.graphName}/external-data/entity/properties`;
 
@@ -1230,8 +1210,7 @@ HKDatasource.prototype.getPropertiesFromExternalDataSource = function(externalDS
 
 	options.datasource = datasource;
 
-	let params =
-	{
+	let params = {
 		headers: {
 			"content-type": "application/json",
 		},
@@ -1246,9 +1225,9 @@ HKDatasource.prototype.getPropertiesFromExternalDataSource = function(externalDS
 
 	request.post(url, params, (err, res) =>
 	{
-		if(!err)
+		if (!err)
 		{
-			if(requestCompletedWithSuccess (res.statusCode))
+			if (requestCompletedWithSuccess(res.statusCode))
 			{
 				let out;
 				try
@@ -1261,11 +1240,13 @@ HKDatasource.prototype.getPropertiesFromExternalDataSource = function(externalDS
 				}
 				callback(null, out);
 			}
+
 			else
 			{
 				callback(stringifyResponseLog(res));
 			}
 		}
+
 		else
 		{
 			callback(err);
@@ -1273,7 +1254,8 @@ HKDatasource.prototype.getPropertiesFromExternalDataSource = function(externalDS
 	});
 }
 
-HKDatasource.prototype.getEntityFromExternalDataSource = function(externalDSEntityId, datasource, options = {}, callback = () => {}) {
+getEntityFromExternalDataSource(externalDSEntityId, datasource, options = {}, callback = () => { })
+{
 	let url = `${this.url}repository/${this.graphName}/external-data/entity`;
 
 	if (!options || typeof (options) === 'function')
@@ -1284,8 +1266,7 @@ HKDatasource.prototype.getEntityFromExternalDataSource = function(externalDSEnti
 
 	options.datasource = datasource;
 
-	let params =
-	{
+	let params = {
 		headers: {
 			"content-type": "application/json",
 		},
@@ -1300,9 +1281,9 @@ HKDatasource.prototype.getEntityFromExternalDataSource = function(externalDSEnti
 
 	request.post(url, params, (err, res) =>
 	{
-		if(!err)
+		if (!err)
 		{
-			if(requestCompletedWithSuccess (res.statusCode))
+			if (requestCompletedWithSuccess(res.statusCode))
 			{
 				let out;
 				try
@@ -1315,11 +1296,13 @@ HKDatasource.prototype.getEntityFromExternalDataSource = function(externalDSEnti
 				}
 				callback(null, out);
 			}
+
 			else
 			{
 				callback(stringifyResponseLog(res));
 			}
 		}
+
 		else
 		{
 			callback(err);
@@ -1327,20 +1310,19 @@ HKDatasource.prototype.getEntityFromExternalDataSource = function(externalDSEnti
 	});
 }
 
-
 /**
- * 
- * @param {string} datasource 
+ *
+ * @param {string} datasource
  * @param {ExternalDatasourceCallback} callback
  */
- HKDatasource.prototype.getExternalDatasourceSettings = function(datasource, callback = () => {}) {
+getExternalDatasourceSettings(datasource, callback = () => { })
+{
 
 	let url = `${this.url}repository/${this.graphName}/external-data/settings`;
 
-	let options = {datasource}
+	let options = { datasource };
 
-	let params =
-	{
+	let params = {
 		headers: {
 			"content-type": "application/json",
 		},
@@ -1352,9 +1334,9 @@ HKDatasource.prototype.getEntityFromExternalDataSource = function(externalDSEnti
 
 	request.get(url, params, (err, res) =>
 	{
-		if(!err)
+		if (!err)
 		{
-			if(requestCompletedWithSuccess (res.statusCode))
+			if (requestCompletedWithSuccess(res.statusCode))
 			{
 				let out;
 				try
@@ -1367,28 +1349,19 @@ HKDatasource.prototype.getEntityFromExternalDataSource = function(externalDSEnti
 				}
 				callback(null, out);
 			}
+
 			else
 			{
 				callback(stringifyResponseLog(res));
 			}
 		}
+
 		else
 		{
 			callback(err);
 		}
 	});
 }
-
-/**
- * Import a RDF data
- * @param {string} data the contents of the RDF
- * @param {object} options a set of options to customize the importation
- * @param {string} options.contentType the mimeType of the serialization for the RDF data
- * @param {string} options.context the target context to import the entities
- * @param {OperationCallback} callback Response callback
- */
-
-HKDatasource.prototype.import = HKDatasource.prototype.importRDF;
 
 /**
  * @callback ExportRdfCallback
@@ -1402,8 +1375,7 @@ HKDatasource.prototype.import = HKDatasource.prototype.importRDF;
  * @param {string} options.mimeType the mimeType of the serialization for the RDF data
  * @param {ExportRdfCallback} callback Response callback
  */
-
-HKDatasource.prototype.exportRDF = function(filter, options, callback = () => {})
+exportRDF(filter, options, callback = () => { })
 {
 	let url = `${this.url}repository/${this.graphName}/rdf/`;
 
@@ -1415,8 +1387,7 @@ HKDatasource.prototype.exportRDF = function(filter, options, callback = () => {}
 		options = {};
 	}
 
-	let params =
-	{
+	let params = {
 		headers: {
 			Accept: options.mimeType || "application/n-quads",
 			"content-type": "application/json"
@@ -1433,17 +1404,19 @@ HKDatasource.prototype.exportRDF = function(filter, options, callback = () => {}
 
 	request.post(url, params, (err, res) =>
 	{
-		if(!err)
+		if (!err)
 		{
-			if(requestCompletedWithSuccess (res.statusCode))
+			if (requestCompletedWithSuccess(res.statusCode))
 			{
 				callback(null, res.body);
 			}
+
 			else
 			{
 				callback(stringifyResponseLog(res));
 			}
 		}
+
 		else
 		{
 			callback(err);
@@ -1452,21 +1425,18 @@ HKDatasource.prototype.exportRDF = function(filter, options, callback = () => {}
 }
 
 // STORED QUERIES
-
 /**
- *	@typedef {Object} StoredQuery
- *	@property {string} [id] the stored query's identifier
- *	@property {string} queryText the query
- *	@property {array}  colums the set of variables in the projection
- *	@property {string} queryLanguage queryText's query language
- *	@property {array}  [parameters] an array of parameters of the query 
+ *  @typedef {Object} StoredQuery
+ *  @property {string} [id] the stored query's identifier
+ *  @property {string} queryText the query
+ *  @property {array}  colums the set of variables in the projection
+ *  @property {string} queryLanguage queryText's query language
+ *  @property {array}  [parameters] an array of parameters of the query
  */
-
-
 /**
  * @callback StoredQueryGetAllCallback
  * @param err An error object that indicates if the operation was successful or not
- * @param {StoredQuery[]} [data] The array of stored queries 
+ * @param {StoredQuery[]} [data] The array of stored queries
  */
 /**
  * Returns all stored queries
@@ -1474,10 +1444,12 @@ HKDatasource.prototype.exportRDF = function(filter, options, callback = () => {}
  * @param {string} [options.transactionId] an optional transaction id
  * @param {StoredQueryGetAllCallback} [callback] Response callback
  */
-HKDatasource.prototype.getAllStoredQueries = function (options, callback = () => {}) {
+getAllStoredQueries(options, callback = () => { })
+{
 	let url = `${this.url}repository/${this.graphName}/stored-query`;
 
-	if (!options || typeof (options) === 'function') {
+	if (!options || typeof (options) === 'function')
+	{
 		callback = options;
 		options = {};
 	}
@@ -1486,41 +1458,48 @@ HKDatasource.prototype.getAllStoredQueries = function (options, callback = () =>
 		headers: {
 			"content-type": "application/json"
 		}
-	}
+	};
 
-	if (options.transactionId) {
+	if (options.transactionId)
+	{
 		params.headers['transactionId'] = transactionId;
 	}
 
-	request.get(url, params, (err, res) => {
-		if (err) {
+	request.get(url, params, (err, res) =>
+	{
+		if (err)
+		{
 			callback(err);
 			return;
 		}
-		if(requestCompletedWithSuccess(res.statusCode)) {
+		if (requestCompletedWithSuccess(res.statusCode))
+		{
 			callback(null, res.body);
-		} else {
+		} else
+		{
 			callback(stringifyResponseLog(res));
 		}
 	});
-};
+}
 
 /**
  * @callback StoredQueryGetCallback
  * @param err An error object that indicates if the operation was successful or not
- * @param {StoredQuery} [data] The array of stored queries 
+ * @param {StoredQuery} [data] The array of stored queries
  */
 /**
  * Returns a stored query
- * @param {string} queryId the stored query's id 
+ * @param {string} queryId the stored query's id
  * @param {object} options a set of options to constumise the request
  * @param {string} [options.transactionId] an optional transaction id
  * @param {StoredQueryGetCallback} [callback] Response callback
  */
-HKDatasource.prototype.getStoredQuery = function(queryId, options, callback = () => {}) {
+getStoredQuery(queryId, options, callback = () => { })
+{
 	let url = `${this.url}repository/${this.graphName}/stored-query/${queryId}`;
 
-	if (!options || typeof (options) === 'function') {
+	if (!options || typeof (options) === 'function')
+	{
 		callback = options;
 		options = {};
 	}
@@ -1529,25 +1508,29 @@ HKDatasource.prototype.getStoredQuery = function(queryId, options, callback = ()
 		headers: {
 			"content-type": "application/json"
 		}
-	}
+	};
 
-	if (options.transactionId) {
+	if (options.transactionId)
+	{
 		params.headers['transactionId'] = transactionId;
 	}
 
-	request.get(url, params, (err, res) => {
-		if (err) {
+	request.get(url, params, (err, res) =>
+	{
+		if (err)
+		{
 			callback(err);
 			return;
 		}
-		if(requestCompletedWithSuccess(res.statusCode)) {
+		if (requestCompletedWithSuccess(res.statusCode))
+		{
 			callback(null, res.body);
-		} else {
+		} else
+		{
 			callback(stringifyResponseLog(res));
 		}
 	});
-};
-
+}
 
 /**
  * Deletes a stored query
@@ -1556,10 +1539,12 @@ HKDatasource.prototype.getStoredQuery = function(queryId, options, callback = ()
  * @param {string} [options.transactionId] an optional transaction id
  * @param {StoredQueryGetCallback} [callback] Response callback's returns the deleted query
  */
-HKDatasource.prototype.deleteStoredQuery = function(queryId, options, callback = () => {}) {
+deleteStoredQuery(queryId, options, callback = () => { })
+{
 	let url = `${this.url}repository/${this.graphName}/stored-query/${queryId}`;
 
-	if (!options || typeof (options) === 'function') {
+	if (!options || typeof (options) === 'function')
+	{
 		callback = options;
 		options = {};
 	}
@@ -1568,25 +1553,30 @@ HKDatasource.prototype.deleteStoredQuery = function(queryId, options, callback =
 		headers: {
 			"content-type": "application/json"
 		}
-	}
+	};
 
-	if (options.transactionId) {
+	if (options.transactionId)
+	{
 		params.headers['transactionId'] = transactionId;
 	}
 
-	request.delete(url, params, (err, res) => {
-		if (err) {
+	request.delete(url, params, (err, res) =>
+	{
+		if (err)
+		{
 			callback(err);
 			return;
 		}
 
-		if (requestCompletedWithSuccess(res.statusCode)) {
+		if (requestCompletedWithSuccess(res.statusCode))
+		{
 			callback(null, res.body);
-		} else {
+		} else
+		{
 			callback(stringifyResponseLog(res));
 		}
 	});
-};
+}
 
 /**
  * Saves a stored query
@@ -1595,10 +1585,12 @@ HKDatasource.prototype.deleteStoredQuery = function(queryId, options, callback =
  * @param {string} [options.transactionId] an optional transaction id
  * @param {StoredQueryGetCallback} [callback] Response callback's returns the deleted query
  */
-HKDatasource.prototype.storeQuery = function(storedQuery, options, callback = () => {}) {
+storeQuery(storedQuery, options, callback = () => { })
+{
 	let url = `${this.url}repository/${this.graphName}/stored-query`;
 
-	if (!options || typeof (options) == 'function') {
+	if (!options || typeof (options) == 'function')
+	{
 		callback = options;
 		options = {};
 	}
@@ -1606,24 +1598,29 @@ HKDatasource.prototype.storeQuery = function(storedQuery, options, callback = ()
 	let params = {
 		headers: {
 			"content-type": "application/json"
-		}, 
+		},
 		body: JSON.stringify(storedQuery)
 	};
 
-	if (options.transactionId) {
+	if (options.transactionId)
+	{
 		params.headers['transactionId'] = options.transactionId;
 	}
 
-	request.post(url, params, (err, res) => {
-		if (err) {
+	request.post(url, params, (err, res) =>
+	{
+		if (err)
+		{
 			callback(err);
 			return;
 		}
 
-		if (requestCompletedWithSuccess(res.statusCode)) {
+		if (requestCompletedWithSuccess(res.statusCode))
+		{
 			callback(null, res.body);
 			return;
-		} else {
+		} else
+		{
 			callback(stringifyResponseLog(res));
 		}
 	});
@@ -1634,21 +1631,22 @@ HKDatasource.prototype.storeQuery = function(storedQuery, options, callback = ()
  * @property {object} [parameters] a key value bind of stored query parameters to values
  * @property {object} [options] run options
  */
-
 /**
  * Run a stored query using a configuration
  * @param {string} queryId
- * @param {StoredQueryRunConfiguration} runConfiguration 
- * @param {object} options 
+ * @param {StoredQueryRunConfiguration} runConfiguration
+ * @param {object} options
  * @param {string} [options."content-type"] an option content type
  * @param {string} [options.mimeType] return's mime type
- * @param {string} [options.transactionId] 
- * @param {QueryResultsCallback} [callback] response callback 
+ * @param {string} [options.transactionId]
+ * @param {QueryResultsCallback} [callback] response callback
  */
-HKDatasource.prototype.runStoredQuery = function(queryId, runConfiguration, options, callback = () => {}) {
+runStoredQuery(queryId, runConfiguration, options, callback = () => { })
+{
 	let url = `${this.url}repository/${this.graphName}/stored-query/${queryId}/run`;
 
-	if (!options || typeof (options) === 'function') {
+	if (!options || typeof (options) === 'function')
+	{
 		callback = options;
 		options = {};
 	}
@@ -1656,28 +1654,34 @@ HKDatasource.prototype.runStoredQuery = function(queryId, runConfiguration, opti
 	let params = {
 		headers: {
 			"content-type": options["content-type"] || "application/json"
-		}, 
+		},
 		body: JSON.stringify(runConfiguration)
 	};
 
-	if (options.mimeType) {
+	if (options.mimeType)
+	{
 		params.headers['Accept'] = options.mimeType;
 	}
 
-	if (options.transactionId) {
+	if (options.transactionId)
+	{
 		params.headers['transactionId'] = options.transactionId;
 	}
 
-	request.post(url, params, (err, res) => {
-		if (err) {
+	request.post(url, params, (err, res) =>
+	{
+		if (err)
+		{
 			callback(err);
 			return;
 		}
 
-		if (requestCompletedWithSuccess(res.statusCode)) {
+		if (requestCompletedWithSuccess(res.statusCode))
+		{
 			callback(null, res.body);
 			return;
-		} else {
+		} else
+		{
 			callback(stringifyResponseLog(res));
 		}
 	});
@@ -1688,52 +1692,121 @@ HKDatasource.prototype.runStoredQuery = function(queryId, runConfiguration, opti
  * Otherwise, it retrieves an empty token
  * @param authSecret secret used to sign the jwt token (must be the same as the one used in the server)
  * @param expiresIn token expiration expressed in seconds or a string describing a time span zeit/m
- * Eg: 60, "2 days", "10h", "7d". A numeric value is interpreted as a seconds count. 
- * If you use a string be sure you provide the time units (days, hours, etc), 
+ * Eg: 60, "2 days", "10h", "7d". A numeric value is interpreted as a seconds count.
+ * If you use a string be sure you provide the time units (days, hours, etc),
  * otherwise milliseconds unit is used by default ("120" is equal to "120ms").
  * If !expiresIn, the generated token never expires.
- */ 
- HKDatasource.getAuthToken = function (authSecret, expiresIn = 2 * 60)
- {
+ */
+static getAuthToken(authSecret, expiresIn = 2 * 60)
+{
 	if (authSecret)
 	{
-		if(!expiresIn)
+		if (!expiresIn)
 		{
-			return jwt.sign({}, authSecret, {})
+			return jwt.sign({}, authSecret, {});
 		}
-		return jwt.sign({}, authSecret, {expiresIn: expiresIn})
+		return jwt.sign({}, authSecret, { expiresIn: expiresIn });
 	}
 	return '';
- }
+}
 
-HKDatasource.prototype.getAuthToken = HKDatasource.getAuthToken;
+
+/**
+ * Alias to `saveEntities`. Add entities may also update entities
+ *
+ * @param {Array} entities array of entities to be added or updated
+ * @param {AddEntitiesCallback} callback Response callback
+ */
+addEntities(entities, callback)
+{
+	return this.saveEntities(entities, callback)
+}
+
+
+/**
+ * Import a RDF data
+ * @param {string} data the contents of the RDF
+ * @param {object} options a set of options to customize the importation
+ * @param {string} options.contentType the mimeType of the serialization for the RDF data
+ * @param {string} options.context the target context to import the entities
+ * @param {OperationCallback} callback Response callback
+ */
+
+import(data, options, callback)
+{
+	return this.importRDF(data, options, callback)
+}
+
+getAuthToken(authSecret, expiresIn = 2 * 60)
+{
+	return HKDatasource.getAuthToken(authSecret, expiresIn)
+}
+
+}
+
+function convertEntities(raw)
+{
+  let data = null;
+  try
+  {
+    data = JSON.parse(raw);
+  }
+  catch (exp)
+  {
+    throw PARSE_FAILED_MESSAGE;
+  }
+
+  if (!data)
+  {
+    throw UNEXPECTED_NULL_DATA;
+  }
+
+  let entities = {};
+
+  for (let k in data)
+  {
+    let entity = deserialize(data[k]);
+    if (entity)
+    {
+      entities[entity.id] = entity;
+    }
+    else
+    {
+      console.warn(`Warning: Error deserializing entity ${JSON.stringify(data[k])}`)
+    }
+  }
+
+  return entities;
+}
+
 
 // ---- 
 
 function toQueryString(options)
 {
-	let optionsKeys = Object.keys(options);
+  let optionsKeys = Object.keys(options);
 
-	let queryString = "?";
+  let queryString = "?";
 
-	if(optionsKeys.length > 0)
-	{
-		for(let i = 0; i < optionsKeys.length; i++)
-		{
-			let k = optionsKeys[i]
-			queryString += `${k}=${encodeURIComponent(options[k])}&`;
-		}
-	}
-	return queryString;
+  if (optionsKeys.length > 0)
+  {
+    for (let i = 0; i < optionsKeys.length; i++)
+    {
+      let k = optionsKeys[i]
+      queryString += `${k}=${encodeURIComponent(options[k])}&`;
+    }
+  }
+  return queryString;
 }
 
-function requestCompletedWithSuccess (code)
+function requestCompletedWithSuccess(code)
 {
-	return code >= 200 && code < 300;
+  return code >= 200 && code < 300;
 }
 
-function stringifyResponseLog(res) {
-	return `Server responded with ${res.statusCode}. ${res.body}`;
+function stringifyResponseLog(res)
+{
+  return `Server responded with ${res.statusCode}. ${res.body}`;
 }
 
 module.exports = HKDatasource;

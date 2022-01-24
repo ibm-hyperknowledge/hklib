@@ -5,68 +5,70 @@
 
 "use strict";
 
+
+class HKEntity
+{
+
 /**
  * Creates a new Hyperknowledge entity
  * 
  * @constructor 
  */
-function HKEntity()
+constructor()
 {
-
 }
-
 
 /**
  * Callback function for `addEntities`
- * 
+ *
  * @callback PropertyCallback
  * @param {Property} property Property key
  * @param {Value} value Property value
  */
-
 /**
  * Iterate through each valid property of the entity
- * 
+ *
  * @param {PropertyCallback} callback
  */
-HKEntity.prototype.foreachProperty = function(callback = ()=>{})
+
+foreachProperty(callback = () => { })
 {
-	let properties = this.properties || {};
-	let metaProperties = this.metaProperties || {};
+    let properties = this.properties || {};
+    let metaProperties = this.metaProperties || {};
 
-	let allProperties = Object.keys(properties);
-	allProperties = allProperties.concat(Object.keys(metaProperties));
+    let allProperties = Object.keys(properties);
+    allProperties = allProperties.concat(Object.keys(metaProperties));
 
-	allProperties = new Set(allProperties);
+    allProperties = new Set(allProperties);
 
-    for(let k of allProperties)
+    for (let k of allProperties)
     {
-		callback(k, properties[k] !== undefined ? properties[k] : null, metaProperties[k] !== undefined ? metaProperties[k] : null);
+        callback(k, properties[k] !== undefined ? properties[k] : null, metaProperties[k] !== undefined ? metaProperties[k] : null);
     }
 }
 
 /**
  * Set a property to entity, overwrite if already exists
- * 
+ *
  * @param {string} property Property key
  * @param {object} value Property value, can be number, string or an array of strings or numbers
  * @param {string} metaProperty Metaproperty, a string that annotates the property (e. g. A type)
  */
-HKEntity.prototype.setProperty = function(property, value, metaProperty = null)
+setProperty(property, value, metaProperty = null)
 {
-    if(property)
+    if (property)
     {
-        if(value !== undefined && value !== null)
+        if (value !== undefined && value !== null)
         {
-            if(!this.properties)
+            if (!this.properties)
             {
                 this.properties = {};
             }
-    
+
             this.properties[property] = value;
         }
 
-        if(metaProperty)
+        if (metaProperty)
         {
             this.setMetaProperty(property, metaProperty);
         }
@@ -75,96 +77,102 @@ HKEntity.prototype.setProperty = function(property, value, metaProperty = null)
 
 /**
  * Append a value to a property, create it if it does not exist, if the property exists and it is not an array convert to an array
- * 
+ *
  * @param {string} property Property key
  * @param {object} value Property value, can be number, string or an array of strings or numbers (in the latter append to the previous values).
  * @param {string} metaProperty Metaproperty, a string that annotates the property (e. g. A type)
  */
-HKEntity.prototype.appendToProperty = function(property, value, metaProperty)
+appendToProperty(property, value, metaProperty)
 {
-    if(property)
+    if (property)
     {
-        if(value !== undefined && value !== null)
+        if (value !== undefined && value !== null)
         {
-            if(!this.properties)
+            if (!this.properties)
             {
                 this.properties = {};
             }
-    
-            if(this.properties.hasOwnProperty(property))
+
+            if (this.properties.hasOwnProperty(property))
             {
-                if(!Array.isArray(this.properties[property]))
+                if (!Array.isArray(this.properties[property]))
                 {
                     this.properties[property] = [this.properties[property]];
                 }
 
-                if(Array.isArray(value))
+                if (Array.isArray(value))
                 {
-                    this.properties[property] = this.properties[property].concat(value)
+                    this.properties[property] = this.properties[property].concat(value);
                 }
+
                 else
                 {
                     this.properties[property].push(value);
                 }
             }
+
             else
             {
-                if(!Array.isArray(value))
+                if (!Array.isArray(value))
                 {
                     value = [value];
                 }
                 this.properties[property] = value;
             }
         }
-        if(metaProperty)
+        if (metaProperty)
         {
             this.setMetaProperty(metaProperty);
         }
     }
 }
 
-
 /**
  *  Remove property value. If property or value does not exist, does nothing. If the property
  * becomes empty, remove the property altogether.
- * 
- * 
+ *
+ *
  * @param {string} property Property key to remove
  * @param {object} value Property value, can be number, string or an array of strings or numbers (in the latter append to the previous values).
- * 
+ *
  * @returns {boolean} T
  */
-HKEntity.prototype.removePropertyValue = function(property, value)
+removePropertyValue(property, value)
 {
     let changed = false;
-    if(property)
+    if (property)
     {
         let deleteProperty = false;
-        if(value !== undefined && value !== null)
+        if (value !== undefined && value !== null)
         {
-            if(this.properties)
+            if (this.properties)
             {
-    
-                if(this.properties.hasOwnProperty(property))
-                {
-                    if(!Array.isArray(this.properties[property]))
-                    {
-                        if(this.properties[property] === value){
-                            deleteProperty = true;
-                        } 
-                    } else {
 
-                        if(Array.isArray(value))
+                if (this.properties.hasOwnProperty(property))
+                {
+                    if (!Array.isArray(this.properties[property]))
+                    {
+                        if (this.properties[property] === value)
+                        {
+                            deleteProperty = true;
+                        }
+                    } else
+                    {
+
+                        if (Array.isArray(value))
                         {
                             Console.log("Operation not supported!");
                         }
+
                         else
                         {
                             let vindex = this.properties[property].indexOf(value);
-                            if (vindex >=0 ){
+                            if (vindex >= 0)
+                            {
                                 delete this.properties[property][vindex];
                                 changed = true;
-                                if (this.properties[property].length == 0){
+                                if (this.properties[property].length == 0)
+                                {
                                     deleteProperty = true;
                                 }
                             }
@@ -173,7 +181,7 @@ HKEntity.prototype.removePropertyValue = function(property, value)
                 }
             }
         }
-        if(deleteProperty)
+        if (deleteProperty)
         {
             this.removeMetaProperty(property);
             this.properties[property] = null;
@@ -184,20 +192,20 @@ HKEntity.prototype.removePropertyValue = function(property, value)
     return changed;
 }
 
-
 /**
  * Append or create a property with value, create it if it does not exist as single value, if the property exists and it is not an array convert to an array
- * 
+ *
  * @param {string} property Property key
  * @param {object} value Property value, can be number, string or an array of strings or numbers (in the latter append to the previous values).
  * @param {string} metaProperty Metaproperty, a string that annotates the property (e. g. A type)
  */
-HKEntity.prototype.setOrAppendToProperty = function(property, value, metaProperty = null)
+setOrAppendToProperty(property, value, metaProperty = null)
 {
-    if(this.hasProperty(property))
+    if (this.hasProperty(property))
     {
-        this.appendToProperty(property, value, metaProperty)
+        this.appendToProperty(property, value, metaProperty);
     }
+
     else
     {
         this.setProperty(property, value, metaProperty);
@@ -206,15 +214,15 @@ HKEntity.prototype.setOrAppendToProperty = function(property, value, metaPropert
 
 /**
  * Get a property value for a given key
- * 
+ *
  * @param {string} property Property key
  * @return {Object} The object value associated to the input property
  */
-HKEntity.prototype.getProperty = function(property)
+getProperty(property)
 {
-    if(this.properties)
+    if (this.properties)
     {
-        if(this.properties.hasOwnProperty(property))
+        if (this.properties.hasOwnProperty(property))
         {
             return this.properties[property];
         }
@@ -224,21 +232,21 @@ HKEntity.prototype.getProperty = function(property)
 
 /**
  * Set a metaproperty value for a given key
- * 
+ *
  * @param {string} metaProperty Metaproperty key
  * @param {string} value Metaproperty, a string that annotates the property (e. g. A type)
  */
-HKEntity.prototype.setMetaProperty = function(metaProperty, value)
+setMetaProperty(metaProperty, value)
 {
-    if(metaProperty)
+    if (metaProperty)
     {
-        if(value !== undefined && value !== null)
+        if (value !== undefined && value !== null)
         {
-            if(!this.metaProperties)
+            if (!this.metaProperties)
             {
                 this.metaProperties = {};
             }
-    
+
             this.metaProperties[metaProperty] = value;
         }
     }
@@ -246,15 +254,15 @@ HKEntity.prototype.setMetaProperty = function(metaProperty, value)
 
 /**
  * Get a metaproperty value for a given key
- * 
+ *
  * @param {string} metaProperty Metaproperty key
  * @returns {string} the metaproperty value
  */
-HKEntity.prototype.getMetaProperty = function(metaProperty)
+getMetaProperty(metaProperty)
 {
-    if(this.metaProperties)
+    if (this.metaProperties)
     {
-        if(this.metaProperties.hasOwnProperty(metaProperty))
+        if (this.metaProperties.hasOwnProperty(metaProperty))
         {
             return this.metaProperties[metaProperty];
         }
@@ -262,18 +270,18 @@ HKEntity.prototype.getMetaProperty = function(metaProperty)
     return null;
 }
 
-
 /**
- * Remove a metaproperty 
- * 
+ * Remove a metaproperty
+ *
  * @param {string} metaProperty Metaproperty to delete
  */
-HKEntity.prototype.removeMetaProperty = function(metaProperty)
+removeMetaProperty(metaProperty)
 {
     let change = false;
-    if(metaProperty)
+    if (metaProperty)
     {
-        if(this.metaProperties) {
+        if (this.metaProperties)
+        {
             this.metaProperties[metaProperty] = null;
             change = true;
         }
@@ -282,16 +290,15 @@ HKEntity.prototype.removeMetaProperty = function(metaProperty)
     return change;
 }
 
-
 /**
  * Check if the entity has the property
- * 
+ *
  * @param {string} property Property key
  * @returns {boolean} A boolean indicating that the entity contains the specified property
  */
-HKEntity.prototype.hasProperty = function(property)
+hasProperty(property)
 {
-    if(this.properties)
+    if (this.properties)
     {
         return this.properties.hasOwnProperty(property);
     }
@@ -300,21 +307,22 @@ HKEntity.prototype.hasProperty = function(property)
 
 /**
  * (Internal) Serialize the properties
- * 
+ *
  */
-HKEntity.prototype.serializeProperties = function()
+serializeProperties()
 {
-    if(this.properties)
+    if (this.properties)
     {
         let properties = {};
-        for(let k in this.properties)
+        for (let k in this.properties)
         {
-            if(this.properties.hasOwnProperty(k))
+            if (this.properties.hasOwnProperty(k))
             {
-                if(Array.isArray(this.properties[k]))
+                if (Array.isArray(this.properties[k]))
                 {
                     properties[k] = this.properties[k].slice(0);
                 }
+
                 else
                 {
                     properties[k] = this.properties[k];
@@ -323,6 +331,7 @@ HKEntity.prototype.serializeProperties = function()
         }
         return properties;
     }
+
     else
     {
         return null;
@@ -331,22 +340,23 @@ HKEntity.prototype.serializeProperties = function()
 
 /**
  * (Internal) Serialize the metaproperties
- * 
+ *
  */
-HKEntity.prototype.serializeMetaProperties = function()
+serializeMetaProperties()
 {
-    if(this.metaProperties)
+    if (this.metaProperties)
     {
         let metaProperties = {};
-        for(let k in this.metaProperties)
+        for (let k in this.metaProperties)
         {
-            if(this.metaProperties.hasOwnProperty(k))
+            if (this.metaProperties.hasOwnProperty(k))
             {
                 metaProperties[k] = this.metaProperties[k];
             }
         }
         return metaProperties;
     }
+
     else
     {
         return null;
@@ -355,26 +365,27 @@ HKEntity.prototype.serializeMetaProperties = function()
 
 /**
  * Append a dictionary of properties, merging both data, overwrites the previous properties
- * 
+ *
  * @param {string} properties A dictionary of new properties
  */
-HKEntity.prototype.appendProperties = function(properties)
+appendProperties(properties)
 {
-    if(!this.properties)
+    if (!this.properties)
     {
         this.properties = {};
     }
-    
-    for(let k in properties)
+
+    for (let k in properties)
     {
-        if(properties.hasOwnProperty(k))
+        if (properties.hasOwnProperty(k))
         {
-            if(properties[k] != null && properties[k] != undefined)
+            if (properties[k] != null && properties[k] != undefined)
             {
                 this.properties[k] = properties[k];
             }
         }
     }
+}
 }
 
 module.exports = HKEntity;

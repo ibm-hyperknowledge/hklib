@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
@@ -18,9 +18,12 @@ const vConnector = new Connector (CONNECTOR_NAME, 'f');
 vConnector.addRole ('sub', RoleTypes.SUBJECT);
 vConnector.addRole ('obj', RoleTypes.OBJECT);
 
-function Trail (id, parent)
+class Trail extends HKEntity
 {
-  if(arguments[0] && typeof arguments[0] === 'object' && isValid(arguments[0]))
+constructor(id, parent)
+{
+  super();
+  if (arguments[0] && typeof arguments[0] === 'object' && isValid(arguments[0]))
   {
     let trail = arguments[0];
 
@@ -30,8 +33,9 @@ function Trail (id, parent)
     this.metaproperties = trail.metaproperties || {};
     this.interfaces = trail.interfaces || {};
     this.children = trail.children || [];
-    _loadSteps.call (this);
+    _loadSteps.call(this);
   }
+
   else
   {
     this.id = id || null;
@@ -46,10 +50,7 @@ function Trail (id, parent)
   this.type = Types.TRAIL;
 }
 
-Trail.prototype = Object.create (HKEntity.prototype);
-Trail.prototype.constructor = Trail;
-
-Trail.prototype.addStep = function (key, properties)
+addStep(key, properties)
 {
   let ts = properties.begin || new Date().toISOString();
   properties.begin = ts;
@@ -57,52 +58,70 @@ Trail.prototype.addStep = function (key, properties)
   if (this.steps.length > 0)
   {
     let lastStep = this.steps[this.steps.length - 1].key;
-    if (! this.interfaces[lastStep].properties.end )
+    if (!this.interfaces[lastStep].properties.end)
     {
       this.interfaces[lastStep].properties.end = ts;
     }
   }
 
-  this.steps.push ({key: key, begin: ts});
-  this.addInterface (key, 'temporal', properties);
+  this.steps.push({ key: key, begin: ts });
+  this.addInterface(key, 'temporal', properties);
 }
 
-Trail.prototype.addInterface  = function (key, type, properties)
+addInterface(key, type, properties)
 {
-  this.interfaces[key] = {type: type, properties: properties}
+  this.interfaces[key] = { type: type, properties: properties };
 }
 
-Trail.prototype.createLinksFromSteps = function ()
+createLinksFromSteps()
 {
-	let vEntities = [vConnector];
+  let vEntities = [vConnector];
 
-	for (let key in this.interfaces)
-	{
-		let interProp = this.interfaces[key].properties;
-		if (!interProp) continue;
+  for (let key in this.interfaces)
+  {
+    let interProp = this.interfaces[key].properties;
+    if (!interProp)
+      continue;
 
-		if (interProp.obj)
-		{
-			let l = new Link (shortid(), vConnector.id, this.parent);
-			l.addBind ('sub', interProp.obj, interProp.objInterface);
-			l.addBind ('obj', this.id);
-			vEntities.push (l);
-		}
-	}
-	return vEntities;
+    if (interProp.obj)
+    {
+      let l = new Link(shortid(), vConnector.id, this.parent);
+      l.addBind('sub', interProp.obj, interProp.objInterface);
+      l.addBind('obj', this.id);
+      vEntities.push(l);
+    }
+  }
+  return vEntities;
 }
 
-Trail.prototype.serialize = function ()
+serialize()
 {
   return {
-      id: this.id,
-      parent: this.parent,
-      properties: this.properties,
-      metaproperties: this.metaproperties,
-      interfaces: this.interfaces,
-      type: this.type
+    id: this.id,
+    parent: this.parent,
+    properties: this.properties,
+    metaproperties: this.metaproperties,
+    interfaces: this.interfaces,
+    type: this.type
   };
 }
+
+static isValid(entity)
+{
+  let isValid = false;
+  if (entity && typeof (entity) === 'object' && !Array.isArray(entity))
+  {
+    if (entity.hasOwnProperty('type') && entity.type === Types.TRAIL &&
+        entity.hasOwnProperty('id') && entity.hasOwnProperty('parent'))
+    {
+      isValid = true;
+    }
+  }
+
+  return isValid;
+}
+}
+
 
 function _loadSteps ()
 {
@@ -136,22 +155,6 @@ function _loadSteps ()
   this.steps = steps;
 }
 
-function isValid(entity)
-{
-  let isValid = false;
-  if (entity && typeof (entity) === 'object' && !Array.isArray(entity))
-  {
-    if (entity.hasOwnProperty('type') && entity.type === Types.TRAIL &&
-        entity.hasOwnProperty('id') && entity.hasOwnProperty('parent'))
-    {
-      isValid = true;
-    }
-  }
-
-  return isValid;
-}
-
 Trail.type = Types.TRAIL;
-Trail.isValid = isValid;
-
+const isValid = Trail.isValid;
 module.exports = Trail;

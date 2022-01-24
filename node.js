@@ -8,8 +8,11 @@
 const Types = require("./types");
 const HKEntity = require("./hkentity");
 
-function Node(id, parent)
+class Node extends HKEntity
 {
+constructor(id, parent)
+{
+	super();
 	if (arguments[0] && typeof arguments[0] === "object")
 	{
 		let node = arguments[0];
@@ -28,6 +31,7 @@ function Node(id, parent)
 			this.interfaces = node.interfaces;
 		}
 	}
+
 	else
 	{
 		this.id = id || null;
@@ -36,10 +40,7 @@ function Node(id, parent)
 	this.type = Types.NODE;
 }
 
-Node.prototype = Object.create(HKEntity.prototype);
-Node.prototype.constructor = Node;
-
-Node.prototype.addInterface = function(key, type, properties)
+addInterface(key, type, properties)
 {
 	if (!this.interfaces)
 	{
@@ -52,13 +53,13 @@ Node.prototype.addInterface = function(key, type, properties)
 	};
 }
 
-Node.prototype.serialize = function()
+serialize()
 {
 	let node = {
 		id: this.id,
 		type: Types.NODE,
 		parent: this.parent || null
-	}
+	};
 
 	if (this.properties)
 	{
@@ -75,14 +76,14 @@ Node.prototype.serialize = function()
 		node.interfaces = {};
 		for (let k in this.interfaces)
 		{
-			node.interfaces[k] = JSON.parse(JSON.stringify(this.interfaces[k])) // Lazy job
+			node.interfaces[k] = JSON.parse(JSON.stringify(this.interfaces[k])); // Lazy job
 		}
 	}
 
 	return node;
 }
 
-function isValid(node)
+static isValid(node)
 {
 	let isValid = false;
 	if (node && typeof(node) === 'object' && !Array.isArray(node))
@@ -97,7 +98,7 @@ function isValid(node)
 	return isValid;
 }
 
-function entitify(data, setId = true)
+static entitify(data, setId = true)
 {
 	if (!data)
 	{
@@ -136,7 +137,7 @@ function entitify(data, setId = true)
 	return out;
 }
 
-function nodefy(data, serialize)
+static nodefy(data, serialize)
 {
 	if (!data)
 	{
@@ -186,9 +187,10 @@ function nodefy(data, serialize)
 	}
 	return out;
 }
+}
 
 Node.type = Types.NODE;
-Node.isValid = isValid;
-Node.nodefy = nodefy;
-Node.entitify = entitify;
+const isValid = Node.isValid;
+const nodefy = Node.nodefy;
+const entitify = Node.entitify;
 module.exports = Node;

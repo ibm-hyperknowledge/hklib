@@ -6,21 +6,25 @@
 "use strict";
 
 const Types = require("./types");
-const HKEntity = require("./hkentity");
+const Node = require("./node");
 
-function Reference (id, refId, parent)
+class Reference extends Node
 {
-  if(arguments[0] && typeof arguments[0] === "object")
+
+constructor(id, refId, parent)
+{
+  super(id, parent);
+  if (arguments[0] && typeof arguments[0] === "object")
   {
     let ref = arguments[0];
     this.id = ref.id || null;
     this.ref = ref.ref || null;
     this.parent = ref.parent || null;
-    if(ref.properties)
+    if (ref.properties)
     {
       this.properties = ref.properties;
     }
-    if(ref.metaProperties)
+    if (ref.metaProperties)
     {
       this.metaProperties = ref.metaProperties;
     }
@@ -34,25 +38,23 @@ function Reference (id, refId, parent)
   this.type = Types.REFERENCE;
 }
 
-Reference.prototype = Object.create (HKEntity.prototype);
-Reference.prototype.constructor = Reference;
 
-Reference.prototype.serialize = function()
+serialize = function ()
 {
   let ref =
   {
     id: this.id,
-    type : Types.REFERENCE,
+    type: Types.REFERENCE,
     ref: this.ref,
     parent: this.parent || null
   }
 
-  if(this.properties)
+  if (this.properties)
   {
     ref.properties = this.serializeProperties();
   }
 
-  if(this.metaProperties)
+  if (this.metaProperties)
   {
     ref.metaProperties = this.serializeMetaProperties();
   }
@@ -60,14 +62,14 @@ Reference.prototype.serialize = function()
   return ref;
 }
 
-function isValid (ref)
+static isValid(ref)
 {
   let isValid = false;
   if (ref && typeof (ref) === 'object' && !Array.isArray(ref))
   {
     if (ref.hasOwnProperty('type') && ref.type === Types.REFERENCE &&
-        ref.hasOwnProperty('id') && ref.hasOwnProperty('parent') &&
-        ref.hasOwnProperty('ref'))
+      ref.hasOwnProperty('id') && ref.hasOwnProperty('parent') &&
+      ref.hasOwnProperty('ref'))
     {
       isValid = true;
     }
@@ -75,7 +77,8 @@ function isValid (ref)
 
   return isValid;
 }
+}
 
 Reference.type       = Types.REFERENCE;
-Reference.isValid    = isValid;
-module.exports  = Reference;
+const isValid        = Reference.isValid;
+module.exports       = Reference;

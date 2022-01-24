@@ -6,10 +6,13 @@
 "use strict";
 
 const Types = require("./types");
-const HKEntity = require("./hkentity");
+const Node = require("./node");
 
-function Context(id, parent)
+class Context extends Node
 {
+	constructor(id, parent)
+	{
+	super(id, parent)
 	if (arguments[0] && typeof arguments[0] === "object")
 	{
 		let context = arguments[0];
@@ -28,6 +31,7 @@ function Context(id, parent)
 			this.interfaces = context.interfaces;
 		}
 	}
+
 	else
 	{
 		this.id = id || null;
@@ -36,10 +40,7 @@ function Context(id, parent)
 	this.type = Types.CONTEXT;
 }
 
-Context.prototype = Object.create(HKEntity.prototype);
-Context.prototype.constructor = Context;
-
-Context.prototype.addInterface = function(key, type, properties)
+addInterface(key, type, properties)
 {
 	if (!this.interfaces)
 	{
@@ -52,13 +53,13 @@ Context.prototype.addInterface = function(key, type, properties)
 	};
 }
 
-Context.prototype.serialize = function()
+serialize()
 {
 	let context = {
 		id: this.id,
 		type: Types.CONTEXT,
 		parent: this.parent || null
-	}
+	};
 
 	if (this.properties)
 	{
@@ -75,17 +76,19 @@ Context.prototype.serialize = function()
 		context.interfaces = {};
 		for (let k in this.interfaces)
 		{
-			context.interfaces[k] = JSON.parse(JSON.stringify(this.interfaces[k])) // Lazy job
+			context.interfaces[k] = JSON.parse(JSON.stringify(this.interfaces[k])); // Lazy job
 		}
 	}
 
 	return context;
 }
 
-function isValid(entity)
+
+
+static isValid(entity)
 {
 	let isValid = false;
-	if (entity && typeof(entity) === 'object' && !Array.isArray(entity))
+	if (entity && typeof (entity) === 'object' && !Array.isArray(entity))
 	{
 		if (entity.hasOwnProperty('type') && entity.type === Types.CONTEXT &&
 			entity.hasOwnProperty('id') && entity.hasOwnProperty('parent'))
@@ -97,7 +100,8 @@ function isValid(entity)
 	return isValid;
 }
 
+}
 
 Context.type = Types.CONTEXT;
-Context.isValid = isValid;
+const isValid = Context.isValid;
 module.exports = Context;
