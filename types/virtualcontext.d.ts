@@ -4,6 +4,7 @@
 */
 export = VirtualContext;
 declare class VirtualContext extends Context {
+    static isValid(entity: any): boolean;
     constructor(id: any, virtualSrc?: null, parent?: null, ...args: any[]);
 }
 import Context = require("./context");
