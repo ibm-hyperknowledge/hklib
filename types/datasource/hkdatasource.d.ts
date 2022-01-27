@@ -390,7 +390,7 @@ declare class HKDatasource {
         /**
          * the set of variables in the projection
          */
-        colums: Array;
+        colums: Array<any>;
         /**
          * queryText's query language
          */
