@@ -16,7 +16,7 @@ declare class HKEntity {
      *
      * @param {PropertyCallback} callback
      */
-    foreachProperty(callback?: (property: Property, value: Value) => any): void;
+    foreachProperty(callback?: (property: string, value: object) => any): void;
     /**
      * Set a property to entity, overwrite if already exists
      *
