@@ -477,7 +477,6 @@ declare class HKDatasource {
          */
         options?: object | undefined;
     }, options: {
-        ?: string | undefined;
         mimeType?: string | undefined;
         transactionId?: string | undefined;
     }, callback?: ((err: any, data: any, stats: any) => any) | undefined): void;
