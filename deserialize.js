@@ -16,28 +16,28 @@ const HKEntity = require("./hkentity");
 
 function _deserialize(input)
 {
-  if (!input || !input.type)
-  {
-    return null;
-  }
-  switch (input.type)
-  {
-    case Node.type:
-      return new Node(input);
-    case Context.type:
-      if (input.properties !== undefined && input.properties.virtualsrc !== undefined) return new VirtualContext(input);
-      return new Context(input);
-    case Link.type:
-      return new Link(input);
-    case Reference.type:
-      return new Reference(input);
-    case Connector.type:
-      return new Connector(input);
-    case Trail.type:
-      return new Trail(input);
-    default:
-      return null;
-  }
+    if (!input || !input.type)
+    {
+        return null;
+    }
+    switch (input.type)
+    {
+        case Node.type:
+            return new Node(input);
+        case Context.type:
+            if (input.properties !== undefined && input.properties.virtualsrc !== undefined) return new VirtualContext(input);
+            return new Context(input);
+        case Link.type:
+            return new Link(input);
+        case Reference.type:
+            return new Reference(input);
+        case Connector.type:
+            return new Connector(input);
+        case Trail.type:
+            return new Trail(input);
+        default:
+            return null;
+    }
 }
 
 /**
@@ -48,30 +48,30 @@ function _deserialize(input)
  */
 function deserialize(serialized)
 {
-  if (typeof serialized === "string")
-  {
-    serialized = JSON.parse(serialized);
-  }
-
-  if (Array.isArray(serialized))
-  {
-    let out = [];
-
-    for (let i = 0; i < serialized.length; i++)
+    if (typeof serialized === "string")
     {
-      let e = _deserialize(serialized[i]);
-      if (e)
-      {
-        out.push(e);
-      }
+        serialized = JSON.parse(serialized);
     }
-    return out;
-  }
-  else if (typeof serialized === "object")
-  {
-    return _deserialize(serialized);
-  }
-  return null;
+
+    if (Array.isArray(serialized))
+    {
+        let out = [];
+
+        for (let i = 0; i < serialized.length; i++)
+        {
+            let e = _deserialize(serialized[i]);
+            if (e)
+            {
+                out.push(e);
+            }
+        }
+        return out;
+    }
+    else if (typeof serialized === "object")
+    {
+        return _deserialize(serialized);
+    }
+    return null;
 }
 
 module.exports = deserialize;
