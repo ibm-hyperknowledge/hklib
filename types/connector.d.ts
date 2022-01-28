@@ -15,12 +15,14 @@ declare class Connector extends HKEntity {
     /**
      * Creates a new instance of Connector.
      *
-     * @param {String | null} id Id of the connector that will be used as the predicate in links (e.g. frinendOf, instanceOf, etc). Deprecated: can be a json object that will be deserialized as a connector.
-     * @param {String | null} className One of the contants in `connectorclass.js`.
-     * @param {Object.<String,String>} roles A map from role names to values in `RoleType`.
+     * @param {string | null} id Id of the connector that will be used as the predicate in links (e.g. frinendOf, instanceOf, etc). Deprecated: can be a json object that will be deserialized as a connector.
+     * @param {string | null} className One of the contants in `connectorclass.js`.
+     * @param {Object.<string,string>} roles A map from role names to values in `RoleType`.
      *
      */
-    constructor(id?: string | null, className?: string | null, roles?: any, ...args: any[]);
+    constructor(id?: string | null, className?: string | null, roles?: {
+        [x: string]: string;
+    }, ...args: any[]);
     /**
      *  Type of this entity.
      *
@@ -66,15 +68,17 @@ declare class Connector extends HKEntity {
     /**
      * Returns a Array of role names.
      *
-     * @returns {Array<String>} an array of string with role names.
+     * @returns {Array<string>} an array of string with role names.
      */
     getRoles(): Array<string>;
     /**
      * Serializes this connector to a plain json object.
      *
-     * @returns {Object.<String,Any>} a plain json object with recursively serialized fields.
+     * @returns {Object.<string,Any>} a plain json object with recursively serialized fields.
      */
-    serialize(): any;
+    serialize(): {
+        [x: string]: Any;
+    };
 }
 declare namespace Connector {
     const type: string;

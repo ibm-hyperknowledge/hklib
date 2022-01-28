@@ -12,8 +12,8 @@ class Node extends HKEntity
 {
     /** Constructs a new node object. Both `id` and `parent` are optional.
      * 
-     * @param {String | null} [id] Some id string for this node. Deprecated: json object, which will deserialized as a Node; use `nodify()` instead. 
-     * @param {String | null} [parent] Parent id.
+     * @param {string | null} [id] Some id string for this node. Deprecated: json object, which will deserialized as a Node; use `nodify()` instead. 
+     * @param {string | null} [parent] Parent id.
      */
     constructor(id = null, parent = null)
     {
@@ -24,7 +24,7 @@ class Node extends HKEntity
          * Id of this node. Might be null.
          * 
          * @public
-         * @type {String | null}
+         * @type {string | null}
          * 
          */
         this.id = id;
@@ -33,7 +33,7 @@ class Node extends HKEntity
          * Parent id. Might be null.
          * 
          * @public
-         * @type {String | null}
+         * @type {string | null}
          * 
          */
         this.parent = parent;
@@ -42,7 +42,7 @@ class Node extends HKEntity
          *  Type of this node.
          * 
          * @public
-         * @type {String | null}
+         * @type {string | null}
         */
         this.type = Types.NODE;
 
@@ -50,7 +50,7 @@ class Node extends HKEntity
          * Interface attributed to this node.
          * 
          * @public
-         * @type {Object.<String,{type : String, properties : Object.<String, Object>}>}
+         * @type {Object.<string,{type : string, properties : Object.<string, Object>}>}
          */
         this.interfaces = {};
 
@@ -77,9 +77,9 @@ class Node extends HKEntity
 
     /**
      * 
-     * @param {String} key Id of the interface
-     * @param {String} type Type of the interface (anchor, etc)
-     * @param {Object.<String,Object>} properties Properties for the interface  
+     * @param {string} key Id of the interface
+     * @param {string} type Type of the interface (anchor, etc)
+     * @param {Object.<string,Object>} properties Properties for the interface  
      * 
      * @return {void}
      */
@@ -94,7 +94,7 @@ class Node extends HKEntity
     /**
      * Serializes this node to a plain json object.
      * 
-     * @returns {Object.<String,Any>} a plain json object with recursively serialized fields. 
+     * @returns {Object.<string,Any>} a plain json object with recursively serialized fields. 
      */
     serialize()
     {

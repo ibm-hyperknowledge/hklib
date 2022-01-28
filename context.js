@@ -12,8 +12,8 @@ class Context extends Node
 {
     /** Constructs a new context object. 
      * 
-     * @param {String | null} [id] Some id string for this context. Deprecated: json object, which will deserialized as a Context; use `nodify()` instead.   
-     * @param {String | null} [parent] Parent id.
+     * @param {string | null} [id] Some id string for this context. Deprecated: json object, which will deserialized as a Context; use `nodify()` instead.   
+     * @param {string | null} [parent] Parent id.
      */
     constructor(id = null, parent = null)
     {
@@ -24,7 +24,7 @@ class Context extends Node
     /**
      * Serializes this context to a plain json object.
      * 
-     * @returns {Object.<String,Any>} a plain json object with recursively serialized fields. 
+     * @returns {Object.<string,Any>} a plain json object with recursively serialized fields. 
      */
     serialize()
     {

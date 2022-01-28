@@ -14,16 +14,16 @@ declare class Link extends HKEntity {
     static isValid(entity: Object): booelan;
     /** Constructs a new link object.
      *
-     * @param {String | null} [id] Some id string for this link. Deprecated: json object, which will deserialized as a Link.
-     * @param {String | null} [connector] Connector id string for this link.
-     * @param {String | null} [parent] Parent id.
+     * @param {string | null} [id] Some id string for this link. Deprecated: json object, which will deserialized as a Link.
+     * @param {string | null} [connector] Connector id string for this link.
+     * @param {string | null} [parent] Parent id.
      */
     constructor(id?: string | null | undefined, connector?: string | null | undefined, parent?: string | null | undefined, ...args: any[]);
     /**
       * Id of this link. Might be null.
       *
       * @public
-      * @type {String | null}
+      * @type {string | null}
       *
       */
     public id: string | null;
@@ -31,7 +31,7 @@ declare class Link extends HKEntity {
       * Connector id for this link. Might be null.
       *
       * @public
-      * @type {String | null}
+      * @type {string | null}
       *
       */
     public connector: string | null;
@@ -39,7 +39,7 @@ declare class Link extends HKEntity {
      * Parent id. Might be null.
      *
      * @public
-     * @type {String | null}
+     * @type {string | null}
      *
      */
     public parent: string | null;
@@ -47,22 +47,26 @@ declare class Link extends HKEntity {
      *  Type of this link.
      *
      * @public
-     * @type {String | null}
+     * @type {string | null}
     */
     public type: string | null;
     /**
      * Interface attributed to this node.
      *
      * @public
-     * @type {Object.<String, Object.<String, Object>>}
+     * @type {Object.<string, Object.<string, Object>>}
      */
-    public binds: any;
+    public binds: {
+        [x: string]: {
+            [x: string]: Object;
+        };
+    };
     /**
      * Adds a new bind to this role;
      *
-     * @param {String} role Role o be used to this bind.
-     * @param {String} componentId Id of the object being linked.
-     * @param {String} [anchor] Anchors name, or Constants.LAMBDA.
+     * @param {string} role Role o be used to this bind.
+     * @param {string} componentId Id of the object being linked.
+     * @param {string} [anchor] Anchors name, or Constants.LAMBDA.
      *
      * @returns {void}
      */
@@ -73,13 +77,13 @@ declare class Link extends HKEntity {
     /**
      * Returns a Array of roles present in this link.
      *
-     * @returns {Array<String>} an array of string with role names.
+     * @returns {Array<string>} an array of string with role names.
      */
     getRoles(): Array<string>;
     /** Removes a bind to a component + anchor.
      *
-     * @param {String} component Component id.
-     * @param {String} [anchor] Anchor name.
+     * @param {string} component Component id.
+     * @param {string} [anchor] Anchor name.
      *
      * @returns {void}
      */
@@ -87,9 +91,11 @@ declare class Link extends HKEntity {
     /**
      * Serializes this link to a plain json object.
      *
-     * @returns {Object.<String,Any>} a plain json object with recursively serialized fields.
+     * @returns {Object.<string,Any>} a plain json object with recursively serialized fields.
      */
-    serialize(): any;
+    serialize(): {
+        [x: string]: Any;
+    };
 }
 declare namespace Link {
     const type: string;
