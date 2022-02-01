@@ -24,6 +24,14 @@ class Connector extends HKEntity
         super();
 
         /**
+         * Roles of this connector.
+         * 
+         * @public
+         * @type {Object.<string, string>}
+         */
+        this.roles = {}
+
+        /**
          *  Type of this entity.
          * 
          * @public
@@ -92,7 +100,7 @@ class Connector extends HKEntity
      * @param {string} role Name of the role. 
      * @param {string} type One of the values in `RoleType`.
      * 
-     * @returns {voio}
+     * @returns {void}
      */
     setRoleType(role, type)
     {

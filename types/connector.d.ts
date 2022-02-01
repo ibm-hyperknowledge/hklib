@@ -24,15 +24,16 @@ declare class Connector extends HKEntity {
         [x: string]: string;
     }, ...args: any[]);
     /**
-     *  Type of this entity.
+     * Roles of this connector.
      *
      * @public
-     * @type {string | null}
-    */
-    public type: string | null;
+     * @type {Object.<string, string>}
+     */
+    public roles: {
+        [x: string]: string;
+    };
     id: any;
     className: any;
-    roles: any;
     /**
      * Adds a new role to this connector.
      *
@@ -62,9 +63,9 @@ declare class Connector extends HKEntity {
      * @param {string} role Name of the role.
      * @param {string} type One of the values in `RoleType`.
      *
-     * @returns {voio}
+     * @returns {void}
      */
-    setRoleType(role: string, type: string): voio;
+    setRoleType(role: string, type: string): void;
     /**
      * Returns a Array of role names.
      *
