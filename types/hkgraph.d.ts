@@ -40,9 +40,25 @@ declare class HKGraph {
     hasReference(id: any, parent: any): boolean;
     getReference(id: any, parent: any): any;
     getChildren(contextId: any): any;
-    getNeighbors(entityId: any): any[];
-    getEntity(id: any): any;
-    getEntities(): {};
+    getNeighbors(entityId: any): HKEntity[];
+    /**
+     * Returns an entity in this graph having `id`.
+     *
+     * @param {string} id ID of requested entity. Null if requested entity is the null context.
+     *
+     * @returns {HKEntity | null} Returns the entity of `id`, or `null` if `id` not found in this graph object.
+     *
+     */
+    getEntity(id: string): HKEntity | null;
+    /**
+     * Returns HK entities in this graph indexed by id.
+     *
+     * @returns {Object.<string,HKEntity>}
+     *
+     */
+    getEntities(): {
+        [x: string]: HKEntity;
+    };
     serialize(): string;
     deserialize(str: any): HKGraph;
 }
@@ -54,3 +70,4 @@ declare namespace HKGraph {
     const INTERFACE: string;
 }
 declare function generateId(model: any, length: any): any;
+import HKEntity = require("./hkentity");
