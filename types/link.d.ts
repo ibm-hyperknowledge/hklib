@@ -44,13 +44,6 @@ declare class Link extends HKEntity {
      */
     public parent: string | null;
     /**
-     *  Type of this link.
-     *
-     * @public
-     * @type {string | null}
-    */
-    public type: string | null;
-    /**
      * Interface attributed to this node.
      *
      * @public

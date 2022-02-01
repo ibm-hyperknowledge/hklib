@@ -12,6 +12,13 @@ declare class HKEntity {
         [x: string]: Object;
     };
     /**
+     *  Type of this entity.
+     *
+     * @public
+     * @type {string | null}
+    */
+    public type: string | null;
+    /**
      * Callback function for `foreachProperty`
      *
      * @callback PropertyCallback

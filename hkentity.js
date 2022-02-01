@@ -13,15 +13,32 @@ class HKEntity
      * Creates a new Hyperknowledge eßntity
      * 
      * @constructor 
+     * @abstract
      */
     constructor()
     {
+        if (this.constructor == HKEntity)
+        {
+            throw new Error("This is an abstract class and cannot be instantiated directly.");
+        }
+
         /** 
          * @public 
          * @type {Object.<string, Object>}
          * */
         this.properties = {};
+
+        /**
+         *  Type of this entity.
+         * 
+         * @public
+         * @type {string | null}
+        */
+        this.type = null;
     }
+
+
+
 
     /**
      * Callback function for `foreachProperty`

@@ -47,13 +47,6 @@ declare class Node extends HKEntity {
      */
     public parent: string | null;
     /**
-     *  Type of this node.
-     *
-     * @public
-     * @type {string | null}
-    */
-    public type: string | null;
-    /**
      * Interface attributed to this node.
      *
      * @public
