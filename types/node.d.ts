@@ -20,9 +20,9 @@ declare class Node extends HKEntity {
      *
      * @param {Object | Array<Object>} data Data to deserialize.
      * @param {boolean} serialize If `true`, reserialize the deserialized objects.
-     * @returns {Array<HKNode> | Array<Object>} An array of node instances if `serialize = false`; an array of json objects otherwise.
+     * @returns {Array<Node> | Array<Object>} An array of node instances if `serialize = false`; an array of json objects otherwise.
      */
-    static nodefy(data: Object | Array<Object>, serialize: boolean): Array<HKNode> | Array<Object>;
+    static nodefy(data: Object | Array<Object>, serialize: boolean): Array<Node> | Array<Object>;
     /** Constructs a new node object. Both `id` and `parent` are optional.
      *
      * @param {string | null} [id] Some id string for this node. Deprecated: json object, which will deserialized as a Node; use `nodify()` instead.
@@ -74,10 +74,10 @@ declare class Node extends HKEntity {
     /**
      * Serializes this node to a plain json object.
      *
-     * @returns {Object.<string,Any>} a plain json object with recursively serialized fields.
+     * @returns {Object.<string,any>} a plain json object with recursively serialized fields.
      */
     serialize(): {
-        [x: string]: Any;
+        [x: string]: any;
     };
 }
 declare namespace Node {

@@ -94,7 +94,7 @@ class Node extends HKEntity
     /**
      * Serializes this node to a plain json object.
      * 
-     * @returns {Object.<string,Any>} a plain json object with recursively serialized fields. 
+     * @returns {Object.<string,any>} a plain json object with recursively serialized fields. 
      */
     serialize()
     {
@@ -193,7 +193,7 @@ class Node extends HKEntity
      * 
      * @param {Object | Array<Object>} data Data to deserialize. 
      * @param {boolean} serialize If `true`, reserialize the deserialized objects. 
-     * @returns {Array<HKNode> | Array<Object>} An array of node instances if `serialize = false`; an array of json objects otherwise.
+     * @returns {Array<Node> | Array<Object>} An array of node instances if `serialize = false`; an array of json objects otherwise.
      */
     static nodefy(data, serialize)
     {

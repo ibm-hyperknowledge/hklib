@@ -241,7 +241,7 @@ class Link extends HKEntity
     /**
      * Serializes this link to a plain json object.
      * 
-     * @returns {Object.<string,Any>} a plain json object with recursively serialized fields. 
+     * @returns {Object.<string,any>} a plain json object with recursively serialized fields. 
      */
     serialize()
     {
@@ -271,7 +271,7 @@ class Link extends HKEntity
      * Tests whether `entity` is a link structurally.
      * 
      * @param {Object} entity The entity to be tested.
-     * @returns {booelan} Returns `true` if valid; `false` otherwise.
+     * @returns {boolean} Returns `true` if valid; `false` otherwise.
      * 
      */
     static isValid(entity)

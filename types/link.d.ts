@@ -8,10 +8,10 @@ declare class Link extends HKEntity {
      * Tests whether `entity` is a link structurally.
      *
      * @param {Object} entity The entity to be tested.
-     * @returns {booelan} Returns `true` if valid; `false` otherwise.
+     * @returns {boolean} Returns `true` if valid; `false` otherwise.
      *
      */
-    static isValid(entity: Object): booelan;
+    static isValid(entity: Object): boolean;
     /** Constructs a new link object.
      *
      * @param {string | null} [id] Some id string for this link. Deprecated: json object, which will deserialized as a Link.
@@ -84,10 +84,10 @@ declare class Link extends HKEntity {
     /**
      * Serializes this link to a plain json object.
      *
-     * @returns {Object.<string,Any>} a plain json object with recursively serialized fields.
+     * @returns {Object.<string,any>} a plain json object with recursively serialized fields.
      */
     serialize(): {
-        [x: string]: Any;
+        [x: string]: any;
     };
 }
 declare namespace Link {
