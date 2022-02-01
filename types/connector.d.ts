@@ -75,10 +75,10 @@ declare class Connector extends HKEntity {
     /**
      * Serializes this connector to a plain json object.
      *
-     * @returns {Object.<string,Any>} a plain json object with recursively serialized fields.
+     * @returns {Object.<string,any>} a plain json object with recursively serialized fields.
      */
     serialize(): {
-        [x: string]: Any;
+        [x: string]: any;
     };
 }
 declare namespace Connector {
