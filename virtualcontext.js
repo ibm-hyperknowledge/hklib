@@ -31,7 +31,6 @@ class VirtualContext extends Context
 				this.interfaces = vContext.interfaces;
 			}
 		}
-
 		else
 		{
 			this.id = id || null;
@@ -40,7 +39,6 @@ class VirtualContext extends Context
 		}
 
 		this.type = Types.CONTEXT;
-
 	}
 
 	static isValid(entity)

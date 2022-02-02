@@ -10,7 +10,7 @@ class HKEntity
 {
 
     /**
-     * Creates a new Hyperknowledge eßntity
+     * Creates a new Hyperknowledge entity
      * 
      * @constructor 
      */

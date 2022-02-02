@@ -27,8 +27,7 @@ describe("Contexts unit tests:", () => {
 	afterEach(done => {
 		HKDatasource.dropRepository((err,  data)=> {
 			if (err) throw err;
-			done();
-				
+			done();		
 		});		
 	})
 
@@ -133,8 +132,9 @@ describe("Contexts unit tests:", () => {
       const payload = {
         "hkTypes": ["context"],
         "nested": false,
+        "lazy": false,
         "includeContextOnResults": false,
-        "fieldsToInclude": { "fields": ["id", "parent"], "properties": ["virtualsrc"]}
+        "fieldsToInclude": { "fields": ["id", "parent", "type"], "properties": ["virtualsrc"]} 
       }
       
       HKDatasource.getContextChildren(context.id, payload, (err, data)=>{
