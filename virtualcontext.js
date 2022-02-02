@@ -13,32 +13,27 @@ class VirtualContext extends Context
 	constructor(id, virtualSrc = null, parent = null)
 	{
 		super(id, parent);
-		if (arguments[0] && typeof arguments[0] === "object")
-		{
-			let vContext = arguments[0];
-			this.id = vContext.id || null;
-			this.parent = vContext.parent || null;
-			if (vContext.properties)
-			{
-				this.properties = vContext.properties;
-			}
-			if (vContext.metaProperties)
-			{
-				this.metaProperties = vContext.metaProperties;
-			}
-			if (vContext.interfaces)
-			{
-				this.interfaces = vContext.interfaces;
-			}
-		}
-		else
-		{
-			this.id = id || null;
-			this.parent = parent || null;
-			this.properties = { "readonly": true, "virtualsrc": virtualSrc };
-		}
 
-		this.type = Types.CONTEXT;
+		const properties = { "readonly": true, "virtualsrc": virtualSrc };
+    const metaProperties = { "readonly": "<http://www.w3.org/2001/XMLSchema#boolean>"};
+
+    if (this.properties)
+    {
+      this.properties = Object.assign(this.properties, properties);
+    }
+    else
+    {
+      this.properties = properties;
+    }
+
+    if (this.metaProperties)
+    {
+      this.metaProperties = Object.assign(this.metaProperties, metaProperties);
+    }
+    else
+    {
+      this.metaProperties = metaProperties;
+    }
 	}
 
 	static isValid(entity)

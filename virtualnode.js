@@ -14,7 +14,6 @@ class VirtualNode extends Node
   {
     super(id, parent);
     const properties = { "virtualsrc": virtualSrc };
-    const metaProperties = { "virtualsrc": virtualSrc };
     if (this.properties)
     {
       this.properties = Object.assign(this.properties, properties);
