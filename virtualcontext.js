@@ -10,7 +10,7 @@ const Context = require("./context");
 
 class VirtualContext extends Context
 {
-	constructor(id, virtualSrc = null, parent = null)
+	constructor(id, virtualSrc, parent = null)
 	{
 		super(id, parent);
 

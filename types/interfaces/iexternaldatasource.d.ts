@@ -1,10 +1,12 @@
 
 
+import HKEntity = require("../hkentity");
 
 export interface IExternalDatasource {
 
   endpoint: String;
-  executeQuery(query: String, options: Any): Promise<any>;
-  _transform(): Promise<Map<string, HKEntity>>
+  executeQuery(query: string, options: any): Promise<any>;
+  transform(data?: any): Promise<Map<string, HKEntity>>;
+  getProperties(property?: string[]): any;
   
 }
