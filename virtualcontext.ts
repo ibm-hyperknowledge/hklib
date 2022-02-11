@@ -3,14 +3,13 @@
  * Licensed under The MIT License [see LICENSE for details]
  */
 
-"use strict";
+import { VIRTUAL_CONTEXT as VIRTUAL_CONTEXT_TYPE } from "./types";
+import Context from "./context";
 
-const Types = require("./types");
-const Context = require("./context");
-
-class VirtualContext extends Context
+export class VirtualContext extends Context
 {
-	constructor(id, virtualSrc, parent = null)
+  type: string
+	constructor(id: string | object, virtualSrc: string, parent?: string, ...args: any[])
 	{
 		super(id, parent);
 
@@ -34,14 +33,16 @@ class VirtualContext extends Context
     {
       this.metaProperties = metaProperties;
     }
+    this.type = VIRTUAL_CONTEXT_TYPE;
+
 	}
 
-	static isValid(entity)
+	static isValid(entity: VirtualContext)
 	{
 		let isValid = false;
 		if (entity && typeof(entity) === 'object' && !Array.isArray(entity))
 		{
-			if (entity.hasOwnProperty('type') && entity.type === Types.CONTEXT &&
+			if (entity.hasOwnProperty('type') && entity.type === VIRTUAL_CONTEXT_TYPE &&
 				entity.hasOwnProperty('id') && entity.hasOwnProperty('parent') &&
 				entity.properties !== undefined && entity.properties.hasOwnProperty('virtualsrc'))
 			{
@@ -52,6 +53,3 @@ class VirtualContext extends Context
 		return isValid;
 	}
 }
-
-const isValid = VirtualContext.isValid
-module.exports = VirtualContext;

@@ -3,45 +3,24 @@
  * Licensed under The MIT License [see LICENSE for details]
  */
 
-"use strict";
+import  { VIRTUAL_NODE as VIRTUAL_NODE_TYPE} from "./types";
+import Node from "./node";
 
-const Types = require("./types");
-const Context = require("./context");
-
-class VirtualContext extends Context
+export class VirtualNode extends Node
 {
-	constructor(id, virtualSrc = null, parent = null)
+  type: string
+	constructor(id: string | object, parent?: string, ...args: any [])
 	{
 		super(id, parent);
-
-		const properties = { "readonly": true, "virtualsrc": virtualSrc };
-    const metaProperties = { "readonly": "<http://www.w3.org/2001/XMLSchema#boolean>"};
-
-    if (this.properties)
-    {
-      this.properties = Object.assign(this.properties, properties);
-    }
-    else
-    {
-      this.properties = properties;
-    }
-
-    if (this.metaProperties)
-    {
-      this.metaProperties = Object.assign(this.metaProperties, metaProperties);
-    }
-    else
-    {
-      this.metaProperties = metaProperties;
-    }
+    this.type = VIRTUAL_NODE_TYPE;
 	}
 
-	static isValid(entity)
+	static isValid(entity: VirtualNode)
 	{
 		let isValid = false;
 		if (entity && typeof(entity) === 'object' && !Array.isArray(entity))
 		{
-			if (entity.hasOwnProperty('type') && entity.type === Types.CONTEXT &&
+			if (entity.hasOwnProperty('type') && entity.type === VIRTUAL_NODE_TYPE &&
 				entity.hasOwnProperty('id') && entity.hasOwnProperty('parent') &&
 				entity.properties !== undefined && entity.properties.hasOwnProperty('virtualsrc'))
 			{
@@ -52,6 +31,3 @@ class VirtualContext extends Context
 		return isValid;
 	}
 }
-
-const isValid = VirtualContext.isValid
-module.exports = VirtualContext;
