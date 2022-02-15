@@ -14,6 +14,7 @@ const Trail = require("./trail");
 const Types = require("./types");
 const shortid = require('shortid');
 const VirtualContext = require("./virtualcontext");
+const HKEntity = require("./hkentity");
 
 class HKGraph
 {
@@ -471,6 +472,15 @@ class HKGraph
         }
         return out;
     }
+
+    /**
+     * Returns an entity in this graph having `id`. 
+     * 
+     * @param {string} id ID of requested entity. Null if requested entity is the null context.
+     * 
+     * @returns {HKEntity | null} Returns the entity of `id`, or `null` if `id` not found in this graph object.
+     * 
+     */
     getEntity(id)
     {
         if (id === null)
@@ -481,6 +491,13 @@ class HKGraph
         }
         return this.nodes[id] || this.contexts[id] || this.links[id] || this.connectors[id] || this.refs[id] || this.trails[id] || null;
     }
+
+    /**
+     * Returns HK entities in this graph indexed by id. 
+     * 
+     * @returns {Object.<string,HKEntity>}
+     * 
+     */
     getEntities()
     {
         let out = {};

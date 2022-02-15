@@ -11,9 +11,34 @@ const RoleType = require("./roletypes");
 
 class Connector extends HKEntity
 {
-    constructor(id, className, roles)
+    /**
+     * Creates a new instance of Connector.
+     * 
+     * @param {string | null} id Id of the connector that will be used as the predicate in links (e.g. frinendOf, instanceOf, etc). Deprecated: can be a json object that will be deserialized as a connector.
+     * @param {string | null} className One of the contants in `connectorclass.js`.
+     * @param {Object.<string,string>} roles A map from role names to values in `RoleType`. 
+     * 
+     */
+    constructor(id = null, className = null, roles = null)
     {
         super();
+
+        /**
+         * Roles of this connector.
+         * 
+         * @public
+         * @type {Object.<string, string>}
+         */
+        this.roles = {}
+
+        /**
+         *  Type of this entity.
+         * 
+         * @public
+         * @type {string | null}
+        */
+        this.type = Types.CONNECTOR;
+
         if (arguments[0] && typeof arguments[0] === "object")
         {
             let connector = arguments[0];
@@ -29,15 +54,16 @@ class Connector extends HKEntity
                 this.metaProperties = connector.metaProperties;
             }
         }
-        else
-        {
-            this.id = id || null;
-            this.className = className || null;
-            this.roles = roles || {};
-        }
-        this.type = Types.CONNECTOR;
     }
 
+    /**
+     * Adds a new role to this connector.
+     * 
+     * @param {string} role Name of the role. 
+     * @param {string} type Values in `RoleType`.
+     * 
+     * @returns {void}
+     */
     addRole(role, type = RoleType.NONE)
     {
         if (!role.hasOwnProperty(role))
@@ -46,16 +72,36 @@ class Connector extends HKEntity
         }
     }
 
+    /**
+     * Tests whether `role` is a role in this connector.
+     * 
+     * @param {string} role Name of the role to be tested.
+     * @returns {boolean} Returns `true` if role exists; `false` otherwise.
+     */
     hasRole(role)
     {
         return this.roles.hasOwnProperty(role);
     }
 
+    /**
+     * Returns the type of `role`, if it exists.
+     * 
+     * @param {string} role The name of the role.
+     * @returns {string} One of the values in `RoleType`. Returns `null` if `role` is not present.
+     */
     getRoleType(role)
     {
         return this.roles[role] || null;
     }
 
+    /**
+     * Sets the type of a given role. If the role does not exist in this connector, then ignores.
+     * 
+     * @param {string} role Name of the role. 
+     * @param {string} type One of the values in `RoleType`.
+     * 
+     * @returns {void}
+     */
     setRoleType(role, type)
     {
         if (this.roles.hasOwnProperty(role))
@@ -64,11 +110,21 @@ class Connector extends HKEntity
         }
     }
 
+    /**
+     * Returns a Array of role names.
+     * 
+     * @returns {Array<string>} an array of string with role names.
+     */
     getRoles()
     {
         return Object.keys(this.roles);
     }
 
+    /**
+     * Serializes this connector to a plain json object.
+     * 
+     * @returns {Object.<string,any>} a plain json object with recursively serialized fields. 
+     */
     serialize()
     {
         let connector = {
@@ -88,6 +144,13 @@ class Connector extends HKEntity
         return connector;
     }
 
+    /**
+     * Tests whether `entity` is a connector structurally.
+     * 
+     * @param {Object} node The entity to be tested.
+     * @returns {boolean} Returns `true` if valid; `false` otherwise.
+     * 
+     */
     static isValid(entity)
     {
 

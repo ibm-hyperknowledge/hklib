@@ -10,32 +10,33 @@ const Node = require("./node");
 
 class Reference extends Node
 {
-
-    constructor(id, refId, parent)
+    /** Constructs a new reference node object. 
+     * 
+     * @param {string | null} [id] Some if string for this node. Deprecated: json object, which will deserialized as a Reference;
+     * @param {string | null} [refId] Id of the referenced entity. 
+     * @param {string | null} [parent] optional parent id.
+     */
+    constructor(id = null, refId = null, parent = null)
     {
         super(id, parent);
+
+        /** 
+         * 
+         * Id of referenced entity. Might be null.
+         * 
+         * @public
+         * @type {string | null}
+         * 
+         */
+        this.ref = refId;
+
+        this.type = Types.REFERENCE;
+
         if (arguments[0] && typeof arguments[0] === "object")
         {
             let ref = arguments[0];
-            this.id = ref.id || null;
             this.ref = ref.ref || null;
-            this.parent = ref.parent || null;
-            if (ref.properties)
-            {
-                this.properties = ref.properties;
-            }
-            if (ref.metaProperties)
-            {
-                this.metaProperties = ref.metaProperties;
-            }
         }
-        else
-        {
-            this.id = id || null;
-            this.ref = refId;
-            this.parent = parent || null;
-        }
-        this.type = Types.REFERENCE;
     }
 
 
@@ -62,6 +63,13 @@ class Reference extends Node
         return ref;
     }
 
+    /**
+     * Tests whether `entity` is a reference node structurally.
+     * 
+     * @param {Object} ref The entity to be tested.
+     * @returns {boolean} Returns `true` if valid; `false` otherwise.
+     * 
+     */
     static isValid(ref)
     {
         let isValid = false;

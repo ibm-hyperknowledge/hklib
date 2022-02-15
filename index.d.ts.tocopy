@@ -22,6 +22,7 @@ export { default as HKLink } from "./link";
 export { default as Trail } from "./trail";
 export { default as HKTrail } from "./trail";
 export { default as HKEntity } from "./hkentity";
+export { default as HKGraph } from "./hkgraph";
 export { default as VirtualNode } from "./virtualnode";
 export { default as HKVirtualNode } from "./virtualnode";
 export { default as VirtualContext } from "./virtualcontext";

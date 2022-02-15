@@ -11,12 +11,12 @@ declare class GraphBuilder {
     groupLinks: boolean;
     subjectLabel: string;
     objectLabel: string;
-    addNode(id: any, parent?: null): any;
+    addNode(id: any, parent?: null): object | null;
     addReference(id: any, parent?: null): any;
     addPreservedEntities(ids: any): void;
-    addContext(id: any, parent?: null): any;
-    addEntity(entity: any): any;
-    getEntity(entityId: any): any;
+    addContext(id: any, parent?: null): object | null;
+    addEntity(entity: any): object | null;
+    getEntity(entityId: any): import("./hkentity") | null;
     addFact(subj: any, pred: any, obj: any, parent: any): any;
     addInheritance(child: any, inheritance: any, className: any, parent: any): any;
     addLink(connectorId: any, linkObj: any, parent?: null): any;

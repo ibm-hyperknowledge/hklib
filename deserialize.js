@@ -41,10 +41,10 @@ function _deserialize(input)
 }
 
 /**
- * Deserialize objects to create instances of HKEntity
+ * Deserialize objects to create HKEntity instances.
  *
- * @param {object} serialized an object or an array of objects to create Hyperknowledge entities
- * @returns {HKEntity | HKEntity[] | null} An entity or an array of entities that are instance of HKEntity. Or returns null if the input is not valid
+ * @param {Object | Array<Object>} serialized an object or an array of objects to create Hyperknowledge entities.
+ * @returns {HKEntity | Array<HKEntity> | null} An entity or an array of entities that are instance of HKEntity. Or returns null if the input is not valid.
  */
 function deserialize(serialized)
 {

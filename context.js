@@ -10,49 +10,22 @@ const Node = require("./node");
 
 class Context extends Node
 {
-    constructor(id, parent)
+    /** Constructs a new context object. 
+     * 
+     * @param {string | null} [id] Some id string for this context. Deprecated: json object, which will deserialized as a Context; use `nodify()` instead.   
+     * @param {string | null} [parent] Parent id.
+     */
+    constructor(id = null, parent = null)
     {
         super(id, parent)
-        if (arguments[0] && typeof arguments[0] === "object")
-        {
-            let context = arguments[0];
-            this.id = context.id || null;
-            this.parent = context.parent || null;
-            if (context.properties)
-            {
-                this.properties = context.properties;
-            }
-            if (context.metaProperties)
-            {
-                this.metaProperties = context.metaProperties;
-            }
-            if (context.interfaces)
-            {
-                this.interfaces = context.interfaces;
-            }
-        }
-
-        else
-        {
-            this.id = id || null;
-            this.parent = parent || null;
-        }
         this.type = Types.CONTEXT;
     }
 
-    addInterface(key, type, properties)
-    {
-        if (!this.interfaces)
-        {
-            this.interfaces = {};
-        }
-
-        this.interfaces[key] = {
-            type: type,
-            properties: properties
-        };
-    }
-
+    /**
+     * Serializes this context to a plain json object.
+     * 
+     * @returns {Object.<string,Any>} a plain json object with recursively serialized fields. 
+     */
     serialize()
     {
         let context = {
@@ -83,6 +56,14 @@ class Context extends Node
         return context;
     }
 
+
+    /**
+     * Tests whether `entity` is a context structurally.
+     * 
+     * @param {Object} entity The entity to be tested.
+     * @returns {booelan} Returns `true` if valid; `false` otherwise.
+     * 
+     */
     static isValid(entity)
     {
         let isValid = false;

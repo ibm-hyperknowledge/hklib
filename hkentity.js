@@ -13,24 +13,46 @@ class HKEntity
      * Creates a new Hyperknowledge entity
      * 
      * @constructor 
+     * @abstract
      */
     constructor()
     {
+        if (this.constructor == HKEntity)
+        {
+            throw new Error("This is an abstract class and cannot be instantiated directly.");
+        }
+
+        /** 
+         * @public 
+         * @type {Object.<string, Object>}
+         * */
+        this.properties = {};
+
+        /**
+         *  Type of this entity.
+         * 
+         * @public
+         * @type {string | null}
+        */
+        this.type = null;
     }
 
+
+
+
     /**
-     * Callback function for `addEntities`
+     * Callback function for `foreachProperty`
      *
      * @callback PropertyCallback
-     * @param {Property} property Property key
-     * @param {Value} value Property value
+     * @param {string} property Property key
+     * @param {Object} value Property value
+     * @param {string | null} metaProperty Metaproperty value, if any
      */
     /**
      * Iterate through each valid property of the entity
      *
      * @param {PropertyCallback} callback
      */
-
     foreachProperty(callback = () => { })
     {
         let properties = this.properties || {};
@@ -51,8 +73,8 @@ class HKEntity
      * Set a property to entity, overwrite if already exists
      *
      * @param {string} property Property key
-     * @param {object} value Property value, can be number, string or an array of strings or numbers
-     * @param {string} metaProperty Metaproperty, a string that annotates the property (e. g. A type)
+     * @param {Object} value Property value, can be number, string or an array of strings or numbers
+     * @param {string} [metaProperty] Metaproperty, a string that annotates the property (e. g. A type)
      */
     setProperty(property, value, metaProperty = null)
     {
@@ -79,10 +101,12 @@ class HKEntity
      * Append a value to a property, create it if it does not exist, if the property exists and it is not an array convert to an array
      *
      * @param {string} property Property key
-     * @param {object} value Property value, can be number, string or an array of strings or numbers (in the latter append to the previous values).
-     * @param {string} metaProperty Metaproperty, a string that annotates the property (e. g. A type)
+     * @param {Object} value Property value, can be number, string or an array of strings or numbers (in the latter append to the previous values).
+     * @param {string} [metaProperty] Optioanl metaproperty, a string that annotates the property (e.g., a XSD type)
+     * 
+     * @returns {void}
      */
-    appendToProperty(property, value, metaProperty)
+    appendToProperty(property, value, metaProperty = null)
     {
         if (property)
         {
@@ -128,14 +152,13 @@ class HKEntity
     }
 
     /**
-     *  Remove property value. If property or value does not exist, does nothing. If the property
+     *  Removes property value. If property or value does not exist, does nothing. If the property
      * becomes empty, remove the property altogether.
      *
-     *
      * @param {string} property Property key to remove
-     * @param {object} value Property value, can be number, string or an array of strings or numbers (in the latter append to the previous values).
+     * @param {Object} value Property value, can be number, string or an array of strings or numbers (in the latter append to the previous values).
      *
-     * @returns {boolean} T
+     * @returns {boolean} True if properties changed; false if not.
      */
     removePropertyValue(property, value)
     {
@@ -193,11 +216,11 @@ class HKEntity
     }
 
     /**
-     * Append or create a property with value, create it if it does not exist as single value, if the property exists and it is not an array convert to an array
+     * Append or create a property with value, create it if it does not exist as single value, if the property exists and it is not an array convert to an array.
      *
-     * @param {string} property Property key
-     * @param {object} value Property value, can be number, string or an array of strings or numbers (in the latter append to the previous values).
-     * @param {string} metaProperty Metaproperty, a string that annotates the property (e. g. A type)
+     * @param {string} property Property key.
+     * @param {Object} value Property value, can be number, string or an array of strings or numbers (in the latter append to the previous values).
+     * @param {string} [metaProperty] Metaproperty, a string that annotates the property (e. g. A type).
      */
     setOrAppendToProperty(property, value, metaProperty = null)
     {
@@ -213,7 +236,7 @@ class HKEntity
     }
 
     /**
-     * Get a property value for a given key
+     * Get a property value for a given key.
      *
      * @param {string} property Property key
      * @return {Object} The object value associated to the input property
@@ -231,10 +254,12 @@ class HKEntity
     }
 
     /**
-     * Set a metaproperty value for a given key
+     * Set a metaproperty value for a given key.
      *
      * @param {string} metaProperty Metaproperty key
      * @param {string} value Metaproperty, a string that annotates the property (e. g. A type)
+     * 
+     * @returns {void}
      */
     setMetaProperty(metaProperty, value)
     {
@@ -253,10 +278,11 @@ class HKEntity
     }
 
     /**
-     * Get a metaproperty value for a given key
+     * Get a metaproperty value for a given key.
      *
-     * @param {string} metaProperty Metaproperty key
-     * @returns {string} the metaproperty value
+     * @param {string} metaProperty Metaproperty key.
+     * @returns {string | null} the metaproperty value.
+     * 
      */
     getMetaProperty(metaProperty)
     {
@@ -273,7 +299,9 @@ class HKEntity
     /**
      * Remove a metaproperty
      *
-     * @param {string} metaProperty Metaproperty to delete
+     * @param {string} metaProperty Metaproperty to delete.
+     * 
+     * @returns {boolean} Returns true if the property has been deleted; false if not or metaProperty does not exist.
      */
     removeMetaProperty(metaProperty)
     {
@@ -291,10 +319,10 @@ class HKEntity
     }
 
     /**
-     * Check if the entity has the property
+     * Check if the entity has the property.
      *
-     * @param {string} property Property key
-     * @returns {boolean} A boolean indicating that the entity contains the specified property
+     * @param {string} property Property key.
+     * @returns {boolean} A boolean indicating that the entity contains the specified property.
      */
     hasProperty(property)
     {
@@ -306,7 +334,7 @@ class HKEntity
     }
 
     /**
-     * (Internal) Serialize the properties
+     * (Internal) Serialize the properties. Used by serialize() functions of extending classes.
      *
      */
     serializeProperties()
@@ -331,7 +359,6 @@ class HKEntity
             }
             return properties;
         }
-
         else
         {
             return null;
@@ -339,7 +366,7 @@ class HKEntity
     }
 
     /**
-     * (Internal) Serialize the metaproperties
+     * (Internal) Serialize the metaproperties.
      *
      */
     serializeMetaProperties()
@@ -356,7 +383,6 @@ class HKEntity
             }
             return metaProperties;
         }
-
         else
         {
             return null;
@@ -364,9 +390,11 @@ class HKEntity
     }
 
     /**
-     * Append a dictionary of properties, merging both data, overwrites the previous properties
+     * Append a dictionary of properties, merging both data, overwrites the previous properties.
      *
-     * @param {string} properties A dictionary of new properties
+     * @param {string} properties A dictionary of new properties.
+     * 
+     * @returns {void}
      */
     appendProperties(properties)
     {
