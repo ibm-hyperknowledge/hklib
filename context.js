@@ -78,7 +78,6 @@ class Context extends Node
 
         return isValid;
     }
-
 }
 
 Context.type = Types.CONTEXT;

@@ -5,24 +5,26 @@
 
 "use strict";
 
-
-exports.NODE      = 'node';
-exports.CONTEXT   = 'context';
-exports.LINK      = 'link';
+exports.NODE = 'node';
+exports.CONTEXT = 'context';
+exports.LINK = 'link';
 exports.CONNECTOR = 'connector';
 exports.REFERENCE = 'ref';
 exports.INTERFACE = 'interface';
-exports.BIND      = 'bind';
-exports.TRAIL     = 'trail';
+exports.BIND = 'bind';
+exports.TRAIL = 'trail';
+exports.VIRTUAL_NODE = 'node';
+exports.VIRTUAL_CONTEXT = 'context';
+exports.VIRTUAL_SOURCE_PROPERTY = "virtualsrc";
 
 exports.isValidType = function (type)
 {
-	for (let key in exports)
-	{
-		if (exports[key] === type)
-		{
-			return true;
-		}
-	}
-	return false;
+  for (let key in exports)
+  {
+    if (exports[key] === type)
+    {
+      return true;
+    }
+  }
+  return false;
 }

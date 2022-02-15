@@ -10,4 +10,7 @@ export var REFERENCE: string;
 export var INTERFACE: string;
 export var BIND: string;
 export var TRAIL: string;
+export var VIRTUAL_NODE: string;
+export var VIRTUAL_CONTEXT: string;
+export var VIRTUAL_SOURCE_PROPERTY: string;
 export function isValidType(type: any): boolean;
