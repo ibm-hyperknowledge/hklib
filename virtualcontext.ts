@@ -14,18 +14,10 @@ export class VirtualContext extends Context {
     const properties = { "readonly": true, "virtualsrc": virtualSrc };
     const metaProperties = { "readonly": "<http://www.w3.org/2001/XMLSchema#boolean>" };
 
-
     this.properties = Object.assign(this.properties, properties);
+    this.metaProperties = Object.assign(this.metaProperties, metaProperties);
 
-
-    if (this.metaProperties) {
-      this.metaProperties = Object.assign(this.metaProperties, metaProperties);
-    }
-    else {
-      this.metaProperties = metaProperties;
-    }
     this.type = VIRTUAL_CONTEXT_TYPE;
-
   }
 
   static isValid(entity: VirtualContext) {
