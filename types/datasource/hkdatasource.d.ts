@@ -93,7 +93,7 @@ declare class HKDatasource {
     /**
      * Save hyperknowledge entities to a hkbase
      *
-     * @param {Array} entities Array of entities to be added or updated
+     * @param {Array} entities array of entities to be added or updated
      * @param {AddEntitiesCallback} callback Response callback
      */
     saveEntities(entities: any[], callback: (err: Error, entities: any[]) => any): void;
@@ -127,10 +127,14 @@ declare class HKDatasource {
      * Fetch entities from a context
      *
      * @param {string} context The context id to retrieve their nested entities. May be null to get the `body` context.
+     * @param {object?} [options] Options to get context children
+     * @param {boolean?} [options.lazy] If set true, will include only the main fields in the results
+     * @param {boolean?} [options.nested] If set true, will walk through nested contexts
+     * @param {boolean?} [options.includeContextOnResults] If set true, will include the context data in the results
      * @param {object} payload A dictionary containing options when returning the entities from the context.
      * @param {GetEntitiesCallback} callback Callback with the entities
      */
-    getContextChildren(context: string, payload: object, callback?: (err: string, entities: object) => any): void;
+    getContextChildren(context: string, options?: object | null | undefined, payload: object, callback?: (err: string, entities: object) => any): void;
     /**
      * Filter entities using CSS pattern `(TODO: document it better)`
      *
@@ -198,7 +202,7 @@ declare class HKDatasource {
      * Get links and connected related to a list entities. The ids can be the links or connector by themselves, or
      * entities that are connected to links.
      *
-     * @param {[string]} ids An Array of id of entities to get related links
+     * @param {[string]} ids An array of id of entities to get related links
      * @param {GetEntitiesCallback} callback Callback with the entities
      */
     getLinks(ids: [string], callback?: (err: string, entities: object) => any): void;
@@ -294,14 +298,14 @@ declare class HKDatasource {
      *  @typedef {Object} StoredQuery
      *  @property {string} [id] the stored query's identifier
      *  @property {string} queryText the query
-     *  @property {Array}  colums the set of variables in the projection
+     *  @property {array}  colums the set of variables in the projection
      *  @property {string} queryLanguage queryText's query language
-     *  @property {Array}  [parameters] an Array of parameters of the query
+     *  @property {array}  [parameters] an array of parameters of the query
      */
     /**
      * @callback StoredQueryGetAllCallback
      * @param err An error object that indicates if the operation was successful or not
-     * @param {StoredQuery[]} [data] The Array of stored queries
+     * @param {StoredQuery[]} [data] The array of stored queries
      */
     /**
      * Returns all stored queries
@@ -323,20 +327,20 @@ declare class HKDatasource {
         /**
          * the set of variables in the projection
          */
-        colums: Array<any>;
+        colums: array;
         /**
          * queryText's query language
          */
         queryLanguage: string;
         /**
-         * an Array of parameters of the query
+         * an array of parameters of the query
          */
         parameters?: any;
     }[] | undefined) => any) | undefined): void;
     /**
      * @callback StoredQueryGetCallback
      * @param err An error object that indicates if the operation was successful or not
-     * @param {StoredQuery} [data] The Array of stored queries
+     * @param {StoredQuery} [data] The array of stored queries
      */
     /**
      * Returns a stored query
@@ -359,13 +363,13 @@ declare class HKDatasource {
         /**
          * the set of variables in the projection
          */
-        colums: Array<any>;
+        colums: array;
         /**
          * queryText's query language
          */
         queryLanguage: string;
         /**
-         * an Array of parameters of the query
+         * an array of parameters of the query
          */
         parameters?: any;
     } | undefined) => any) | undefined): void;
@@ -390,13 +394,13 @@ declare class HKDatasource {
         /**
          * the set of variables in the projection
          */
-        colums: Array<any>;
+        colums: array;
         /**
          * queryText's query language
          */
         queryLanguage: string;
         /**
-         * an Array of parameters of the query
+         * an array of parameters of the query
          */
         parameters?: any;
     } | undefined) => any) | undefined): void;
@@ -419,13 +423,13 @@ declare class HKDatasource {
         /**
          * the set of variables in the projection
          */
-        colums: Array<any>;
+        colums: array;
         /**
          * queryText's query language
          */
         queryLanguage: string;
         /**
-         * an Array of parameters of the query
+         * an array of parameters of the query
          */
         parameters?: any;
     }, options: {
@@ -442,13 +446,13 @@ declare class HKDatasource {
         /**
          * the set of variables in the projection
          */
-        colums: Array<any>;
+        colums: array;
         /**
          * queryText's query language
          */
         queryLanguage: string;
         /**
-         * an Array of parameters of the query
+         * an array of parameters of the query
          */
         parameters?: any;
     } | undefined) => any) | undefined): void;
@@ -477,13 +481,14 @@ declare class HKDatasource {
          */
         options?: object | undefined;
     }, options: {
+        ?: string | undefined;
         mimeType?: string | undefined;
         transactionId?: string | undefined;
     }, callback?: ((err: any, data: any, stats: any) => any) | undefined): void;
     /**
      * Alias to `saveEntities`. Add entities may also update entities
      *
-     * @param {Array} entities Array of entities to be added or updated
+     * @param {Array} entities array of entities to be added or updated
      * @param {AddEntitiesCallback} callback Response callback
      */
     addEntities(entities: any[], callback: (err: Error, entities: any[]) => any): void;

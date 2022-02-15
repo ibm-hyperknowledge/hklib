@@ -83,8 +83,6 @@ class Context extends Node
         return context;
     }
 
-
-
     static isValid(entity)
     {
         let isValid = false;
@@ -99,7 +97,6 @@ class Context extends Node
 
         return isValid;
     }
-
 }
 
 Context.type = Types.CONTEXT;

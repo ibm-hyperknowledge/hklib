@@ -25,7 +25,7 @@ function _deserialize(input)
         case Node.type:
             return new Node(input);
         case Context.type:
-            if (input.properties !== undefined && input.properties.virtualsrc !== undefined) return new VirtualContext(input);
+            if (input.properties !== undefined && input.properties.virtualsrc !== undefined) return new VirtualContext(input, input.properties.virtualsrc );
             return new Context(input);
         case Link.type:
             return new Link(input);

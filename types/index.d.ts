@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2016-present, IBM Research
- * Licensed under The MIT License [see LICENSE for details]
- */
+* Copyright (c) 2016-present, IBM Research
+* Licensed under The MIT License [see LICENSE for details]
+*/
 
 
 /*
@@ -22,6 +22,10 @@ export { default as HKLink } from "./link";
 export { default as Trail } from "./trail";
 export { default as HKTrail } from "./trail";
 export { default as HKEntity } from "./hkentity";
+export { default as VirtualNode } from "./virtualnode";
+export { default as HKVirtualNode } from "./virtualnode";
+export { default as VirtualContext } from "./virtualcontext";
+export { default as HKVirtualContext } from "./virtualcontext";
 
 export { default as Types } from "./types";
 export { default as HKTypes } from "./types";
@@ -32,6 +36,10 @@ export { CONNECTOR as CONNECTOR_TYPE } from "./types";
 export { BIND as BIND_TYPE } from "./types";
 export { INTERFACE as INTERFACE } from "./types";
 export { TRAIL as TRAIL_TYPE } from "./types";
+export { VIRTUAL_NODE as VIRTUAL_NODE } from "./types";
+export { VIRTUAL_CONTEXT as VIRTUAL_CONTEXT } from "./types";
+export { VIRTUAL_SOURCE_PROPERTY } from "./types";
+
 
 export { default as RolesTypes } from "./roletypes";
 export { default as HKRoleTypes } from "./roletypes";
@@ -57,4 +65,5 @@ export { default as Constants } from "./constants";
 export { default as HKDatasource } from "./datasource/hkdatasource";
 export { default as HKRepository } from "./datasource/hkrepository";
 export { default as GraphBuilder } from "./graphbuilder";
+export { default as IExternalDatasource } from "./interfaces/iexternaldatasource";
 

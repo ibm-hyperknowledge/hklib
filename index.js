@@ -8,8 +8,6 @@ exports.Node           = require("./node");
 exports.HKNode         = require("./node");
 exports.Context        = require("./context");
 exports.HKContext      = require("./context");
-exports.VirtualContext = require("./virtualcontext");
-exports.HKVirtualContext = require("./virtualcontext");
 exports.Connector      = require("./connector");
 exports.HKConnector    = require("./connector");
 exports.Reference      = require("./reference");
@@ -21,15 +19,22 @@ exports.HKTrail        = require("./trail");
 exports.HKEntity       = require("./hkentity");
 exports.HKGraph        = require("./hkgraph")
 
-exports.Types          = require("./types");
-exports.HKTypes        = require("./types");
-exports.NODE_TYPE      = require("./types").NODE;
-exports.CONTEXT_TYPE   = require("./types").CONTEXT;
-exports.LINK_TYPE      = require("./types").LINK;
-exports.CONNECTOR_TYPE = require("./types").CONNECTOR;
-exports.BIND_TYPE      = require("./types").BIND;
-exports.INTERFACE      = require("./types").INTERFACE;
-exports.TRAIL_TYPE     = require("./types").TRAIL;
+exports.VirtualNode = require("./virtualnode").VirtualNode;
+exports.HKVirtualNode = require("./virtualnode").VirtualNode;
+exports.VirtualContext = require("./virtualcontext").VirtualContext;
+exports.HKVirtualContext = require("./virtualcontext").VirtualContext;
+
+exports.Types                 = require("./types");
+exports.HKTypes               = require("./types");
+exports.NODE_TYPE             = require("./types").NODE;
+exports.CONTEXT_TYPE          = require("./types").CONTEXT;
+exports.LINK_TYPE             = require("./types").LINK;
+exports.CONNECTOR_TYPE        = require("./types").CONNECTOR;
+exports.BIND_TYPE             = require("./types").BIND;
+exports.INTERFACE             = require("./types").INTERFACE;
+exports.TRAIL_TYPE            = require("./types").TRAIL;
+exports.VIRTUAL_NODE_TYPE     = require("./types").VIRTUAL_NODE;
+exports.VIRTUAL_CONTEXT_TYPE  = require("./types").VIRTUAL_CONTEXT;
 
 exports.VIRTUAL_SOURCE_PROPERTY = "virtualsrc";
 
@@ -56,5 +61,8 @@ exports.deserialize    = require("./deserialize");
 exports.Constants      = require("./constants");
 exports.HKDatasource   = require("./datasource/hkdatasource");
 exports.HKRepository   = require("./datasource/hkrepository");
+
 exports.GraphBuilder   = require("./graphbuilder");
+exports.IExternalDatasource   = require("./interfaces/iexternaldatasource");
+
 
