@@ -3,31 +3,26 @@
  * Licensed under The MIT License [see LICENSE for details]
  */
 
-import  { VIRTUAL_NODE as VIRTUAL_NODE_TYPE} from "./types";
+import { VIRTUAL_NODE as VIRTUAL_NODE_TYPE } from "./types";
 import Node from "./node";
 
-export class VirtualNode extends Node
-{
+export class VirtualNode extends Node {
   type: string
-	constructor(id: string | object, parent?: string, ...args: any [])
-	{
-		super(id, parent);
+  constructor(id: string | object, parent?: string, ...args: any[]) {
+    super(id, parent);
     this.type = VIRTUAL_NODE_TYPE;
-	}
+  }
 
-	static isValid(entity: VirtualNode)
-	{
-		let isValid = false;
-		if (entity && typeof(entity) === 'object' && !Array.isArray(entity))
-		{
-			if (entity.hasOwnProperty('type') && entity.type === VIRTUAL_NODE_TYPE &&
-				entity.hasOwnProperty('id') && entity.hasOwnProperty('parent') &&
-				entity.properties !== undefined && entity.properties.hasOwnProperty('virtualsrc'))
-			{
-				isValid = true;
-			}
-		}
+  static isValid(entity: VirtualNode) {
+    let isValid = false;
+    if (entity && typeof (entity) === 'object' && !Array.isArray(entity)) {
+      if (entity.hasOwnProperty('type') && entity.type === VIRTUAL_NODE_TYPE &&
+        entity.hasOwnProperty('id') && entity.hasOwnProperty('parent') &&
+        entity.properties !== undefined && entity.properties.hasOwnProperty('virtualsrc')) {
+        isValid = true;
+      }
+    }
 
-		return isValid;
-	}
+    return isValid;
+  }
 }
