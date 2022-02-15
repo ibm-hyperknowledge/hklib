@@ -23,10 +23,20 @@ class HKEntity
         }
 
         /** 
+         *  Properties of this node.
+         * 
          * @public 
          * @type {Object.<string, Object>}
          * */
         this.properties = {};
+
+        /** 
+         * Metaproperties of this node. It should have at least the same keys as `properties`.
+         * 
+         * @public 
+         * @type {Object.<string, Object>}
+         * */
+         this.metaProperties = {};
 
         /**
          *  Type of this entity.

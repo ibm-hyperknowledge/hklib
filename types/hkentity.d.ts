@@ -5,10 +5,21 @@
 export = HKEntity;
 declare class HKEntity {
     /**
+     *  Properties of this node.
+     *
      * @public
      * @type {Object.<string, Object>}
      * */
     public properties: {
+        [x: string]: Object;
+    };
+    /**
+     * Metaproperties of this node. It should have at least the same keys as `properties`.
+     *
+     * @public
+     * @type {Object.<string, Object>}
+     * */
+    public metaProperties: {
         [x: string]: Object;
     };
     /**
@@ -84,7 +95,6 @@ declare class HKEntity {
      * @returns {void}
      */
     setMetaProperty(metaProperty: string, value: string): void;
-    metaProperties: {} | undefined;
     /**
      * Get a metaproperty value for a given key.
      *
