@@ -93,7 +93,7 @@ declare class HKDatasource {
     /**
      * Save hyperknowledge entities to a hkbase
      *
-     * @param {Array} entities array of entities to be added or updated
+     * @param {Array} entities Array of entities to be added or updated
      * @param {AddEntitiesCallback} callback Response callback
      */
     saveEntities(entities: any[], callback: (err: Error, entities: any[]) => any): void;
@@ -198,7 +198,7 @@ declare class HKDatasource {
      * Get links and connected related to a list entities. The ids can be the links or connector by themselves, or
      * entities that are connected to links.
      *
-     * @param {[string]} ids An array of id of entities to get related links
+     * @param {[string]} ids An Array of id of entities to get related links
      * @param {GetEntitiesCallback} callback Callback with the entities
      */
     getLinks(ids: [string], callback?: (err: string, entities: object) => any): void;
@@ -294,14 +294,14 @@ declare class HKDatasource {
      *  @typedef {Object} StoredQuery
      *  @property {string} [id] the stored query's identifier
      *  @property {string} queryText the query
-     *  @property {array}  colums the set of variables in the projection
+     *  @property {Array}  colums the set of variables in the projection
      *  @property {string} queryLanguage queryText's query language
-     *  @property {array}  [parameters] an array of parameters of the query
+     *  @property {Array}  [parameters] an Array of parameters of the query
      */
     /**
      * @callback StoredQueryGetAllCallback
      * @param err An error object that indicates if the operation was successful or not
-     * @param {StoredQuery[]} [data] The array of stored queries
+     * @param {StoredQuery[]} [data] The Array of stored queries
      */
     /**
      * Returns all stored queries
@@ -323,20 +323,20 @@ declare class HKDatasource {
         /**
          * the set of variables in the projection
          */
-        colums: array;
+        colums: Array<any>;
         /**
          * queryText's query language
          */
         queryLanguage: string;
         /**
-         * an array of parameters of the query
+         * an Array of parameters of the query
          */
         parameters?: any;
     }[] | undefined) => any) | undefined): void;
     /**
      * @callback StoredQueryGetCallback
      * @param err An error object that indicates if the operation was successful or not
-     * @param {StoredQuery} [data] The array of stored queries
+     * @param {StoredQuery} [data] The Array of stored queries
      */
     /**
      * Returns a stored query
@@ -359,13 +359,13 @@ declare class HKDatasource {
         /**
          * the set of variables in the projection
          */
-        colums: array;
+        colums: Array<any>;
         /**
          * queryText's query language
          */
         queryLanguage: string;
         /**
-         * an array of parameters of the query
+         * an Array of parameters of the query
          */
         parameters?: any;
     } | undefined) => any) | undefined): void;
@@ -390,13 +390,13 @@ declare class HKDatasource {
         /**
          * the set of variables in the projection
          */
-        colums: array;
+        colums: Array<any>;
         /**
          * queryText's query language
          */
         queryLanguage: string;
         /**
-         * an array of parameters of the query
+         * an Array of parameters of the query
          */
         parameters?: any;
     } | undefined) => any) | undefined): void;
@@ -419,13 +419,13 @@ declare class HKDatasource {
         /**
          * the set of variables in the projection
          */
-        colums: array;
+        colums: Array<any>;
         /**
          * queryText's query language
          */
         queryLanguage: string;
         /**
-         * an array of parameters of the query
+         * an Array of parameters of the query
          */
         parameters?: any;
     }, options: {
@@ -442,13 +442,13 @@ declare class HKDatasource {
         /**
          * the set of variables in the projection
          */
-        colums: array;
+        colums: Array<any>;
         /**
          * queryText's query language
          */
         queryLanguage: string;
         /**
-         * an array of parameters of the query
+         * an Array of parameters of the query
          */
         parameters?: any;
     } | undefined) => any) | undefined): void;
@@ -477,14 +477,13 @@ declare class HKDatasource {
          */
         options?: object | undefined;
     }, options: {
-        ?: string | undefined;
         mimeType?: string | undefined;
         transactionId?: string | undefined;
     }, callback?: ((err: any, data: any, stats: any) => any) | undefined): void;
     /**
      * Alias to `saveEntities`. Add entities may also update entities
      *
-     * @param {Array} entities array of entities to be added or updated
+     * @param {Array} entities Array of entities to be added or updated
      * @param {AddEntitiesCallback} callback Response callback
      */
     addEntities(entities: any[], callback: (err: Error, entities: any[]) => any): void;
