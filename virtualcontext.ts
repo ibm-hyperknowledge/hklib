@@ -8,18 +8,15 @@ import Context from "./context";
 
 export class VirtualContext extends Context {
   type: string
-  constructor(id: string | object, virtualSrc: string, parent?: string, ...args: any[]) {
+  constructor(id: any, virtualSrc: string, parent?: string) {
     super(id, parent);
 
     const properties = { "readonly": true, "virtualsrc": virtualSrc };
     const metaProperties = { "readonly": "<http://www.w3.org/2001/XMLSchema#boolean>" };
 
-    if (this.properties) {
-      this.properties = Object.assign(this.properties, properties);
-    }
-    else {
-      this.properties = properties;
-    }
+
+    this.properties = Object.assign(this.properties, properties);
+
 
     if (this.metaProperties) {
       this.metaProperties = Object.assign(this.metaProperties, metaProperties);

@@ -5,6 +5,6 @@
 import Node from "./node";
 export declare class VirtualNode extends Node {
     type: string;
-    constructor(id: string | object, parent?: string, ...args: any[]);
+    constructor(id: any, parent?: string);
     static isValid(entity: VirtualNode): boolean;
 }

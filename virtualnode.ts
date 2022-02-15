@@ -8,7 +8,7 @@ import Node from "./node";
 
 export class VirtualNode extends Node {
   type: string
-  constructor(id: string | object, parent?: string, ...args: any[]) {
+  constructor(id: any, parent?: string) {
     super(id, parent);
     this.type = VIRTUAL_NODE_TYPE;
   }

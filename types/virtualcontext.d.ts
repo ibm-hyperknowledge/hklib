@@ -5,6 +5,6 @@
 import Context from "./context";
 export declare class VirtualContext extends Context {
     type: string;
-    constructor(id: string | object, virtualSrc: string, parent?: string, ...args: any[]);
+    constructor(id: any, virtualSrc: string, parent?: string);
     static isValid(entity: VirtualContext): boolean;
 }
