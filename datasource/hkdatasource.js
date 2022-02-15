@@ -477,15 +477,23 @@ fetchContext(context, callback = () => { })
  * Fetch entities from a context
  *
  * @param {string} context The context id to retrieve their nested entities. May be null to get the `body` context.
+ * @param {object?} [options] Options to get context children
+ * @param {boolean?} [options.lazy] If set true, will include only the main fields in the results
+ * @param {boolean?} [options.nested] If set true, will walk through nested contexts
+ * @param {boolean?} [options.includeContextOnResults] If set true, will include the context data in the results
  * @param {object} payload A dictionary containing options when returning the entities from the context.
  * @param {GetEntitiesCallback} callback Callback with the entities
  */
-getContextChildren(context, payload, callback = () => { })
+getContextChildren(context, options, payload, callback = () => { })
 {
 	let url = `${this.url}repository/${this.graphName}/context/${context}`;
 
-	Object.assign(payload, this.options);
-	const options = {
+  if (options)
+	{
+		url += toQueryString(options);
+	}
+  
+	const config = {
 		method: 'POST',
 		url: url,
 		headers: {
@@ -495,7 +503,9 @@ getContextChildren(context, payload, callback = () => { })
 		json: true
 	};
 
-	request(options, (err, res) =>
+  Object.assign(config, this.options);
+
+	request(config, (err, res) =>
 	{
 		if (!err)
 		{
