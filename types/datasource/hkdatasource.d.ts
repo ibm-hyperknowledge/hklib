@@ -134,7 +134,7 @@ declare class HKDatasource {
      * @param {object} payload A dictionary containing options when returning the entities from the context.
      * @param {GetEntitiesCallback} callback Callback with the entities
      */
-    getContextChildren(context: string, options?: object | null | undefined, payload: object, callback?: (err: string, entities: object) => any): void;
+    getContextChildren(context: string, options?: object | null | undefined, payload?: object, callback?: (err: string, entities: object) => any): void;
     /**
      * Filter entities using CSS pattern `(TODO: document it better)`
      *

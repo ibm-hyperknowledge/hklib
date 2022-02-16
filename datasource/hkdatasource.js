@@ -484,7 +484,7 @@ class HKDatasource
    * @param {object} payload A dictionary containing options when returning the entities from the context.
    * @param {GetEntitiesCallback} callback Callback with the entities
    */
-  getContextChildren(context, options, payload, callback = () => { })
+  getContextChildren(context, options = {} , payload = {}, callback = () => { })
   {
     let url = `${this.url}repository/${this.graphName}/context/${context}`;
 
