@@ -298,9 +298,9 @@ declare class HKDatasource {
      *  @typedef {Object} StoredQuery
      *  @property {string} [id] the stored query's identifier
      *  @property {string} queryText the query
-     *  @property {array}  colums the set of variables in the projection
+     *  @property {Array}  colums the set of variables in the projection
      *  @property {string} queryLanguage queryText's query language
-     *  @property {array}  [parameters] an array of parameters of the query
+     *  @property {Array}  [parameters] an array of parameters of the query
      */
     /**
      * @callback StoredQueryGetAllCallback
@@ -327,7 +327,7 @@ declare class HKDatasource {
         /**
          * the set of variables in the projection
          */
-        colums: array;
+        colums: any[];
         /**
          * queryText's query language
          */
@@ -335,7 +335,7 @@ declare class HKDatasource {
         /**
          * an array of parameters of the query
          */
-        parameters?: any;
+        parameters?: any[] | undefined;
     }[] | undefined) => any) | undefined): void;
     /**
      * @callback StoredQueryGetCallback
@@ -363,7 +363,7 @@ declare class HKDatasource {
         /**
          * the set of variables in the projection
          */
-        colums: array;
+        colums: any[];
         /**
          * queryText's query language
          */
@@ -371,7 +371,7 @@ declare class HKDatasource {
         /**
          * an array of parameters of the query
          */
-        parameters?: any;
+        parameters?: any[] | undefined;
     } | undefined) => any) | undefined): void;
     /**
      * Deletes a stored query
@@ -394,7 +394,7 @@ declare class HKDatasource {
         /**
          * the set of variables in the projection
          */
-        colums: array;
+        colums: any[];
         /**
          * queryText's query language
          */
@@ -402,7 +402,7 @@ declare class HKDatasource {
         /**
          * an array of parameters of the query
          */
-        parameters?: any;
+        parameters?: any[] | undefined;
     } | undefined) => any) | undefined): void;
     /**
      * Saves a stored query
@@ -423,7 +423,7 @@ declare class HKDatasource {
         /**
          * the set of variables in the projection
          */
-        colums: array;
+        colums: any[];
         /**
          * queryText's query language
          */
@@ -431,7 +431,7 @@ declare class HKDatasource {
         /**
          * an array of parameters of the query
          */
-        parameters?: any;
+        parameters?: any[] | undefined;
     }, options: {
         transactionId?: string | undefined;
     }, callback?: ((err: any, data?: {
@@ -446,7 +446,7 @@ declare class HKDatasource {
         /**
          * the set of variables in the projection
          */
-        colums: array;
+        colums: any[];
         /**
          * queryText's query language
          */
@@ -454,7 +454,7 @@ declare class HKDatasource {
         /**
          * an array of parameters of the query
          */
-        parameters?: any;
+        parameters?: any[] | undefined;
     } | undefined) => any) | undefined): void;
     /**
      * @typedef {object} StoredQueryRunConfiguration
@@ -462,13 +462,16 @@ declare class HKDatasource {
      * @property {object} [options] run options
      */
     /**
+     * @typedef {object} StoredQueryRunOptions
+     * @property {string} [content-type] a key value bind of stored query parameters to values
+     * @property {string} [mimeType] run options
+     * @property {string} [transactionId] run options
+     */
+    /**
      * Run a stored query using a configuration
      * @param {string} queryId
      * @param {StoredQueryRunConfiguration} runConfiguration
-     * @param {object} options
-     * @param {string} [options."content-type"] an option content type
-     * @param {string} [options.mimeType] return's mime type
-     * @param {string} [options.transactionId]
+     * @param {StoredQueryRunOptions} options
      * @param {QueryResultsCallback} [callback] response callback
      */
     runStoredQuery(queryId: string, runConfiguration: {
@@ -481,8 +484,17 @@ declare class HKDatasource {
          */
         options?: object | undefined;
     }, options: {
-        ?: string | undefined;
+        /**
+         * a key value bind of stored query parameters to values
+         */
+        "content-type"?: string | undefined;
+        /**
+         * run options
+         */
         mimeType?: string | undefined;
+        /**
+         * run options
+         */
         transactionId?: string | undefined;
     }, callback?: ((err: any, data: any, stats: any) => any) | undefined): void;
     /**
