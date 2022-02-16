@@ -61,7 +61,7 @@ class Context extends Node
      * Tests whether `entity` is a context structurally.
      * 
      * @param {Object} entity The entity to be tested.
-     * @returns {booelan} Returns `true` if valid; `false` otherwise.
+     * @returns {boolean} Returns `true` if valid; `false` otherwise.
      * 
      */
     static isValid(entity)

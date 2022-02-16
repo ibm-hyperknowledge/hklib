@@ -14,7 +14,7 @@
     "declaration": true,
     //"emitDeclarationOnly": true,
     "esModuleInterop": true,
-    "declarationDir": "./types",
+    //"declarationDir": "./types",
     "forceConsistentCasingInFileNames": true, /* Disallow inconsistently-cased references to the same file. */
   },
   "include" :[

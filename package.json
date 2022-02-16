@@ -3,7 +3,7 @@
   "version": "3.2.0",
   "main": "dist/index.js",
   "author": "IBM Research",
-  "types": "types/index.d.ts",
+  "types": "dist/index.d.ts",
   "contributors": [
     {
       "name": "Marcelo Machado",
@@ -64,13 +64,14 @@
     "driver"
   ],
   "scripts": {
-    "clean-build-ts": "rm -rf types; tsc; ./prepend-copyright-notice-d-ts.sh; cp index.d.ts.tocopy types/index.d.ts",
+    "clean-build-ts": "rm -rf dist; tsc; ./prepend-copyright-notice-d-ts.sh; cp index.d.ts.tocopy dist/index.d.ts",
     "unit": "mocha test/unit test/setup.json --timeout 360000"
   },
   "devDependencies": {
     "@types/amqplib": "^0.8.2",
     "chai": "^4.3.4",
     "mocha": "^9.1.3",
-    "typescript": "^4.3.5"
+    "tslib": "^2.3.0",
+    "typescript": "^4.5.5"
   }
 }
