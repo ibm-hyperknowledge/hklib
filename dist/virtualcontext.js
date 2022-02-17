@@ -3,8 +3,6 @@
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.VirtualContext = void 0;
 const tslib_1 = require("tslib");
 const types_1 = require("./types");
 const context_1 = (0, tslib_1.__importDefault)(require("./context"));
@@ -29,4 +27,4 @@ class VirtualContext extends context_1.default {
         return isValid;
     }
 }
-exports.VirtualContext = VirtualContext;
+module.exports = VirtualContext;

@@ -6,7 +6,8 @@
 import { VIRTUAL_CONTEXT as VIRTUAL_CONTEXT_TYPE } from "./types";
 import Context from "./context";
 
-export class VirtualContext extends Context {
+export = VirtualContext;
+class VirtualContext extends Context {
   type: string
   constructor(id: any, virtualSrc: string, parent?: string) {
     super(id, parent);
