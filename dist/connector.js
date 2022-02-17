@@ -18,6 +18,15 @@ class Connector extends HKEntity {
     constructor(id = null, className = null, roles = null) {
         super();
         /**
+         *
+         * Id of this connector. Might be null.
+         *
+         * @public
+         * @type {string | null}
+         *
+         */
+        this.id = id;
+        /**
          * Roles of this connector.
          *
          * @public

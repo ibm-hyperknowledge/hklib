@@ -24,6 +24,15 @@ declare class Connector extends HKEntity {
         [x: string]: string;
     }, ...args: any[]);
     /**
+     *
+     * Id of this connector. Might be null.
+     *
+     * @public
+     * @type {string | null}
+     *
+     */
+    public id: string | null;
+    /**
      * Roles of this connector.
      *
      * @public
@@ -32,7 +41,6 @@ declare class Connector extends HKEntity {
     public roles: {
         [x: string]: string;
     };
-    id: any;
     className: any;
     /**
      * Adds a new role to this connector.
