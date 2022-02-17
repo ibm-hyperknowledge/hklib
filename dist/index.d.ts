@@ -32,6 +32,7 @@ export { default as Types } from "./types";
 export { default as HKTypes } from "./types";
 export { NODE as NODE_TYPE } from "./types";
 export { CONTEXT as CONTEXT_TYPE } from "./types";
+export { REFERENCE as REFERENCE_TYPE } from "./types";
 export { LINK as LINK_TYPE } from "./types";
 export { CONNECTOR as CONNECTOR_TYPE } from "./types";
 export { BIND as BIND_TYPE } from "./types";
