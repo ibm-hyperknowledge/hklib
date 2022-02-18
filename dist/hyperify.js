@@ -8,7 +8,6 @@ const Node = require("./node");
 const Context = require("./context");
 const Connector = require("./connector");
 const Link = require("./link");
-const Constants = require("./constants");
 const ConnectorClass = require("./connectorclass");
 const RoleTypes = require("./roletypes");
 function createRelation(key, subj, obj, options, connectors, entities) {

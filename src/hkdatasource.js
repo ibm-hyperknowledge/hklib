@@ -10,8 +10,8 @@
 const util = require('util');
 const path = require('path');
 
-util.deprecate (()=>{},
-	`${path.basename(module.filename)} is deprecated, use "datasource/hkdatasource" instead`)
-();
+util.deprecate(() => { },
+  `${path.basename(module.filename)} is deprecated, use "datasource/hkdatasource" instead`)
+  ();
 
-module.exports = require ('./datasource/hkdatasource');
+module.exports = require('./datasource/hkdatasource');

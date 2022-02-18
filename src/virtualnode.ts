@@ -6,7 +6,7 @@
 import { VIRTUAL_NODE as VIRTUAL_NODE_TYPE } from "./types";
 import Node from "./node";
 
-export = VirtualNode; 
+export = VirtualNode;
 class VirtualNode extends Node {
   type: string
   constructor(id: any, parent?: string) {

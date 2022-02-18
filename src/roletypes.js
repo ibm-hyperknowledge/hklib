@@ -5,8 +5,8 @@
 
 "use strict";
 
-exports.NONE        = "n";
-exports.SUBJECT     = "s";
-exports.OBJECT      = "o";
-exports.PARENT      = "p";
-exports.CHILD       = "c";
+exports.NONE = "n";
+exports.SUBJECT = "s";
+exports.OBJECT = "o";
+exports.PARENT = "p";
+exports.CHILD = "c";

@@ -20,139 +20,139 @@ vConnector.addRole('obj', RoleTypes.OBJECT);
 
 class Trail extends HKEntity
 {
-    constructor(id, parent)
+  constructor(id, parent)
+  {
+    super();
+    if (arguments[0] && typeof arguments[0] === 'object' && isValid(arguments[0]))
     {
-        super();
-        if (arguments[0] && typeof arguments[0] === 'object' && isValid(arguments[0]))
-        {
-            let trail = arguments[0];
+      let trail = arguments[0];
 
-            this.id = trail.id || null;
-            this.parent = trail.parent || null;
-            this.properties = trail.properties || {};
-            this.metaproperties = trail.metaproperties || {};
-            this.interfaces = trail.interfaces || {};
-            this.children = trail.children || [];
-            _loadSteps.call(this);
-        }
-
-        else
-        {
-            this.id = id || null;
-            this.parent = parent || null;
-            this.interfaces = {};
-            this.properties = {};
-            this.metaproperties = {};
-            this.children = [];
-            this.steps = [];
-        }
-
-        this.type = Types.TRAIL;
+      this.id = trail.id || null;
+      this.parent = trail.parent || null;
+      this.properties = trail.properties || {};
+      this.metaproperties = trail.metaproperties || {};
+      this.interfaces = trail.interfaces || {};
+      this.children = trail.children || [];
+      _loadSteps.call(this);
     }
 
-    addStep(key, properties)
+    else
     {
-        let ts = properties.begin || new Date().toISOString();
-        properties.begin = ts;
-
-        if (this.steps.length > 0)
-        {
-            let lastStep = this.steps[this.steps.length - 1].key;
-            if (!this.interfaces[lastStep].properties.end)
-            {
-                this.interfaces[lastStep].properties.end = ts;
-            }
-        }
-
-        this.steps.push({ key: key, begin: ts });
-        this.addInterface(key, 'temporal', properties);
+      this.id = id || null;
+      this.parent = parent || null;
+      this.interfaces = {};
+      this.properties = {};
+      this.metaproperties = {};
+      this.children = [];
+      this.steps = [];
     }
 
-    addInterface(key, type, properties)
+    this.type = Types.TRAIL;
+  }
+
+  addStep(key, properties)
+  {
+    let ts = properties.begin || new Date().toISOString();
+    properties.begin = ts;
+
+    if (this.steps.length > 0)
     {
-        this.interfaces[key] = { type: type, properties: properties };
+      let lastStep = this.steps[this.steps.length - 1].key;
+      if (!this.interfaces[lastStep].properties.end)
+      {
+        this.interfaces[lastStep].properties.end = ts;
+      }
     }
 
-    createLinksFromSteps()
+    this.steps.push({ key: key, begin: ts });
+    this.addInterface(key, 'temporal', properties);
+  }
+
+  addInterface(key, type, properties)
+  {
+    this.interfaces[key] = { type: type, properties: properties };
+  }
+
+  createLinksFromSteps()
+  {
+    let vEntities = [vConnector];
+
+    for (let key in this.interfaces)
     {
-        let vEntities = [vConnector];
+      let interProp = this.interfaces[key].properties;
+      if (!interProp)
+        continue;
 
-        for (let key in this.interfaces)
-        {
-            let interProp = this.interfaces[key].properties;
-            if (!interProp)
-                continue;
+      if (interProp.obj)
+      {
+        let l = new Link(shortid(), vConnector.id, this.parent);
+        l.addBind('sub', interProp.obj, interProp.objInterface);
+        l.addBind('obj', this.id);
+        vEntities.push(l);
+      }
+    }
+    return vEntities;
+  }
 
-            if (interProp.obj)
-            {
-                let l = new Link(shortid(), vConnector.id, this.parent);
-                l.addBind('sub', interProp.obj, interProp.objInterface);
-                l.addBind('obj', this.id);
-                vEntities.push(l);
-            }
-        }
-        return vEntities;
+  serialize()
+  {
+    return {
+      id: this.id,
+      parent: this.parent,
+      properties: this.properties,
+      metaproperties: this.metaproperties,
+      interfaces: this.interfaces,
+      type: this.type
+    };
+  }
+
+  static isValid(entity)
+  {
+    let isValid = false;
+    if (entity && typeof (entity) === 'object' && !Array.isArray(entity))
+    {
+      if (entity.hasOwnProperty('type') && entity.type === Types.TRAIL &&
+        entity.hasOwnProperty('id') && entity.hasOwnProperty('parent'))
+      {
+        isValid = true;
+      }
     }
 
-    serialize()
-    {
-        return {
-            id: this.id,
-            parent: this.parent,
-            properties: this.properties,
-            metaproperties: this.metaproperties,
-            interfaces: this.interfaces,
-            type: this.type
-        };
-    }
-
-    static isValid(entity)
-    {
-        let isValid = false;
-        if (entity && typeof (entity) === 'object' && !Array.isArray(entity))
-        {
-            if (entity.hasOwnProperty('type') && entity.type === Types.TRAIL &&
-                entity.hasOwnProperty('id') && entity.hasOwnProperty('parent'))
-            {
-                isValid = true;
-            }
-        }
-
-        return isValid;
-    }
+    return isValid;
+  }
 }
 
 
 function _loadSteps()
 {
-    let steps = [];
-    for (let key in this.interfaces)
+  let steps = [];
+  for (let key in this.interfaces)
+  {
+    let begin = new Date(Date.parse(this.interfaces[key].properties.begin));
+    let end = new Date(Date.parse(this.interfaces[key].properties.end));
+
+    this.interfaces[key].properties.begin = begin;
+    this.interfaces[key].properties.end = end;
+
+    steps.push({ key: key, begin: begin });
+  }
+
+  steps.sort(
+    (a, b) =>
     {
-        let begin = new Date(Date.parse(this.interfaces[key].properties.begin));
-        let end = new Date(Date.parse(this.interfaces[key].properties.end));
+      if (a.begin < b.begin)
+      {
+        return -1;
+      }
+      if (a.begin > b.begin)
+      {
+        return 1;
+      }
 
-        this.interfaces[key].properties.begin = begin;
-        this.interfaces[key].properties.end = end;
+      return 0;
+    });
 
-        steps.push({ key: key, begin: begin });
-    }
-
-    steps.sort(
-        (a, b) =>
-        {
-            if (a.begin < b.begin)
-            {
-                return -1;
-            }
-            if (a.begin > b.begin)
-            {
-                return 1;
-            }
-
-            return 0;
-        });
-
-    this.steps = steps;
+  this.steps = steps;
 }
 
 Trail.type = Types.TRAIL;
