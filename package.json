@@ -1,9 +1,9 @@
 {
   "name": "hklib",
   "version": "3.2.0",
-  "main": "./dist/index.js",
+  "main": "dist/index.js",
   "author": "IBM Research",
-  "types": "./dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "contributors": [
     {
       "name": "Marcelo Machado",
@@ -79,6 +79,6 @@
     "./*": "./dist/*.js"
   },
   "files": [
-    "./dist"
+    "/dist"
   ]
 }
