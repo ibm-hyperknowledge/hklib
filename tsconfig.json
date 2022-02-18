@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2020", /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', 'ES2021', or 'ESNEXT'. */
     "module": "commonjs", /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */
-    "outDir": "./dist", /* Redirect output structure to the directory. */
+    "outDir": "dist", /* Redirect output structure to the directory. */
     "importHelpers": true, /* Import emit helpers from 'tslib'. */
     "strict": true, /* Enable all strict type-checking options. */
     "alwaysStrict": true, /* Parse in strict mode and emit "use strict" for each source file. */
@@ -11,18 +11,16 @@
     "experimentalDecorators": true, /* Enables experimental support for ES7 decorators. */
     "emitDecoratorMetadata": true, /* Enables experimental support for emitting type metadata for decorators. */
     "allowJs": true,
+    "sourceMap": false, /* sourceMaps are enabled so you’ll be able to use node’s DevTools integration to view TypeScript sources alongside your JavaScript */
+    "strictNullChecks": true,
     "declaration": true,
     //"emitDeclarationOnly": true,
     "esModuleInterop": true,
     //"declarationDir": "./types",
     "forceConsistentCasingInFileNames": true, /* Disallow inconsistently-cased references to the same file. */
   },
-  "include" :[
-    "./*.js",
-    "./*.ts",
-    "./datasource/**/*.js",
-    "./datasource/**/*.ts",
-    "./interfaces/**/*.ts"    
+  "include": [
+    "src/**/*"
   ],
   "exclude": [
     "test/**/*",
