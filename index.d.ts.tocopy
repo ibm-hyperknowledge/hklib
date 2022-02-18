@@ -45,8 +45,8 @@ export { VIRTUAL_SOURCE_PROPERTY } from "./types";
 
 export { default as RolesTypes } from "./roletypes";
 export { default as HKRoleTypes } from "./roletypes";
-export { OBJECT as SUBJECT } from "./roletypes";
-export { SUBJECT as OBJECT } from "./roletypes";
+export { OBJECT as OBJECT } from "./roletypes";
+export { SUBJECT as SUBJECT } from "./roletypes";
 export { PARENT as PARENT } from "./roletypes";
 export { CHILD as CHILD } from "./roletypes";
 
