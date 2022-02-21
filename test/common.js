@@ -16,10 +16,12 @@ module.exports.preamble = function ()
 	{
 		const setup = require(`../${process.argv[2]}`);
 
+
 		if(setup.datasource)
 		{
+      let options = setup.options || {};
 			const repoName = this.randomString(10)
-			return new HKDatasource(setup.datasource, `${repoName}_test`);
+			return new HKDatasource(setup.datasource, `${repoName}_test`, options);
 		}
 	}	
 }
