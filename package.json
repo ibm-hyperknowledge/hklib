@@ -1,6 +1,6 @@
 {
   "name": "hklib",
-  "version": "3.2.0",
+  "version": "4.0.0",
   "main": "dist/index.js",
   "author": "IBM Research",
   "types": "dist/index.d.ts",
