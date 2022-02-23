@@ -7,7 +7,6 @@
 
 const classes = require ('./observer/clients/');
 const request = require ('request-promise-native');
-const ping		= require ('ping');
 
 const CONNECTION_REFUSED_ERROR = 'ECONNREFUSED';
 
