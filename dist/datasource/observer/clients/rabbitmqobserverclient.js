@@ -5,7 +5,9 @@
 'use strict';
 const ConfigurableObserverClient = require('./configurableobserverclient');
 const amqp = require('amqp-connection-manager');
-const ping = require('ping');
+const Promisify = require("ninja-util/promisify");
+const NetcatClient = require('netcat/client');
+const nc = new NetcatClient();
 async function createChannel() {
     try {
         this._channelWrapper = this._connectionManager.createChannel();
@@ -22,16 +24,19 @@ async function connect() {
         if (this._certificate) {
             options.ca = [Buffer.from(this._certificate, 'base64')];
         }
-        let brokerHost = new URL(this._broker).hostname;
-        let pingResult = await ping.promise.probe(brokerHost, { timeout: 10 });
-        if (pingResult.alive) {
+        let brokerURL = new URL(this._broker);
+        let brokerHost = brokerURL.hostname;
+        let brokerPort = brokerURL.port;
+        let portsStatus = await Promisify(null, nc.addr(brokerHost).scan, brokerPort);
+        brokerPort = `${brokerPort}`;
+        if (portsStatus.hasOwnProperty(brokerPort) && portsStatus[brokerPort] == 'open') {
             this._connectionManager = amqp.connect(this._broker, { connectionOptions: options });
         }
         else if (this._brokerExternal) {
             this._connectionManager = amqp.connect(this._brokerExternal, { connectionOptions: options });
         }
         else {
-            throw `Cannot reach broker host ${brokerHost} from ${this._broker}`;
+            throw `Cannot reach broker on port ${brokerPort} of host ${brokerHost}`;
         }
         await this._connectionManager._connectPromise;
         this._connectionManager._currentConnection.connection.on('error', console.error);
