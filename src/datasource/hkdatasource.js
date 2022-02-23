@@ -6,6 +6,8 @@
 "use strict";
 
 const request = require("request");
+const axios = require("axios").default;
+
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
 
@@ -532,6 +534,55 @@ class HKDatasource
         callback(err);
       }
     });
+  }
+
+  /**
+   * Fetch entity
+   *
+   * @param {string} id The context id to retrieve their nested entities. May be null to get the `body` context.
+   * @param {object?} [options] Options to get entity
+   * @param {boolean?} [options.parent] The entity parent
+   * @param {object} payload A dictionary containing options when returning the entities.
+   * @param {GetEntitiesCallback} callback Callback with the entities
+   */
+  async getEntityById(id, options = {}, payload = {}, callback = () => { })
+  {
+    let url = `${this.url}repository/${this.graphName}/entity/${id}`;
+
+    if (options)
+    {
+      url += toQueryString(options);
+    }
+
+    const config = {
+      method: 'POST',
+      url: url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: payload,
+      json: true
+    };
+
+    Object.assign(config, this.options);
+
+    try
+    {
+      let res = await axios(config);
+
+      if (requestCompletedWithSuccess(res.statusCode))
+      {
+        callback(null, res.body);
+      }
+      else
+      {
+        callback(`Server responded with ${res.statusCode}. ${res.body}`);
+      }
+    }
+    catch (err)
+    {
+      callback(err);
+    }
   }
 
   /**

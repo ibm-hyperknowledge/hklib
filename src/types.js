@@ -13,7 +13,7 @@ exports.REFERENCE = 'ref';
 exports.INTERFACE = 'interface';
 exports.BIND = 'bind';
 exports.TRAIL = 'trail';
-exports.VIRTUAL_NODE = 'node';
+exports.VIRTUAL_NODE = 'virtualnode';
 exports.VIRTUAL_CONTEXT = 'context';
 exports.VIRTUAL_SOURCE_PROPERTY = "virtualsrc";
 

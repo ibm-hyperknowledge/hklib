@@ -136,6 +136,16 @@ declare class HKDatasource {
      */
     getContextChildren(context: string, options?: object | null | undefined, payload?: object, callback?: (err: string, entities: object) => any): void;
     /**
+     * Fetch entity
+     *
+     * @param {string} id The context id to retrieve their nested entities. May be null to get the `body` context.
+     * @param {object?} [options] Options to get entity
+     * @param {boolean?} [options.parent] The entity parent
+     * @param {object} payload A dictionary containing options when returning the entities.
+     * @param {GetEntitiesCallback} callback Callback with the entities
+     */
+    getEntityById(id: string, options?: object | null | undefined, payload?: object, callback?: (err: string, entities: object) => any): Promise<void>;
+    /**
      * Filter entities using CSS pattern `(TODO: document it better)`
      *
      * Examples:
