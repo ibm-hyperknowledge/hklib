@@ -29,7 +29,9 @@ async function connect() {
         let brokerPort = parseInt(brokerURL.port);
         console.info(`Scanning Host=${brokerHost} and Port=${brokerPort} with Netcat ...`);
         let ncAddr = nc.addr(brokerHost);
-        let portsStatus = await Promisify.exec(ncAddr, ncAddr.scan, brokerPort);
+        let portsStatus = await new Promise((resolve, reject) => {
+            nc.addr(brokerHost).scan(brokerPort, (output) => resolve(output));
+        });
         brokerPort = `${brokerPort}`;
         if (portsStatus.hasOwnProperty(brokerPort) && portsStatus[brokerPort] == 'open') {
             console.info(`Scan Succeded! Connecting to Broker Host ${this._broker} ...`);
