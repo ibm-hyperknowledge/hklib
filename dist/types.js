@@ -12,7 +12,7 @@ exports.INTERFACE = 'interface';
 exports.BIND = 'bind';
 exports.TRAIL = 'trail';
 exports.VIRTUAL_NODE = 'virtualnode';
-exports.VIRTUAL_CONTEXT = 'context';
+exports.VIRTUAL_CONTEXT = 'virtualcontext';
 exports.VIRTUAL_SOURCE_PROPERTY = "virtualsrc";
 exports.isValidType = function (type) {
     for (let key in exports) {

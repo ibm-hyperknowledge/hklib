@@ -5,7 +5,9 @@
 export = HKGraph;
 declare class HKGraph {
     nodes: {};
+    virtualNodes: {};
     contexts: {};
+    virtualContexts: {};
     links: {};
     connectors: {};
     refs: {};

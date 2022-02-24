@@ -65,7 +65,7 @@
     "driver"
   ],
   "scripts": {
-    "clean-build-ts": "rm -rf dist; tsc; ./prepend-copyright-notice-d-ts.sh; cp index.d.ts.tocopy dist/index.d.ts",
+    "build": "rm -rf dist; tsc; ./prepend-copyright-notice-d-ts.sh; cp index.d.ts.tocopy dist/index.d.ts",
     "unit": "mocha test/unit test/setup.json --timeout 360000"
   },
   "devDependencies": {

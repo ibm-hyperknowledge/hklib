@@ -8,7 +8,6 @@ import Context from "./context";
 
 export = VirtualContext;
 class VirtualContext extends Context {
-  type: string
   constructor(id: any, virtualSrc: string, parent?: string) {
     super(id, parent);
 

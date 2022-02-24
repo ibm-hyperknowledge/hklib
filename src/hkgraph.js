@@ -15,13 +15,16 @@ const Types = require("./types");
 const shortid = require('shortid');
 const VirtualContext = require("./virtualcontext");
 const HKEntity = require("./hkentity");
+const VirtualNode = require("./virtualnode");
 
 class HKGraph
 {
   constructor()
   {
     this.nodes = {};
-    this.contexts = {};
+    this.virtualNodes = {};
+    this.contexts = {}; 
+    this.virtualContexts = {};
     this.links = {};
     this.connectors = {};
     this.refs = {};
@@ -73,7 +76,7 @@ class HKGraph
       oldEntity.className = entity.className;
     }
 
-    if (entity.type === Types.NODE || entity.type === Types.REFERENCE || entity.type === Types.CONTEXT)
+    if (entity.type === Types.NODE || entity.type === Types.REFERENCE || entity.type === Types.CONTEXT || entity.type === Types.VIRTUAL_NODE || entity.type === Types.VIRTUAL_CONTEXT)
     {
 
       oldEntity.interfaces = entity.interfaces;
@@ -159,6 +162,17 @@ class HKGraph
             }
             break;
           }
+        case Types.VIRTUAL_NODE:
+        {
+          if (VirtualNode.isValid(entity))
+          {
+            newEntity = new VirtualNode(entity);
+            /**TODO delete this.nodes */
+            this.nodes[entity.id] = newEntity;
+            this.virtualNodes[entity.id] = newEntity;
+          }
+          break;
+        }
         case Types.CONTEXT:
           {
             const validVirtualContext = VirtualContext.isValid(entity);

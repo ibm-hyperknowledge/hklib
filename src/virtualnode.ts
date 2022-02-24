@@ -8,7 +8,6 @@ import Node from "./node";
 
 export = VirtualNode;
 class VirtualNode extends Node {
-  type: string
   constructor(id: any, parent?: string) {
     super(id, parent);
     this.type = VIRTUAL_NODE_TYPE;
@@ -19,7 +18,7 @@ class VirtualNode extends Node {
     if (entity && typeof (entity) === 'object' && !Array.isArray(entity)) {
       if (entity.hasOwnProperty('type') && entity.type === VIRTUAL_NODE_TYPE &&
         entity.hasOwnProperty('id') && entity.hasOwnProperty('parent') &&
-        entity.properties !== undefined && entity.properties.hasOwnProperty('virtualsrc')) {
+        entity.properties !== undefined) {
         isValid = true;
       }
     }
