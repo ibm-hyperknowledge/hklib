@@ -46,7 +46,7 @@
     "jsonwebtoken": "^8.5.1",
     "nearley": "^2.20.1",
     "ninja-util": "^1.2.3",
-    "ping": "^0.4.1",
+    "netcat": "^1.5.0",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.8",
     "shortid": "^2.2.14"
@@ -65,7 +65,9 @@
   ],
   "scripts": {
     "clean-build-ts": "rm -rf dist; tsc; ./prepend-copyright-notice-d-ts.sh; cp index.d.ts.tocopy dist/index.d.ts",
-    "unit": "mocha test/unit test/setup.json --timeout 360000"
+    "integration-tests": "mocha test/integration test/integration/setup.json --timeout 360000 --forbid-only",
+    "unit-tests": "mocha test/unit --timeout 360000 --forbid-only",
+    "tests": "npm run unit-tests && npm run integration-tests"
   },
   "devDependencies": {
     "@types/amqplib": "^0.8.2",

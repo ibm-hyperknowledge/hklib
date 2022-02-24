@@ -1,6 +1,6 @@
 'use strict';
 
-const HKDatasource = require("../datasource/hkdatasource");
+const HKDatasource = require("../dist/datasource/hkdatasource");
 
 
 module.exports.preamble = function ()
