@@ -5,15 +5,15 @@ const expect = require("chai").expect;
 
 const util = require("../common");
 
-const Context = require("../../context");
-const Node = require("../../node");
-const VContext = require("../../virtualcontext");
-const HKEntity = require("../../hkentity");
+const Context = require("../../dist/context");
+const Node = require("../../dist/node");
+const VContext = require("../../dist/virtualcontext");
+const HKEntity = require("../../dist/hkentity");
 
 const HKDatasource = util.preamble();
 
 
-describe("Contexts unit tests:", () => {
+describe("Contexts integration tests:", () => {
 
 	beforeEach(done => {
 		HKDatasource.createRepository((err,  data)=>
@@ -30,14 +30,6 @@ describe("Contexts unit tests:", () => {
 			done();		
 		});		
 	})
-
-	it('Inheritance Tests', done => {
-		expect(Context.prototype).to.be.instanceOf(HKEntity);
-		expect(VContext.prototype).to.be.instanceOf(Context);
-		expect(VContext.prototype).to.be.instanceOf(HKEntity);
-		done();
-		
-	});
 
 	
 	it("Add Virtual Context", done => {
@@ -64,7 +56,7 @@ describe("Contexts unit tests:", () => {
         "includeContextOnResults": true
       }
       
-      HKDatasource.getContextChildren(context.id, payload, (err, data)=>{
+      HKDatasource.getContextChildren(context.id, payload, payload, (err, data)=>{
         if (err) throw err;
         
         expect([context.id, node.id].sort()).to.be.deep.equal(Object.keys(data).sort());
@@ -88,7 +80,7 @@ describe("Contexts unit tests:", () => {
         "includeContextOnResults": false
       }
       
-      HKDatasource.getContextChildren(context.id, payload, (err, data)=>{
+      HKDatasource.getContextChildren(context.id, payload, payload, (err, data)=>{
         if (err) throw err;
         
         expect([node.id]).to.be.deep.equal(Object.keys(data));
@@ -112,7 +104,7 @@ describe("Contexts unit tests:", () => {
         "includeContextOnResults": false
       }
       
-      HKDatasource.getContextChildren(context.id, payload, (err, data)=>{
+      HKDatasource.getContextChildren(context.id, payload, payload, (err, data)=>{
         if (err) throw err;
         
         expect([node.id]).to.be.deep.equal(Object.keys(data));
@@ -137,7 +129,7 @@ describe("Contexts unit tests:", () => {
         "fieldsToInclude": { "fields": ["id", "parent", "type"], "properties": ["virtualsrc"]} 
       }
       
-      HKDatasource.getContextChildren(context.id, payload, (err, data)=>{
+      HKDatasource.getContextChildren(context.id, payload, payload, (err, data)=>{
         if (err) throw err;
         expect(vContext.id).to.be.deep.equal(Object.values(data)[0].id);
         expect(vContext.parent).to.be.deep.equal(Object.values(data)[0].parent);
