@@ -39,7 +39,7 @@ async function connect ()
 		let brokerURL = new URL(this._broker);
 		let brokerHost = brokerURL.hostname;
 		let brokerPort = brokerURL.port;
-		let portsStatus = await Promisify(null, nc.addr(brokerHost).scan, brokerPort);
+		let portsStatus = await Promisify.exec(null, nc.addr(brokerHost).scan, brokerPort);
 		brokerPort = `${brokerPort}`;
 		if(portsStatus.hasOwnProperty(brokerPort) && portsStatus[brokerPort] == 'open')
 		{
@@ -53,7 +53,7 @@ async function connect ()
 		{
 			throw `Cannot reach broker on port ${brokerPort} of host ${brokerHost}`;
 		}
-		
+
 		await this._connectionManager._connectPromise;
 		this._connectionManager._currentConnection.connection.on ('error', console.error);
 
