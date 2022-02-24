@@ -38,15 +38,18 @@ async function connect ()
 
 		let brokerURL = new URL(this._broker);
 		let brokerHost = brokerURL.hostname;
-		let brokerPort = brokerURL.port;
+		let brokerPort = parseInt(brokerURL.port);
+		console.info(`Scanning Host=${brokerHost} and Port=${brokerPort} with Netcat ...`);
 		let portsStatus = await Promisify.exec(null, nc.addr(brokerHost).scan, brokerPort);
 		brokerPort = `${brokerPort}`;
 		if(portsStatus.hasOwnProperty(brokerPort) && portsStatus[brokerPort] == 'open')
 		{
+			console.info(`Scan Succeded! Connecting to Broker Host ${this._broker} ...`);
 			this._connectionManager = amqp.connect (this._broker, {connectionOptions: options});
 		}
 		else if(this._brokerExternal)
 		{
+			console.info(`Scan failed! Connecting to External Broker Host ${this._brokerExternal} ...`);
 			this._connectionManager = amqp.connect (this._brokerExternal, {connectionOptions: options});
 		}
 		else
