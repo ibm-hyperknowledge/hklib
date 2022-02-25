@@ -145,3 +145,11 @@ datasource.addEntities(entities,  (err,  data)=>{
 	}
 });
 ```
+
+# Build
+
+From version 4.x.x onwards, HKLib has staarted to accept Typescript code. Therefore, if you want to use and collaborate with the source code, you will need to compile the project to generate the javascript files that will be added to the `dist` folder:
+
+```
+npm run build
+```
