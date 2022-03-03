@@ -5,13 +5,15 @@
 
 "use strict";
 
+const Types = require("./types");
 const Node = require("./node");
+const VirtualNode = require("./virtualnode");
 const Context = require("./context");
+const VirtualContext = require("./virtualcontext");
 const Connector = require("./connector");
 const Reference = require("./reference");
 const Link = require("./link");
 const Trail = require("./trail");
-const VirtualContext = require("./virtualcontext");
 const HKEntity = require("./hkentity");
 
 function _deserialize(input)
@@ -24,9 +26,14 @@ function _deserialize(input)
   {
     case Node.type:
       return new Node(input);
+    case Types.VIRTUAL_NODE:
+      return new VirtualNode(input);
     case Context.type:
-      if (input.properties !== undefined && input.properties.virtualsrc !== undefined) return new VirtualContext(input, input.properties.virtualsrc);
       return new Context(input);
+    case Types.VIRTUAL_CONTEXT:
+      if (input.properties !== undefined && input.properties.virtualsrc !== undefined) 
+        return new VirtualContext(input, input.properties.virtualsrc);
+      return new VirtualContext(input);
     case Link.type:
       return new Link(input);
     case Reference.type:
