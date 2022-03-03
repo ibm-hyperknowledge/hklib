@@ -135,7 +135,7 @@ class HKGraph {
                         if (VirtualContext.isValid(entity)) {
                             newEntity = new VirtualContext(entity);
                             this.virtualContexts[entity.id] = newEntity;
-                            this.virtualContextMap = [entity.id] = {};
+                            this.virtualContextMap[entity.id] = {};
                         }
                         if (this.orphans.hasOwnProperty(entity.id)) {
                             this.virtualContextMap[entity.id] = this.orphans[entity.id];
