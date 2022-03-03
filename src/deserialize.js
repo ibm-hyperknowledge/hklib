@@ -24,7 +24,7 @@ function _deserialize(input)
   }
   switch (input.type)
   {
-    case Node.type:
+    case Types.NODE:
       return new Node(input);
     case Types.VIRTUAL_NODE:
       return new VirtualNode(input);
@@ -34,13 +34,13 @@ function _deserialize(input)
       if (input.properties !== undefined && input.properties.virtualsrc !== undefined) 
         return new VirtualContext(input, input.properties.virtualsrc);
       return new VirtualContext(input);
-    case Link.type:
+    case Types.LINK:
       return new Link(input);
-    case Reference.type:
+    case Types.REFERENCE:
       return new Reference(input);
-    case Connector.type:
+    case Types.CONNECTOR:
       return new Connector(input);
-    case Trail.type:
+    case Types.TRAIL:
       return new Trail(input);
     default:
       return null;
