@@ -36,7 +36,9 @@ class HKGraph {
     }
     hasId(id) {
         return this.nodes.hasOwnProperty(id) ||
+            this.virtualNodes.hasOwnProperty(id) ||
             this.contexts.hasOwnProperty(id) ||
+            this.virtualContexts.hasOwnProperty(id) ||
             this.links.hasOwnProperty(id) ||
             this.connectors.hasOwnProperty(id) ||
             this.refs.hasOwnProperty(id) ||
@@ -123,29 +125,28 @@ class HKGraph {
                     {
                         if (VirtualNode.isValid(entity)) {
                             newEntity = new VirtualNode(entity);
-                            /**TODO delete this.nodes */
-                            this.nodes[entity.id] = newEntity;
                             this.virtualNodes[entity.id] = newEntity;
+                        }
+                        break;
+                    }
+                case Types.VIRTUAL_CONTEXT:
+                    {
+                        if (VirtualContext.isValid(entity)) {
+                            newEntity = new VirtualContext(entity);
+                            this.virtualContexts[entity.id] = newEntity;
                         }
                         break;
                     }
                 case Types.CONTEXT:
                     {
-                        const validVirtualContext = VirtualContext.isValid(entity);
-                        const validContext = Context.isValid(entity);
-                        if (validVirtualContext || validContext) {
-                            if (validVirtualContext) {
-                                newEntity = new VirtualContext(entity);
-                            }
-                            else {
-                                newEntity = new Context(entity);
-                            }
+                        if (Context.isValid(entity)) {
+                            newEntity = new Context(entity);
                             this.contexts[entity.id] = newEntity;
                             this.contextMap[entity.id] = {};
-                            if (this.orphans.hasOwnProperty(entity.id)) {
-                                this.contextMap[entity.id] = this.orphans[entity.id];
-                                delete this.orphans[entity.id];
-                            }
+                        }
+                        if (this.orphans.hasOwnProperty(entity.id)) {
+                            this.contextMap[entity.id] = this.orphans[entity.id];
+                            delete this.orphans[entity.id];
                         }
                         break;
                     }
@@ -236,10 +237,20 @@ class HKGraph {
                         delete this.nodes[id];
                         break;
                     }
+                case Types.VIRTUAL_NODE:
+                    {
+                        delete this.virtualNodes[id];
+                        break;
+                    }
                 case Context.type:
                     {
                         delete this.contexts[id];
                         delete this.contextMap[entity.id];
+                        break;
+                    }
+                case Types.VIRTUAL_CONTEXT:
+                    {
+                        delete this.virtualContexts[id];
                         break;
                     }
                 case Reference.type:
@@ -381,7 +392,7 @@ class HKGraph {
             c.id = null;
             return c;
         }
-        return this.nodes[id] || this.contexts[id] || this.links[id] || this.connectors[id] || this.refs[id] || this.trails[id] || null;
+        return this.nodes[id] || this.virtualNodes[id] || this.contexts[id] || this.virtualContexts[id] || this.links[id] || this.connectors[id] || this.refs[id] || this.trails[id] || null;
     }
     /**
      * Returns HK entities in this graph indexed by id.
@@ -394,7 +405,9 @@ class HKGraph {
         Object.assign(out, this.links);
         Object.assign(out, this.connectors);
         Object.assign(out, this.contexts);
+        Object.assign(out, this.virtualContexts);
         Object.assign(out, this.nodes);
+        Object.assign(out, this.virtualNodes);
         Object.assign(out, this.refs);
         Object.assign(out, this.trails);
         return out;
@@ -402,8 +415,10 @@ class HKGraph {
     serialize() {
         let out = {
             nodes: this.nodes,
+            virtualNodes: this.virtualNodes,
             links: this.links,
             contexts: this.contexts,
+            virtualContexts: this.virtualContexts,
             connectors: this.connectors,
             refs: this.refs,
             trails: this.trails
