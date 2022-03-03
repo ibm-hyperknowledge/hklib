@@ -19,8 +19,7 @@ class VirtualContext extends context_1.default {
         let isValid = false;
         if (entity && typeof (entity) === 'object' && !Array.isArray(entity)) {
             if (entity.hasOwnProperty('type') && entity.type === types_1.VIRTUAL_CONTEXT &&
-                entity.hasOwnProperty('id') && entity.hasOwnProperty('parent') &&
-                entity.properties !== undefined && entity.properties.hasOwnProperty('virtualsrc')) {
+                entity.hasOwnProperty('id') && entity.hasOwnProperty('parent')) {
                 isValid = true;
             }
         }
