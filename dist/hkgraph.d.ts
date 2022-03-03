@@ -17,6 +17,7 @@ declare class HKGraph {
     refMap: {};
     orphans: {};
     contextMap: {};
+    virtualContextMap: {};
     relationless: {};
     generateId: typeof generateId;
     hasId(id: any): boolean;
@@ -66,7 +67,9 @@ declare class HKGraph {
 }
 declare namespace HKGraph {
     const NODE_TYPE: string;
+    const VIRTUAL_NODE_TYPE: string;
     const CONTEXT_TYPE: string;
+    const VIRTUAL_CONTEXT_TYPE: string;
     const LINK_TYPE: string;
     const CONNECTOR_TYPE: string;
     const INTERFACE: string;
