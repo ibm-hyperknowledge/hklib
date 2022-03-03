@@ -410,11 +410,11 @@ class HKDatasource {
         Object.assign(config, this.options);
         try {
             let res = await axios(config);
-            if (requestCompletedWithSuccess(res.statusCode)) {
-                callback(null, res.body);
+            if (requestCompletedWithSuccess(res.status)) {
+                callback(null, res.data);
             }
             else {
-                callback(`Server responded with ${res.statusCode}. ${res.body}`);
+                callback(`Server responded with ${res.status}. ${res.data}`);
             }
         }
         catch (err) {

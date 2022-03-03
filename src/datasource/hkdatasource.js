@@ -570,13 +570,13 @@ class HKDatasource
     {
       let res = await axios(config);
 
-      if (requestCompletedWithSuccess(res.statusCode))
+      if (requestCompletedWithSuccess(res.status))
       {
-        callback(null, res.body);
+        callback(null, res.data);
       }
       else
       {
-        callback(`Server responded with ${res.statusCode}. ${res.body}`);
+        callback(`Server responded with ${res.status}. ${res.data}`);
       }
     }
     catch (err)
