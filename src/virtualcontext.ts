@@ -32,21 +32,16 @@ class VirtualContext extends Context {
     return isValid;
   }
 
-  setOrAppendToProperty(property: string, value: Object, metaProperty?: string | undefined): void 
-  {
-    if (this.hasProperty(property))
-    {
-      if(property === "virtualsrc" || property === "readonly")
-      {
+  setOrAppendToProperty(property: string, value: Object, metaProperty?: string | undefined): void {
+    if (this.hasProperty(property)) {
+      if (property === "virtualsrc" || property === "readonly") {
         this.properties[property] = value;
       }
-      else
-      {
+      else {
         this.appendToProperty(property, value, metaProperty);
       }
     }
-    else
-    {
+    else {
       this.setProperty(property, value, metaProperty);
     }
   }
