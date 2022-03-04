@@ -25,5 +25,18 @@ class VirtualContext extends context_1.default {
         }
         return isValid;
     }
+    setOrAppendToProperty(property, value, metaProperty) {
+        if (this.hasProperty(property)) {
+            if (property === "virtualsrc" || property === "readonly") {
+                this.properties[property] = value;
+            }
+            else {
+                this.appendToProperty(property, value, metaProperty);
+            }
+        }
+        else {
+            this.setProperty(property, value, metaProperty);
+        }
+    }
 }
 module.exports = VirtualContext;
