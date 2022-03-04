@@ -124,9 +124,9 @@ declare class HKDatasource {
      */
     fetchContext(context: string, callback?: (err: string, entities: object) => any): void;
     /**
-     * Fetch entities from a context
+     * Get entities from a context
      *
-     * @param {string} context The context id to retrieve their nested entities. May be null to get the `body` context.
+     * @param {string} contextId The context id to retrieve their nested entities. May be null to get the `body` context.
      * @param {object?} [options] Options to get context children
      * @param {boolean?} [options.lazy] If set true, will include only the main fields in the results
      * @param {boolean?} [options.nested] If set true, will walk through nested contexts
@@ -134,17 +134,17 @@ declare class HKDatasource {
      * @param {object} payload A dictionary containing options when returning the entities from the context.
      * @param {GetEntitiesCallback} callback Callback with the entities
      */
-    getContextChildren(context: string, options?: object | null | undefined, payload?: object, callback?: (err: string, entities: object) => any): void;
+    getContextChildren(contextId: string, options?: object | null | undefined, payload?: object, callback?: (err: string, entities: object) => any): void;
     /**
-     * Fetch entity
+     * Get an entity from its identifier
      *
-     * @param {string} id The context id to retrieve their nested entities. May be null to get the `body` context.
+     * @param {string} entityId The identifier of the entity to be fetched
      * @param {object?} [options] Options to get entity
      * @param {boolean?} [options.parent] The entity parent
      * @param {object} payload A dictionary containing options when returning the entities.
      * @param {GetEntitiesCallback} callback Callback with the entities
      */
-    getEntityById(id: string, options?: object | null | undefined, payload?: object, callback?: (err: string, entities: object) => any): Promise<void>;
+    getEntityById(entityId: string, options?: object | null | undefined, payload?: object, callback?: (err: string, entities: object) => any): Promise<void>;
     /**
      * Filter entities using CSS pattern `(TODO: document it better)`
      *
