@@ -33,6 +33,7 @@ class HKGraph {
         this.virtualContextMap = {};
         this.relationless = {};
         this.contextMap[null] = {};
+        this.virtualContextMap[null] = {};
         this.generateId = generateId;
     }
     hasId(id) {
@@ -70,7 +71,10 @@ class HKGraph {
         if (oldEntity.hasOwnProperty('parent')) {
             let oldParent = this.getEntity(oldEntity.parent);
             if (oldParent) {
-                delete this.contextMap[oldEntity.parent][oldEntity.id];
+                if (this.contextMap[oldEntity.parent])
+                    delete this.contextMap[oldEntity.parent][oldEntity.id];
+                if (this.virtualContextMap[oldEntity.parent])
+                    delete this.virtualContextMap[oldEntity.parent][oldEntity.id];
             }
             else if (oldEntity.parent) {
                 delete this.orphans[oldEntity.parent][oldEntity.id];
@@ -80,7 +84,12 @@ class HKGraph {
         if (entity.hasOwnProperty('parent')) {
             let parent = this.getEntity(entity.parent);
             if (parent || entity.parent === null) {
-                this.contextMap[entity.parent][entity.id] = entity;
+                if (this.contextMap[entity.parent]) {
+                    this.contextMap[entity.parent][entity.id] = entity;
+                }
+                if (this.virtualContextMap[entity.parent]) {
+                    this.virtualContextMap[entity.parent][entity.id] = entity;
+                }
             }
             else if (entity.parent) {
                 if (!this.orphans.hasOwnProperty(entity.parent)) {
@@ -214,6 +223,9 @@ class HKGraph {
             if (entity.type !== HKTypes.CONNECTOR) {
                 if (this.contextMap.hasOwnProperty(newEntity.parent)) {
                     this.contextMap[newEntity.parent][newEntity.id] = newEntity;
+                }
+                else if (this.virtualContextMap.hasOwnProperty(newEntity.parent)) {
+                    this.virtualContextMap[newEntity.parent][newEntity.id] = newEntity;
                 }
                 else {
                     if (!this.orphans.hasOwnProperty(newEntity.parent)) {
