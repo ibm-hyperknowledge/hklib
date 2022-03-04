@@ -16,7 +16,7 @@ class VirtualNode extends node_1.default {
         if (entity && typeof (entity) === 'object' && !Array.isArray(entity)) {
             if (entity.hasOwnProperty('type') && entity.type === types_1.VIRTUAL_NODE &&
                 entity.hasOwnProperty('id') && entity.hasOwnProperty('parent') &&
-                entity.properties !== undefined && entity.properties.hasOwnProperty('virtualsrc')) {
+                entity.properties !== undefined) {
                 isValid = true;
             }
         }

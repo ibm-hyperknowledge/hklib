@@ -8,7 +8,6 @@ import Context from "./context";
 
 export = VirtualContext;
 class VirtualContext extends Context {
-  type: string
   constructor(id: any, virtualSrc: string, parent?: string) {
     super(id, parent);
 
@@ -25,12 +24,25 @@ class VirtualContext extends Context {
     let isValid = false;
     if (entity && typeof (entity) === 'object' && !Array.isArray(entity)) {
       if (entity.hasOwnProperty('type') && entity.type === VIRTUAL_CONTEXT_TYPE &&
-        entity.hasOwnProperty('id') && entity.hasOwnProperty('parent') &&
-        entity.properties !== undefined && entity.properties.hasOwnProperty('virtualsrc')) {
+        entity.hasOwnProperty('id') && entity.hasOwnProperty('parent')) {
         isValid = true;
       }
     }
 
     return isValid;
+  }
+
+  setOrAppendToProperty(property: string, value: Object, metaProperty?: string | undefined): void {
+    if (this.hasProperty(property)) {
+      if (property === "virtualsrc" || property === "readonly") {
+        this.properties[property] = value;
+      }
+      else {
+        this.appendToProperty(property, value, metaProperty);
+      }
+    }
+    else {
+      this.setProperty(property, value, metaProperty);
+    }
   }
 }

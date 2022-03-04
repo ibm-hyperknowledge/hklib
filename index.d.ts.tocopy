@@ -43,7 +43,7 @@ export { VIRTUAL_CONTEXT as VIRTUAL_CONTEXT } from "./types";
 export { VIRTUAL_SOURCE_PROPERTY } from "./types";
 
 
-export { default as RolesTypes } from "./roletypes";
+export { default as RoleTypes } from "./roletypes";
 export { default as HKRoleTypes } from "./roletypes";
 export { OBJECT as OBJECT } from "./roletypes";
 export { SUBJECT as SUBJECT } from "./roletypes";

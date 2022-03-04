@@ -11,43 +11,49 @@ const Link = require("./link");
 const Node = require("./node");
 const Reference = require("./reference");
 const Trail = require("./trail");
-const Types = require("./types");
+const HKTypes = require("./types");
 const shortid = require('shortid');
 const VirtualContext = require("./virtualcontext");
 const HKEntity = require("./hkentity");
+const VirtualNode = require("./virtualnode");
 
 class HKGraph
 {
   constructor()
   {
     this.nodes = {};
+    this.virtualNodes = {};
     this.contexts = {};
+    this.virtualContexts = {};
     this.links = {};
     this.connectors = {};
     this.refs = {};
     this.trails = {};
-
     // Auxiliar maps
     this.bindsMap = {};
     this.linkMap = {};
     this.refMap = {};
     this.orphans = {};
     this.contextMap = {};
+    this.virtualContextMap = {};
     this.relationless = {};
-
     this.contextMap[null] = {};
-
+    this.virtualContextMap[null] = {};
     this.generateId = generateId;
   }
+
   hasId(id)
   {
     return this.nodes.hasOwnProperty(id) ||
+      this.virtualNodes.hasOwnProperty(id) ||
       this.contexts.hasOwnProperty(id) ||
+      this.virtualContexts.hasOwnProperty(id) ||
       this.links.hasOwnProperty(id) ||
       this.connectors.hasOwnProperty(id) ||
       this.refs.hasOwnProperty(id) ||
       this.trails.hasOwnProperty(id);
   }
+
   /**
    * Update an entity
    * @param {object} entity an entity with an id and ALL updated properties (including intrinsecs properties)
@@ -56,28 +62,25 @@ class HKGraph
   setEntity(entity)
   {
     let oldEntity = this.getEntity(entity.id);
-
     if (!oldEntity)
     {
       return null;
     }
 
-    if (entity.type === Types.LINK)
+    if (entity.type === HKTypes.LINK)
     {
       oldEntity.binds = entity.binds;
     }
 
-    if (entity.type === Types.CONNECTOR)
+    if (entity.type === HKTypes.CONNECTOR)
     {
       oldEntity.roles = entity.roles;
       oldEntity.className = entity.className;
     }
 
-    if (entity.type === Types.NODE || entity.type === Types.REFERENCE || entity.type === Types.CONTEXT)
+    if (entity.type === HKTypes.NODE || entity.type === HKTypes.REFERENCE || entity.type === HKTypes.CONTEXT || entity.type === HKTypes.VIRTUAL_NODE || entity.type === HKTypes.VIRTUAL_CONTEXT)
     {
-
       oldEntity.interfaces = entity.interfaces;
-
     }
 
     // Update parent
@@ -87,7 +90,10 @@ class HKGraph
       let oldParent = this.getEntity(oldEntity.parent);
       if (oldParent)
       {
-        delete this.contextMap[oldEntity.parent][oldEntity.id];
+        if (this.contextMap[oldEntity.parent])
+          delete this.contextMap[oldEntity.parent][oldEntity.id];
+        if (this.virtualContextMap[oldEntity.parent])
+          delete this.virtualContextMap[oldEntity.parent][oldEntity.id];
       }
       else if (oldEntity.parent)
       {
@@ -101,7 +107,15 @@ class HKGraph
       let parent = this.getEntity(entity.parent);
       if (parent || entity.parent === null)
       {
-        this.contextMap[entity.parent][entity.id] = entity;
+        if(this.contextMap[entity.parent])
+        {
+          this.contextMap[entity.parent][entity.id] = entity;
+        }
+        if(this.virtualContextMap[entity.parent])
+        {
+          this.virtualContextMap[entity.parent][entity.id] = entity;
+        }
+        
       }
       else if (entity.parent)
       {
@@ -114,12 +128,11 @@ class HKGraph
     }
 
     oldEntity.parent = entity.parent;
-
     // Update properties
     oldEntity.properties = entity.properties;
-
     return oldEntity;
   }
+
   /**
    * Add a new entity to the graph
    * @param {object} entity The entity object to be added.
@@ -128,11 +141,9 @@ class HKGraph
   addEntity(entity)
   {
     let newEntity = null;
-
     if (entity && entity.hasOwnProperty('type'))
     {
       let id;
-
       if (this.hasId(entity.id))
       {
         return this.setEntity(entity);
@@ -142,7 +153,6 @@ class HKGraph
         id = this.generateId(this);
         entity.id = id;
       }
-
       else
       {
         id = entity.id;
@@ -150,7 +160,7 @@ class HKGraph
 
       switch (entity.type)
       {
-        case Types.NODE:
+        case HKTypes.NODE:
           {
             if (Node.isValid(entity))
             {
@@ -159,35 +169,46 @@ class HKGraph
             }
             break;
           }
-        case Types.CONTEXT:
+        case HKTypes.VIRTUAL_NODE:
           {
-            const validVirtualContext = VirtualContext.isValid(entity);
-            const validContext = Context.isValid(entity);
-
-            if (validVirtualContext || validContext)
+            if (VirtualNode.isValid(entity))
             {
-              if (validVirtualContext)
-              {
-                newEntity = new VirtualContext(entity);
-              }
-
-              else
-              {
-                newEntity = new Context(entity);
-              }
-
-              this.contexts[entity.id] = newEntity;
-              this.contextMap[entity.id] = {};
-
-              if (this.orphans.hasOwnProperty(entity.id))
-              {
-                this.contextMap[entity.id] = this.orphans[entity.id];
-                delete this.orphans[entity.id];
-              }
+              newEntity = new VirtualNode(entity);
+              this.virtualNodes[entity.id] = newEntity;
             }
             break;
           }
-        case Types.TRAIL:
+        case HKTypes.VIRTUAL_CONTEXT:
+          {
+            if (VirtualContext.isValid(entity))
+            {
+              newEntity = new VirtualContext(entity);
+              this.virtualContexts[entity.id] = newEntity;
+              this.virtualContextMap[entity.id] = {};
+            }
+            if (this.orphans.hasOwnProperty(entity.id))
+            {
+              this.virtualContextMap[entity.id] = this.orphans[entity.id];
+              delete this.orphans[entity.id];
+            }
+            break;
+          }
+        case HKTypes.CONTEXT:
+          {
+            if (Context.isValid(entity))
+            {
+              newEntity = new Context(entity);
+              this.contexts[entity.id] = newEntity;
+              this.contextMap[entity.id] = {};
+            }
+            if (this.orphans.hasOwnProperty(entity.id))
+            {
+              this.contextMap[entity.id] = this.orphans[entity.id];
+              delete this.orphans[entity.id];
+            }
+            break;
+          }
+        case HKTypes.TRAIL:
           {
             if (Trail.isValid(entity))
             {
@@ -196,25 +217,22 @@ class HKGraph
             }
             break;
           }
-        case Types.LINK:
+        case HKTypes.LINK:
           {
             if (Link.isValid(entity))
             {
               newEntity = new Link(entity);
               newEntity.id = id;
               this.links[id] = newEntity;
-
               if (!this.linkMap.hasOwnProperty(newEntity.connector))
               {
                 this.linkMap[newEntity.connector] = {};
               }
               this.linkMap[newEntity.connector][newEntity.id] = newEntity;
-
               this.bindsMap[newEntity.id] = new Set();
               newEntity.forEachBind((__, comp) =>
               {
                 this.bindsMap[newEntity.id].add(comp);
-
                 if (!this.bindsMap.hasOwnProperty(comp))
                 {
                   this.bindsMap[comp] = new Set();
@@ -224,7 +242,7 @@ class HKGraph
             }
             break;
           }
-        case Types.CONNECTOR:
+        case HKTypes.CONNECTOR:
           {
             if (Connector.isValid(entity))
             {
@@ -233,14 +251,13 @@ class HKGraph
             }
             break;
           }
-        case Types.REFERENCE:
+        case HKTypes.REFERENCE:
           {
             if (Reference.isValid(entity))
             {
               newEntity = new Reference(entity);
               newEntity.id = id;
               this.refs[newEntity.id] = newEntity;
-
               if (!this.refMap.hasOwnProperty(newEntity.ref))
               {
                 this.refMap[newEntity.ref] = {};
@@ -248,7 +265,6 @@ class HKGraph
               this.refMap[newEntity.ref][newEntity.id] = newEntity;
             }
             break;
-
           }
       }
 
@@ -258,13 +274,16 @@ class HKGraph
       }
 
       // Set parent
-      if (entity.type !== Types.CONNECTOR)
+      if (entity.type !== HKTypes.CONNECTOR)
       {
         if (this.contextMap.hasOwnProperty(newEntity.parent))
         {
           this.contextMap[newEntity.parent][newEntity.id] = newEntity;
         }
-
+        else if (this.virtualContextMap.hasOwnProperty(newEntity.parent))
+        {
+          this.virtualContextMap[newEntity.parent][newEntity.id] = newEntity;
+        }
         else
         {
           if (!this.orphans.hasOwnProperty(newEntity.parent))
@@ -281,10 +300,11 @@ class HKGraph
         newEntity.binds = this.relationless[id];
         delete this.relationless[id];
       }
-
     }
+
     return newEntity;
   }
+
   /**
    * @param {string} id the id of entity to be removed
    * @returns {object} the removed entity
@@ -301,10 +321,21 @@ class HKGraph
             delete this.nodes[id];
             break;
           }
+        case HKTypes.VIRTUAL_NODE:
+          {
+            delete this.virtualNodes[id];
+            break;
+          }
         case Context.type:
           {
             delete this.contexts[id];
             delete this.contextMap[entity.id];
+            break;
+          }
+        case HKTypes.VIRTUAL_CONTEXT:
+          {
+            delete this.virtualContexts[id];
+            delete this.virtualContextMap[entity.id];
             break;
           }
         case Reference.type:
@@ -367,10 +398,14 @@ class HKGraph
         delete this.contextMap[entity.parent][entity.id];
       }
 
+      if (this.virtualContextMap.hasOwnProperty(entity.parent))
+      {
+        delete this.virtualContextMap[entity.parent][entity.id];
+      }
+
       if (this.bindsMap.hasOwnProperty(entity.id))
       {
         let connections = this.bindsMap[entity.id];
-
         for (let k in connections)
         {
           let binds = connections[k];
@@ -379,13 +414,14 @@ class HKGraph
         delete this.bindsMap[entity.id];
       }
     }
-
     else
     {
       return null;
     }
+
     return entity;
   }
+
   hasBind(connectorId, bind)
   {
     if (this.linkMap.hasOwnProperty(connectorId))
@@ -402,6 +438,7 @@ class HKGraph
     }
     return false;
   }
+
   getReferences(id)
   {
     if (this.refMap.hasOwnProperty(id))
@@ -410,6 +447,7 @@ class HKGraph
     }
     return [];
   }
+
   hasReference(id, parent)
   {
     if (this.refMap.hasOwnProperty(id))
@@ -426,6 +464,7 @@ class HKGraph
     }
     return false;
   }
+
   getReference(id, parent)
   {
     if (this.refMap.hasOwnProperty(id))
@@ -442,25 +481,26 @@ class HKGraph
     }
     return null;
   }
+
   getChildren(contextId)
   {
     if (this.contextMap.hasOwnProperty(contextId))
     {
       return this.contextMap[contextId];
     }
-
-    else
+    if (this.virtualContextMap.hasOwnProperty(contextId))
     {
-      return {};
+      return this.virtualContextMap[contextId];
     }
+    return {};
   }
+
   getNeighbors(entityId)
   {
     let out = [];
     if (this.bindsMap.hasOwnProperty(entityId))
     {
       let binds = this.bindsMap[entityId];
-
       for (let k of binds)
       {
         let entity = this.getEntity(k);
@@ -474,12 +514,12 @@ class HKGraph
   }
 
   /**
-   * Returns an entity in this graph having `id`. 
-   * 
+   * Returns an entity in this graph having `id`.
+   *
    * @param {string} id ID of requested entity. Null if requested entity is the null context.
-   * 
+   *
    * @returns {HKEntity | null} Returns the entity of `id`, or `null` if `id` not found in this graph object.
-   * 
+   *
    */
   getEntity(id)
   {
@@ -489,34 +529,37 @@ class HKGraph
       c.id = null;
       return c;
     }
-    return this.nodes[id] || this.contexts[id] || this.links[id] || this.connectors[id] || this.refs[id] || this.trails[id] || null;
+    return this.nodes[id] || this.virtualNodes[id] || this.contexts[id] || this.virtualContexts[id] || this.links[id] || this.connectors[id] || this.refs[id] || this.trails[id] || null;
   }
 
   /**
-   * Returns HK entities in this graph indexed by id. 
-   * 
+   * Returns HK entities in this graph indexed by id.
+   *
    * @returns {Object.<string,HKEntity>}
-   * 
+   *
    */
   getEntities()
   {
     let out = {};
-
     Object.assign(out, this.links);
     Object.assign(out, this.connectors);
     Object.assign(out, this.contexts);
+    Object.assign(out, this.virtualContexts);
     Object.assign(out, this.nodes);
+    Object.assign(out, this.virtualNodes);
     Object.assign(out, this.refs);
     Object.assign(out, this.trails);
-
     return out;
   }
+
   serialize()
   {
     let out = {
       nodes: this.nodes,
+      virtualNodes: this.virtualNodes,
       links: this.links,
       contexts: this.contexts,
+      virtualContexts: this.virtualContexts,
       connectors: this.connectors,
       refs: this.refs,
       trails: this.trails
@@ -528,17 +571,28 @@ class HKGraph
   {
     let model = new HKGraph();
     let serialized = str ? JSON.parse(str) : {};
-
-    if (serialized.hasOwnProperty('nodes')) model.nodes = serialized.nodes;
-    if (serialized.hasOwnProperty('contexts')) model.contexts = serialized.contexts;
-    if (serialized.hasOwnProperty('connectors')) model.connectors = serialized.connectors;
-    if (serialized.hasOwnProperty('links')) model.links = serialized.links;
-    if (serialized.hasOwnProperty('binds')) model.binds = serialized.binds;
-    if (serialized.hasOwnProperty('refs')) model.refs = serialized.refs;
-    if (serialized.hasOwnProperty('trails')) model.trails = serialized.trails;
+    if (serialized.hasOwnProperty('nodes'))
+      model.nodes = serialized.nodes;
+    if (serialized.hasOwnProperty('virtualNodes'))
+      model.virtualNodes = serialized.virtualNodes;
+    if (serialized.hasOwnProperty('contexts'))
+      model.contexts = serialized.contexts;
+    if (serialized.hasOwnProperty('virtualContexts'))
+      model.virtualContexts = serialized.virtualContexts;
+    if (serialized.hasOwnProperty('connectors'))
+      model.connectors = serialized.connectors;
+    if (serialized.hasOwnProperty('links'))
+      model.links = serialized.links;
+    if (serialized.hasOwnProperty('binds'))
+      model.binds = serialized.binds;
+    if (serialized.hasOwnProperty('refs'))
+      model.refs = serialized.refs;
+    if (serialized.hasOwnProperty('trails'))
+      model.trails = serialized.trails;
     return model;
   }
 }
+
 /* private functions */
 function generateId(model, length)
 {
@@ -546,14 +600,15 @@ function generateId(model, length)
   do
   {
     id = shortid();
-  }
-  while (model.hasId(id));
+  } while (model.hasId(id));
   return id;
 }
 
 module.exports = HKGraph;
-HKGraph.NODE_TYPE = Types.NODE;
-HKGraph.CONTEXT_TYPE = Types.CONTEXT;
-HKGraph.LINK_TYPE = Types.LINK;
-HKGraph.CONNECTOR_TYPE = Types.CONNECTOR;
-HKGraph.INTERFACE = Types.INTERFACE;
+HKGraph.NODE_TYPE = HKTypes.NODE;
+HKGraph.VIRTUAL_NODE_TYPE = HKTypes.VIRTUAL_NODE;
+HKGraph.CONTEXT_TYPE = HKTypes.CONTEXT;
+HKGraph.VIRTUAL_CONTEXT_TYPE = HKTypes.VIRTUAL_CONTEXT;
+HKGraph.LINK_TYPE = HKTypes.LINK;
+HKGraph.CONNECTOR_TYPE = HKTypes.CONNECTOR;
+HKGraph.INTERFACE = HKTypes.INTERFACE;

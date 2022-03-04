@@ -4,6 +4,7 @@
  */
 "use strict";
 const request = require("request");
+const axios = require("axios").default;
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
 const HKEntity = require("../hkentity");
@@ -339,9 +340,9 @@ class HKDatasource {
         });
     }
     /**
-     * Fetch entities from a context
+     * Get entities from a context
      *
-     * @param {string} context The context id to retrieve their nested entities. May be null to get the `body` context.
+     * @param {string} contextId The context id to retrieve their nested entities. May be null to get the `body` context.
      * @param {object?} [options] Options to get context children
      * @param {boolean?} [options.lazy] If set true, will include only the main fields in the results
      * @param {boolean?} [options.nested] If set true, will walk through nested contexts
@@ -349,8 +350,8 @@ class HKDatasource {
      * @param {object} payload A dictionary containing options when returning the entities from the context.
      * @param {GetEntitiesCallback} callback Callback with the entities
      */
-    getContextChildren(context, options = {}, payload = {}, callback = () => { }) {
-        let url = `${this.url}repository/${this.graphName}/context/${context}`;
+    getContextChildren(contextId, options = {}, payload = {}, callback = () => { }) {
+        let url = `${this.url}repository/${this.graphName}/context/${contextId}`;
         if (options) {
             url += toQueryString(options);
         }
@@ -382,6 +383,43 @@ class HKDatasource {
                 callback(err);
             }
         });
+    }
+    /**
+     * Get an entity from its identifier
+     *
+     * @param {string} entityId The identifier of the entity to be fetched
+     * @param {object?} [options] Options to get entity
+     * @param {boolean?} [options.parent] The entity parent
+     * @param {object} payload A dictionary containing options when returning the entities.
+     * @param {GetEntitiesCallback} callback Callback with the entities
+     */
+    async getEntityById(entityId, options = {}, payload = {}, callback = () => { }) {
+        let url = `${this.url}repository/${this.graphName}/entity/${entityId}`;
+        if (options) {
+            url += toQueryString(options);
+        }
+        const config = {
+            method: 'POST',
+            url: url,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: payload,
+            json: true
+        };
+        Object.assign(config, this.options);
+        try {
+            let res = await axios(config);
+            if (requestCompletedWithSuccess(res.status)) {
+                callback(null, res.data);
+            }
+            else {
+                callback(`Server responded with ${res.status}. ${res.data}`);
+            }
+        }
+        catch (err) {
+            callback(err);
+        }
     }
     /**
      * Filter entities using CSS pattern `(TODO: document it better)`

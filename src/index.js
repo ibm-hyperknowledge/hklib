@@ -38,7 +38,7 @@ exports.VIRTUAL_CONTEXT_TYPE = require("./types").VIRTUAL_CONTEXT;
 
 exports.VIRTUAL_SOURCE_PROPERTY = "virtualsrc";
 
-exports.RolesTypes = require("./roletypes");
+exports.RoleTypes = require("./roletypes");
 exports.HKRoleTypes = require("./roletypes");
 exports.SUBJECT = require("./roletypes").SUBJECT;
 exports.OBJECT = require("./roletypes").OBJECT;

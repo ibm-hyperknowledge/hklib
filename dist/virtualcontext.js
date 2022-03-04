@@ -19,12 +19,24 @@ class VirtualContext extends context_1.default {
         let isValid = false;
         if (entity && typeof (entity) === 'object' && !Array.isArray(entity)) {
             if (entity.hasOwnProperty('type') && entity.type === types_1.VIRTUAL_CONTEXT &&
-                entity.hasOwnProperty('id') && entity.hasOwnProperty('parent') &&
-                entity.properties !== undefined && entity.properties.hasOwnProperty('virtualsrc')) {
+                entity.hasOwnProperty('id') && entity.hasOwnProperty('parent')) {
                 isValid = true;
             }
         }
         return isValid;
+    }
+    setOrAppendToProperty(property, value, metaProperty) {
+        if (this.hasProperty(property)) {
+            if (property === "virtualsrc" || property === "readonly") {
+                this.properties[property] = value;
+            }
+            else {
+                this.appendToProperty(property, value, metaProperty);
+            }
+        }
+        else {
+            this.setProperty(property, value, metaProperty);
+        }
     }
 }
 module.exports = VirtualContext;

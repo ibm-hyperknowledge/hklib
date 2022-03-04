@@ -5,7 +5,6 @@
 import Node from "./node";
 export = VirtualNode;
 declare class VirtualNode extends Node {
-    type: string;
     constructor(id: any, parent?: string);
     static isValid(entity: VirtualNode): boolean;
 }
