@@ -23,6 +23,8 @@ exports.VirtualNode = require("./virtualnode");
 exports.HKVirtualNode = require("./virtualnode");
 exports.VirtualContext = require("./virtualcontext");
 exports.HKVirtualContext = require("./virtualcontext");
+exports.VirtualLink = require("./virtuallink");
+exports.HKVirtualLink = require("./virtuallink");
 
 exports.Types = require("./types");
 exports.HKTypes = require("./types");
@@ -35,6 +37,7 @@ exports.INTERFACE = require("./types").INTERFACE;
 exports.TRAIL_TYPE = require("./types").TRAIL;
 exports.VIRTUAL_NODE_TYPE = require("./types").VIRTUAL_NODE;
 exports.VIRTUAL_CONTEXT_TYPE = require("./types").VIRTUAL_CONTEXT;
+exports.VIRTUAL_LINK_TYPE = require("./types").VIRTUAL_LINK;
 
 exports.VIRTUAL_SOURCE_PROPERTY = "virtualsrc";
 
@@ -64,5 +67,6 @@ exports.HKRepository = require("./datasource/hkrepository");
 
 exports.GraphBuilder = require("./graphbuilder");
 exports.IExternalDatasource = require("./interfaces/iexternaldatasource");
+exports.BaseExternalDatasource = require("./abstract/baseexternaldatasource");
 
 

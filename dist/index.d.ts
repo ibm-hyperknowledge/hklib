@@ -27,6 +27,8 @@ export { default as VirtualNode } from "./virtualnode";
 export { default as HKVirtualNode } from "./virtualnode";
 export { default as VirtualContext } from "./virtualcontext";
 export { default as HKVirtualContext } from "./virtualcontext";
+export { default as VirtualLink } from "./virtuallink";
+export { default as HKVirtualLink } from "./virtuallink";
 
 export { default as Types } from "./types";
 export { default as HKTypes } from "./types";
@@ -67,5 +69,6 @@ export { default as Constants } from "./constants";
 export { default as HKDatasource } from "./datasource/hkdatasource";
 export { default as HKRepository } from "./datasource/hkrepository";
 export { default as GraphBuilder } from "./graphbuilder";
+export { default as BaseExternalDatasource } from "./abstract/baseexternaldatasource";
 export { IExternalDatasource } from "./interfaces/iexternaldatasource";
 

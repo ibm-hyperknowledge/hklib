@@ -10,11 +10,13 @@ const Node = require("./node");
 const VirtualNode = require("./virtualnode");
 const Context = require("./context");
 const VirtualContext = require("./virtualcontext");
+const VirtualLink = require("./virtuallink");
 const Connector = require("./connector");
 const Reference = require("./reference");
 const Link = require("./link");
 const Trail = require("./trail");
 const HKEntity = require("./hkentity");
+
 
 function _deserialize(input)
 {
@@ -36,6 +38,8 @@ function _deserialize(input)
       return new VirtualContext(input);
     case Types.LINK:
       return new Link(input);
+    case Types.VIRTUAL_LINK:
+      return new VirtualLink(input);
     case Types.REFERENCE:
       return new Reference(input);
     case Types.CONNECTOR:

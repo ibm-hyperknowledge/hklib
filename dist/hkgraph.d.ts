@@ -9,11 +9,13 @@ declare class HKGraph {
     contexts: {};
     virtualContexts: {};
     links: {};
+    virtualLinks: {};
     connectors: {};
     refs: {};
     trails: {};
     bindsMap: {};
     linkMap: {};
+    virtualLinkMap: {};
     refMap: {};
     orphans: {};
     contextMap: {};
@@ -33,6 +35,11 @@ declare class HKGraph {
      * @returns {object} The entity added, if the input object does not have an id, the returned will have.
      */
     addEntity(entity: object): object;
+    /**
+     * Add a new entities to the graph
+     * @param {object} entities The entities object to be added.
+     */
+    addEntities(entities: object): void;
     /**
      * @param {string} id the id of entity to be removed
      * @returns {object} the removed entity

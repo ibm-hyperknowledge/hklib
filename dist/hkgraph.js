@@ -14,6 +14,7 @@ const shortid = require('shortid');
 const VirtualContext = require("./virtualcontext");
 const HKEntity = require("./hkentity");
 const VirtualNode = require("./virtualnode");
+const VirtualLink = require("./virtuallink");
 class HKGraph {
     constructor() {
         this.nodes = {};
@@ -21,12 +22,14 @@ class HKGraph {
         this.contexts = {};
         this.virtualContexts = {};
         this.links = {};
+        this.virtualLinks = {};
         this.connectors = {};
         this.refs = {};
         this.trails = {};
         // Auxiliar maps
         this.bindsMap = {};
         this.linkMap = {};
+        this.virtualLinkMap = {};
         this.refMap = {};
         this.orphans = {};
         this.contextMap = {};
@@ -194,6 +197,27 @@ class HKGraph {
                         }
                         break;
                     }
+                case HKTypes.VIRTUAL_LINK:
+                    {
+                        if (VirtualLink.isValid(entity)) {
+                            newEntity = new VirtualLink(entity);
+                            newEntity.id = id;
+                            this.virtualLinks[id] = newEntity;
+                            if (!this.virtualLinkMap.hasOwnProperty(newEntity.connector)) {
+                                this.virtualLinkMap[newEntity.connector] = {};
+                            }
+                            this.virtualLinkMap[newEntity.connector][newEntity.id] = newEntity;
+                            this.bindsMap[newEntity.id] = new Set();
+                            newEntity.forEachBind((__, comp) => {
+                                this.bindsMap[newEntity.id].add(comp);
+                                if (!this.bindsMap.hasOwnProperty(comp)) {
+                                    this.bindsMap[comp] = new Set();
+                                }
+                                this.bindsMap[comp].add(newEntity.id);
+                            });
+                        }
+                        break;
+                    }
                 case HKTypes.CONNECTOR:
                     {
                         if (Connector.isValid(entity)) {
@@ -241,6 +265,13 @@ class HKGraph {
             }
         }
         return newEntity;
+    }
+    /**
+     * Add a new entities to the graph
+     * @param {object} entities The entities object to be added.
+     */
+    addEntities(entities) {
+        Object.values(entities).forEach(e => this.addEntity(e));
     }
     /**
      * @param {string} id the id of entity to be removed

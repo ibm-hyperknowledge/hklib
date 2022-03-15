@@ -7,6 +7,12 @@ const tslib_1 = require("tslib");
 const types_1 = require("./types");
 const context_1 = (0, tslib_1.__importDefault)(require("./context"));
 class VirtualContext extends context_1.default {
+    /** Constructs a new virtual context object.
+     *
+     * @param {string | null} [id] Some id string for this entity.
+     * @param {string | null} [virtualSrc] Virtual endpoint to acceess information
+     * @param {string | null} [parent] Parent id.
+     */
     constructor(id, virtualSrc, parent) {
         super(id, parent);
         const properties = { "readonly": true, "virtualsrc": virtualSrc };
@@ -39,4 +45,5 @@ class VirtualContext extends context_1.default {
         }
     }
 }
+VirtualContext.type = types_1.VIRTUAL_CONTEXT;
 module.exports = VirtualContext;
