@@ -603,7 +603,7 @@ class HKDatasource
    */
   filterEntities(filter, callback = () => { })
   {
-    let url = this.url + "repository/" + this.graphName + "/entity/";
+    let url = this.url + "repository/" + this.graphName + "/entity/filter/";
 
     let params = {};
     // {

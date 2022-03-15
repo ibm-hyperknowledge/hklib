@@ -438,7 +438,7 @@ class HKDatasource {
      * @param {GetEntitiesCallback} callback Callback with the entities
      */
     filterEntities(filter, callback = () => { }) {
-        let url = this.url + "repository/" + this.graphName + "/entity/";
+        let url = this.url + "repository/" + this.graphName + "/entity/filter/";
         let params = {};
         // {
         //     // headers: {"content-type": "text/plain"},
