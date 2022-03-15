@@ -386,13 +386,13 @@ class HKDatasource
    * @param {Array} ids Array of ids to retrieve their respective entities
    * @param {GetEntitiesCallback} callback Callback with the entities
    */
-  getEntities(ids, callback = () => { })
-  {
+   getEntities(ids, callback = () => { }) 
+   {
     let url = this.url + "repository/" + this.graphName + "/entity/";
 
     let params = {
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(ids)
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(ids)
     };
 
     Object.assign(params, this.options);

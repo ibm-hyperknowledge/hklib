@@ -243,6 +243,13 @@ class HKGraph {
         return newEntity;
     }
     /**
+     * Add a new entities to the graph
+     * @param {object} entities The entities object to be added.
+     */
+    addEntities(entities) {
+        Object.values(entities).forEach(e => this.addEntity(e));
+    }
+    /**
      * @param {string} id the id of entity to be removed
      * @returns {object} the removed entity
      */

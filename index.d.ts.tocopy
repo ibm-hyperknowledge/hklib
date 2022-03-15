@@ -67,5 +67,6 @@ export { default as Constants } from "./constants";
 export { default as HKDatasource } from "./datasource/hkdatasource";
 export { default as HKRepository } from "./datasource/hkrepository";
 export { default as GraphBuilder } from "./graphbuilder";
+export { default as BaseExternalDatasource } from "./abstract/baseexternaldatasource";
 export { IExternalDatasource } from "./interfaces/iexternaldatasource";
 

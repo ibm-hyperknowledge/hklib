@@ -34,6 +34,11 @@ declare class HKGraph {
      */
     addEntity(entity: object): object;
     /**
+     * Add a new entities to the graph
+     * @param {object} entities The entities object to be added.
+     */
+    addEntities(entities: object): void;
+    /**
      * @param {string} id the id of entity to be removed
      * @returns {object} the removed entity
      */

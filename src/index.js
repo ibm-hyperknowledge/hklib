@@ -64,5 +64,6 @@ exports.HKRepository = require("./datasource/hkrepository");
 
 exports.GraphBuilder = require("./graphbuilder");
 exports.IExternalDatasource = require("./interfaces/iexternaldatasource");
+exports.BaseExternalDatasource = require("./abstract/baseexternaldatasource");
 
 
