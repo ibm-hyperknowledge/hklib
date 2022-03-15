@@ -9,11 +9,13 @@ declare class HKGraph {
     contexts: {};
     virtualContexts: {};
     links: {};
+    virtualLinks: {};
     connectors: {};
     refs: {};
     trails: {};
     bindsMap: {};
     linkMap: {};
+    virtualLinkMap: {};
     refMap: {};
     orphans: {};
     contextMap: {};

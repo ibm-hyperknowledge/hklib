@@ -1,6 +1,7 @@
 import HKTypes from "../types";
 import VirtualContext from "../virtualcontext";
 import VirtualNode from "../virtualnode";
+import VirtualLink from "../virtuallink";
 
 export = BaseExternalDatasource;
 class BaseExternalDatasource {
@@ -20,6 +21,11 @@ class BaseExternalDatasource {
         case HKTypes.NODE:
           {
             entity = new VirtualNode(entity, contextId);
+            break;
+          }
+        case HKTypes.LINK:
+          {
+            entity = new VirtualLink(entity, contextId);
             break;
           }
       }

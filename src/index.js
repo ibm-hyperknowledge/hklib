@@ -23,6 +23,8 @@ exports.VirtualNode = require("./virtualnode");
 exports.HKVirtualNode = require("./virtualnode");
 exports.VirtualContext = require("./virtualcontext");
 exports.HKVirtualContext = require("./virtualcontext");
+exports.VirtualLink = require("./virtuallink");
+exports.HKVirtualLink = require("./virtuallink");
 
 exports.Types = require("./types");
 exports.HKTypes = require("./types");

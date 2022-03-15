@@ -3,6 +3,7 @@ const tslib_1 = require("tslib");
 const types_1 = (0, tslib_1.__importDefault)(require("../types"));
 const virtualcontext_1 = (0, tslib_1.__importDefault)(require("../virtualcontext"));
 const virtualnode_1 = (0, tslib_1.__importDefault)(require("../virtualnode"));
+const virtuallink_1 = (0, tslib_1.__importDefault)(require("../virtuallink"));
 class BaseExternalDatasource {
     constructor() { }
     transformToVirtualEntities(entities, contextId, endpoint) {
@@ -18,6 +19,11 @@ class BaseExternalDatasource {
                 case types_1.default.NODE:
                     {
                         entity = new virtualnode_1.default(entity, contextId);
+                        break;
+                    }
+                case types_1.default.LINK:
+                    {
+                        entity = new virtuallink_1.default(entity, contextId);
                         break;
                     }
             }
