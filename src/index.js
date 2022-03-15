@@ -37,6 +37,7 @@ exports.INTERFACE = require("./types").INTERFACE;
 exports.TRAIL_TYPE = require("./types").TRAIL;
 exports.VIRTUAL_NODE_TYPE = require("./types").VIRTUAL_NODE;
 exports.VIRTUAL_CONTEXT_TYPE = require("./types").VIRTUAL_CONTEXT;
+exports.VIRTUAL_LINK_TYPE = require("./types").VIRTUAL_LINK;
 
 exports.VIRTUAL_SOURCE_PROPERTY = "virtualsrc";
 

@@ -8,6 +8,12 @@ import Context from "./context";
 
 export = VirtualContext;
 class VirtualContext extends Context {
+  /** Constructs a new virtual context object. 
+   * 
+   * @param {string | null} [id] Some id string for this entity.
+   * @param {string | null} [virtualSrc] Virtual endpoint to acceess information
+   * @param {string | null} [parent] Parent id.
+   */
   constructor(id: any, virtualSrc: string, parent?: string) {
     super(id, parent);
 
@@ -46,3 +52,5 @@ class VirtualContext extends Context {
     }
   }
 }
+
+VirtualContext.type = VIRTUAL_CONTEXT_TYPE;
