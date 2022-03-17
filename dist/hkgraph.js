@@ -338,6 +338,20 @@ class HKGraph {
                         delete this.links[id];
                         break;
                     }
+                case HKTypes.VIRTUAL_LINK:
+                    {
+                        if (this.virtualLinkMap.hasOwnProperty(entity.connector)) {
+                            let virtualLinks = this.virtualLinkMap[entity.connector];
+                            for (let j = 0; j < virtualLinks.length; j++) {
+                                if (virtualLinks[j].id === entity.id) {
+                                    virtualLinks.splice(j, 1);
+                                    break;
+                                }
+                            }
+                        }
+                        delete this.virtualLinks[id];
+                        break;
+                    }
                 case Trail.type:
                     {
                         /* delete children trails? */
@@ -446,7 +460,7 @@ class HKGraph {
             c.id = null;
             return c;
         }
-        return this.nodes[id] || this.virtualNodes[id] || this.contexts[id] || this.virtualContexts[id] || this.links[id] || this.connectors[id] || this.refs[id] || this.trails[id] || null;
+        return this.nodes[id] || this.virtualNodes[id] || this.contexts[id] || this.virtualContexts[id] || this.virtualLinks[id] || this.links[id] || this.connectors[id] || this.refs[id] || this.trails[id] || null;
     }
     /**
      * Returns HK entities in this graph indexed by id.
@@ -494,6 +508,8 @@ class HKGraph {
             model.connectors = serialized.connectors;
         if (serialized.hasOwnProperty('links'))
             model.links = serialized.links;
+        if (serialized.hasOwnProperty('virtualLinks'))
+            model.virtualLinks = serialized.virtualLinks;
         if (serialized.hasOwnProperty('binds'))
             model.binds = serialized.binds;
         if (serialized.hasOwnProperty('refs'))
@@ -517,5 +533,6 @@ HKGraph.VIRTUAL_NODE_TYPE = HKTypes.VIRTUAL_NODE;
 HKGraph.CONTEXT_TYPE = HKTypes.CONTEXT;
 HKGraph.VIRTUAL_CONTEXT_TYPE = HKTypes.VIRTUAL_CONTEXT;
 HKGraph.LINK_TYPE = HKTypes.LINK;
+HKGraph.VIRTUAL_LINK_TYPE = HKTypes.VIRTUAL_LINK;
 HKGraph.CONNECTOR_TYPE = HKTypes.CONNECTOR;
 HKGraph.INTERFACE = HKTypes.INTERFACE;
