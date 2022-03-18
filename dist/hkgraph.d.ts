@@ -78,6 +78,7 @@ declare namespace HKGraph {
     const CONTEXT_TYPE: string;
     const VIRTUAL_CONTEXT_TYPE: string;
     const LINK_TYPE: string;
+    const VIRTUAL_LINK_TYPE: string;
     const CONNECTOR_TYPE: string;
     const INTERFACE: string;
 }
