@@ -6,4 +6,5 @@ export interface IExternalDatasource {
   transform(data: any, context: any): any;
   getProperties(property?: string[]): any;
   getEntity(key: string, parentId: string, endpoint: string | undefined, options: any): Promise<any>;
+  getLinks(key: string, ...args: any): Promise<any>;
 }
