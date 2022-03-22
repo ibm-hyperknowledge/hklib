@@ -69,6 +69,7 @@ declare class HKGraph {
     getEntities(): {
         [x: string]: HKEntity;
     };
+    getLinks(entityId: any): {};
     serialize(): string;
     deserialize(str: any): HKGraph;
 }

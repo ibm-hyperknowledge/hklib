@@ -10,7 +10,7 @@ const Node = require("./node");
 const Reference = require("./reference");
 const Trail = require("./trail");
 const HKTypes = require("./types");
-const shortid = require('shortid');
+const shortId = require('shortid');
 const VirtualContext = require("./virtualcontext");
 const HKEntity = require("./hkentity");
 const VirtualNode = require("./virtualnode");
@@ -480,6 +480,9 @@ class HKGraph {
         Object.assign(out, this.trails);
         return out;
     }
+    getLinks(entityId) {
+        return {};
+    }
     serialize() {
         let out = {
             nodes: this.nodes,
@@ -523,7 +526,7 @@ class HKGraph {
 function generateId(model, length) {
     let id;
     do {
-        id = shortid();
+        id = shortId();
     } while (model.hasId(id));
     return id;
 }
