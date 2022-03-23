@@ -678,6 +678,39 @@ class HKDatasource {
         });
     }
     /**
+   * Get connectors.
+   *
+   * @param {[string]} contextIds An array of id of contexts to get related connectors
+   * @param {GetEntitiesCallback} callback Callback with the entities
+   */
+    getConnectors(contextIds = null, callback = () => { }) {
+        let url = `${this.url}repository/${this.graphName}/connectors/`;
+        let params = {
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(contextIds)
+        };
+        Object.assign(params, this.options);
+        request.post(url, params, (err, res) => {
+            if (!err) {
+                if (requestCompletedWithSuccess(res.statusCode)) {
+                    try {
+                        let entities = convertEntities(res.body);
+                        callback(null, entities);
+                    }
+                    catch (exp) {
+                        callback(exp);
+                    }
+                }
+                else {
+                    callback(stringifyResponseLog(res));
+                }
+            }
+            else {
+                callback(err);
+            }
+        });
+    }
+    /**
      * Import a RDF file from the filesystem
      * @param {string} filePath The path to the file
      * @param {object} options a set of options to customize the importation

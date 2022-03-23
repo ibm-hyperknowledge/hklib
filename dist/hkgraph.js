@@ -446,6 +446,26 @@ class HKGraph {
         }
         return out;
     }
+    getLinks(entityId) {
+        let out = {};
+        if (this.bindsMap.hasOwnProperty(entityId)) {
+            let binds = this.bindsMap[entityId];
+            for (let k of binds) {
+                let entity = this.getEntity(k);
+                if (entity) {
+                    if (this.connectors.hasOwnProperty(entity.connector)) {
+                        const connector = this.getEntity(entity.connector);
+                        out[entity.connector] = connector;
+                    }
+                    out[entity.id] = entity;
+                }
+            }
+        }
+        return out;
+    }
+    getAllConnectors() {
+        return { ...this.connectors.map((x) => ({ [x.id]: x })) };
+    }
     /**
      * Returns an entity in this graph having `id`.
      *
@@ -479,9 +499,6 @@ class HKGraph {
         Object.assign(out, this.refs);
         Object.assign(out, this.trails);
         return out;
-    }
-    getLinks(entityId) {
-        return {};
     }
     serialize() {
         let out = {
