@@ -10,6 +10,7 @@ declare class Context extends Node {
      * @param {string | null} [parent] Parent id.
      */
     constructor(id?: string | null | undefined, parent?: string | null | undefined);
+    type: string;
 }
 declare namespace Context {
     const type: string;
