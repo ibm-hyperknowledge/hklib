@@ -27,6 +27,13 @@ class Connector extends HKEntity {
          */
         this.id = id;
         /**
+         *  Class Name of this connector.
+         *
+         * @public
+         * @type {string | null}
+        */
+        this.className = className || null;
+        /**
          * Roles of this connector.
          *
          * @public

@@ -10,7 +10,7 @@ const Node = require("./node");
 const Reference = require("./reference");
 const Trail = require("./trail");
 const HKTypes = require("./types");
-const shortid = require('shortid');
+const shortId = require('shortid');
 const VirtualContext = require("./virtualcontext");
 const HKEntity = require("./hkentity");
 const VirtualNode = require("./virtualnode");
@@ -446,6 +446,26 @@ class HKGraph {
         }
         return out;
     }
+    getLinks(entityId) {
+        let out = {};
+        if (this.bindsMap.hasOwnProperty(entityId)) {
+            let binds = this.bindsMap[entityId];
+            for (let k of binds) {
+                let entity = this.getEntity(k);
+                if (entity) {
+                    if (this.connectors.hasOwnProperty(entity.connector)) {
+                        const connector = this.getEntity(entity.connector);
+                        out[entity.connector] = connector;
+                    }
+                    out[entity.id] = entity;
+                }
+            }
+        }
+        return out;
+    }
+    getAllConnectors() {
+        return { ...this.connectors.map((x) => ({ [x.id]: x })) };
+    }
     /**
      * Returns an entity in this graph having `id`.
      *
@@ -523,7 +543,7 @@ class HKGraph {
 function generateId(model, length) {
     let id;
     do {
-        id = shortid();
+        id = shortId();
     } while (model.hasId(id));
     return id;
 }

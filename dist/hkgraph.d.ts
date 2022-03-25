@@ -51,6 +51,8 @@ declare class HKGraph {
     getReference(id: any, parent: any): any;
     getChildren(contextId: any): any;
     getNeighbors(entityId: any): HKEntity[];
+    getLinks(entityId: any): {};
+    getAllConnectors(): any;
     /**
      * Returns an entity in this graph having `id`.
      *

@@ -217,6 +217,13 @@ declare class HKDatasource {
      */
     getLinks(ids: [string], callback?: (err: string, entities: object) => any): void;
     /**
+   * Get connectors.
+   *
+   * @param {[string]} contextIds An array of id of contexts to get related connectors
+   * @param {GetEntitiesCallback} callback Callback with the entities
+   */
+    getConnectors(contextIds?: [string], callback?: (err: string, entities: object) => any): void;
+    /**
      * Import a RDF file from the filesystem
      * @param {string} filePath The path to the file
      * @param {object} options a set of options to customize the importation
