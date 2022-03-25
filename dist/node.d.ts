@@ -60,8 +60,6 @@ declare class Node extends HKEntity {
             };
         };
     };
-    properties: any;
-    metaProperties: any;
     /**
      *
      * @param {string} key Id of the interface
