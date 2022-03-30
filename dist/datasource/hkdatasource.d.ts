@@ -51,6 +51,16 @@ declare class HKDatasource {
      */
     getVersion(callback?: (err: any) => any): void;
     /**
+     * @callback OperationCallback
+     * @param err An error object that indicate if the operation was succesful or not
+     */
+    /**
+     * Get a list of the current external parses that HKBase has implemented.
+     *
+     * @param {OperationCallback} callback Response callback
+     */
+    getExternalParsersInfo(callback?: (err: any) => any): void;
+    /**
      * Callback function for `addEntities`
      *
      * @callback ListRepositoriesCallback
@@ -126,7 +136,7 @@ declare class HKDatasource {
     /**
      * Get entities from a context
      *
-     * @param {string} contextId The context id to retrieve their nested entities. May be null to get the `body` context.
+     * @param {string | null} contextId The context id to retrieve their nested entities. May be null to get the `body` context.
      * @param {object?} [options] Options to get context children
      * @param {boolean?} [options.lazy] If set true, will include only the main fields in the results
      * @param {boolean?} [options.nested] If set true, will walk through nested contexts
@@ -134,7 +144,7 @@ declare class HKDatasource {
      * @param {object} payload A dictionary containing options when returning the entities from the context.
      * @param {GetEntitiesCallback} callback Callback with the entities
      */
-    getContextChildren(contextId: string, options?: object | null | undefined, payload?: object, callback?: (err: string, entities: object) => any): void;
+    getContextChildren(contextId: string | null, options?: object | null | undefined, payload?: object, callback?: (err: string, entities: object) => any): void;
     /**
      * Get an entity from its identifier
      *
