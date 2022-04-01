@@ -134,6 +134,47 @@ class HKDatasource
   }
 
   /**
+   * @callback OperationCallback
+   * @param err An error object that indicate if the operation was succesful or not
+   */
+  /**
+   * Get a list of the current external parses that HKBase has implemented.
+   *
+   * @param {OperationCallback} callback Response callback
+   */
+  getExternalParsersInfo(callback = () => { })
+  {
+    request.get(`${this.url}external-parsers`, this.options, (err, res) =>
+    {
+      if (!err)
+      {
+        if (requestCompletedWithSuccess(res.statusCode))
+        {
+          try
+          {
+            let data = JSON.parse(res.body);
+            callback(null, data);
+          }
+          catch (exp)
+          {
+            callback(exp);
+          }
+        }
+
+        else
+        {
+          callback(stringifyResponseLog(res));
+        }
+      }
+
+      else
+      {
+        callback(err);
+      }
+    });
+  }
+
+  /**
    * Callback function for `addEntities`
    *
    * @callback ListRepositoriesCallback
@@ -478,7 +519,7 @@ class HKDatasource
   /**
    * Get entities from a context
    *
-   * @param {string} contextId The context id to retrieve their nested entities. May be null to get the `body` context.
+   * @param {string | null} contextId The context id to retrieve their nested entities. May be null to get the `body` context.
    * @param {object?} [options] Options to get context children
    * @param {boolean?} [options.lazy] If set true, will include only the main fields in the results
    * @param {boolean?} [options.nested] If set true, will walk through nested contexts
