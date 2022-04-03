@@ -146,16 +146,6 @@ declare class HKDatasource {
      */
     getContextChildren(contextId: string | null, options?: object | null | undefined, payload?: object, callback?: (err: string, entities: object) => any): void;
     /**
-     * Get an entity from its identifier
-     *
-     * @param {string} entityId The identifier of the entity to be fetched
-     * @param {object?} [options] Options to get entity
-     * @param {boolean?} [options.parent] The entity parent
-     * @param {object} payload A dictionary containing options when returning the entities.
-     * @param {GetEntitiesCallback} callback Callback with the entities
-     */
-    getEntityById(entityId: string, options?: object | null | undefined, payload?: object, callback?: (err: string, entities: object) => any): Promise<void>;
-    /**
      * Filter entities using CSS pattern `(TODO: document it better)`
      *
      * Examples:

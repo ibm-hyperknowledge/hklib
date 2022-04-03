@@ -415,43 +415,6 @@ class HKDatasource {
         });
     }
     /**
-     * Get an entity from its identifier
-     *
-     * @param {string} entityId The identifier of the entity to be fetched
-     * @param {object?} [options] Options to get entity
-     * @param {boolean?} [options.parent] The entity parent
-     * @param {object} payload A dictionary containing options when returning the entities.
-     * @param {GetEntitiesCallback} callback Callback with the entities
-     */
-    async getEntityById(entityId, options = {}, payload = {}, callback = () => { }) {
-        let url = `${this.url}repository/${this.graphName}/entity/${entityId}`;
-        if (options) {
-            url += toQueryString(options);
-        }
-        const config = {
-            method: 'POST',
-            url: url,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: payload,
-            json: true
-        };
-        Object.assign(config, this.options);
-        try {
-            let res = await axios(config);
-            if (requestCompletedWithSuccess(res.status)) {
-                callback(null, res.data);
-            }
-            else {
-                callback(`Server responded with ${res.status}. ${res.data}`);
-            }
-        }
-        catch (err) {
-            callback(err);
-        }
-    }
-    /**
      * Filter entities using CSS pattern `(TODO: document it better)`
      *
      * Examples:
