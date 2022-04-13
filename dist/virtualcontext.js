@@ -9,7 +9,7 @@ const context_1 = (0, tslib_1.__importDefault)(require("./context"));
 class VirtualContext extends context_1.default {
     /** Constructs a new virtual context object.
      *
-     * @param {string | null} [id] Some id string for this entity.
+     * @param {any} [id] Some id string for this entity.
      * @param {string | null} [virtualSrc] Virtual endpoint to acceess information
      * @param {string | null} [parent] Parent id.
      */
