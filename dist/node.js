@@ -44,6 +44,11 @@ class Node extends HKEntity {
          * @type {Object.<string,{type : string, properties : Object.<string, Object>}>}
          */
         this.interfaces = {};
+        /**
+         * @public
+         * @type {Object.<string, string | number | Object>
+         */
+        this.properties = {};
         // TODO: this code seems to copy a node passed as an id. Create a separate clone/json-deserialize function for that.
         if (arguments[0] && typeof arguments[0] === "object") {
             let node = arguments[0];

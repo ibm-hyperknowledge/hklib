@@ -11,8 +11,8 @@ class HKEntity
 
   /**
    * Creates a new Hyperknowledge entity
-   * 
-   * @constructor 
+   *
+   * @constructor
    * @abstract
    */
   constructor()
@@ -22,25 +22,25 @@ class HKEntity
       throw new Error("This is an abstract class and cannot be instantiated directly.");
     }
 
-    /** 
+    /**
      *  Properties of this node.
-     * 
-     * @public 
-     * @type {Object.<string, Object>}
+     *
+     * @public
+     * @type {Object.<string, string | number | string[] | number[] | Object>}
      * */
     this.properties = {};
 
-    /** 
+    /**
      * Metaproperties of this node. It should have at least the same keys as `properties`.
-     * 
-     * @public 
+     *
+     * @public
      * @type {Object.<string, Object>}
      * */
     this.metaProperties = {};
 
     /**
      *  Type of this entity.
-     * 
+     *
      * @public
      * @type {string | null}
     */
@@ -113,7 +113,7 @@ class HKEntity
    * @param {string} property Property key
    * @param {Object} value Property value, can be number, string or an array of strings or numbers (in the latter append to the previous values).
    * @param {string} [metaProperty] Optioanl metaproperty, a string that annotates the property (e.g., a XSD type)
-   * 
+   *
    * @returns {void}
    */
   appendToProperty(property, value, metaProperty = null)
@@ -268,7 +268,7 @@ class HKEntity
    *
    * @param {string} metaProperty Metaproperty key
    * @param {string} value Metaproperty, a string that annotates the property (e. g. A type)
-   * 
+   *
    * @returns {void}
    */
   setMetaProperty(metaProperty, value)
@@ -292,7 +292,7 @@ class HKEntity
    *
    * @param {string} metaProperty Metaproperty key.
    * @returns {string | null} the metaproperty value.
-   * 
+   *
    */
   getMetaProperty(metaProperty)
   {
@@ -310,7 +310,7 @@ class HKEntity
    * Remove a metaproperty
    *
    * @param {string} metaProperty Metaproperty to delete.
-   * 
+   *
    * @returns {boolean} Returns true if the property has been deleted; false if not or metaProperty does not exist.
    */
   removeMetaProperty(metaProperty)
@@ -403,7 +403,7 @@ class HKEntity
    * Append a dictionary of properties, merging both data, overwrites the previous properties.
    *
    * @param {string} properties A dictionary of new properties.
-   * 
+   *
    * @returns {void}
    */
   appendProperties(properties)

@@ -11,36 +11,36 @@ const HKEntity = require("./hkentity");
 class Node extends HKEntity
 {
   /** Constructs a new node object. Both `id` and `parent` are optional.
-   * 
-   * @param {string | null} [id] Some id string for this node. Deprecated: json object, which will deserialized as a Node; use `nodify()` instead. 
+   *
+   * @param {string | null} [id] Some id string for this node. Deprecated: json object, which will deserialized as a Node; use `nodify()` instead.
    * @param {string | null} [parent] Parent id.
    */
   constructor(id = null, parent = null)
   {
     super();
 
-    /** 
-     * 
+    /**
+     *
      * Id of this node. Might be null.
-     * 
+     *
      * @public
      * @type {string | null}
-     * 
+     *
      */
     this.id = id;
 
-    /** 
+    /**
      * Parent id. Might be null.
-     * 
+     *
      * @public
      * @type {string | null}
-     * 
+     *
      */
     this.parent = parent;
 
     /**
      *  Type of this node.
-     * 
+     *
      * @public
      * @type {string | null}
     */
@@ -48,11 +48,17 @@ class Node extends HKEntity
 
     /**
      * Interface attributed to this node.
-     * 
+     *
      * @public
      * @type {Object.<string,{type : string, properties : Object.<string, Object>}>}
      */
     this.interfaces = {};
+
+    /**
+     * @public
+     * @type {Object.<string, string | number | Object>
+     */
+    this.properties = {};
 
     // TODO: this code seems to copy a node passed as an id. Create a separate clone/json-deserialize function for that.
     if (arguments[0] && typeof arguments[0] === "object")
@@ -76,11 +82,11 @@ class Node extends HKEntity
   }
 
   /**
-   * 
+   *
    * @param {string} key Id of the interface
    * @param {string} type Type of the interface (anchor, etc)
-   * @param {Object.<string,Object>} properties Properties for the interface  
-   * 
+   * @param {Object.<string,Object>} properties Properties for the interface
+   *
    * @return {void}
    */
   addInterface(key, type, properties)
@@ -93,8 +99,8 @@ class Node extends HKEntity
 
   /**
    * Serializes this node to a plain json object.
-   * 
-   * @returns {Object.<string,any>} a plain json object with recursively serialized fields. 
+   *
+   * @returns {Object.<string,any>} a plain json object with recursively serialized fields.
    */
   serialize()
   {
@@ -128,10 +134,10 @@ class Node extends HKEntity
 
   /**
    * Tests whether `entity` is a node structurally.
-   * 
+   *
    * @param {Object} node The entity to be tested.
    * @returns {boolean} Returns `true` if valid; `false` otherwise.
-   * 
+   *
    */
   static isValid(node)
   {
@@ -187,12 +193,12 @@ class Node extends HKEntity
     return out;
   }
   /**
-   * Tries to deserialize a json object, or a list of json objects, to node instances(s). 
-   * 
+   * Tries to deserialize a json object, or a list of json objects, to node instances(s).
+   *
    * Use `serialize` parameter to conver the output back to json objects. This feature can be used to normalize a json-object representation of hk nodes.
-   * 
-   * @param {Object | Array<Object>} data Data to deserialize. 
-   * @param {boolean} serialize If `true`, reserialize the deserialized objects. 
+   *
+   * @param {Object | Array<Object>} data Data to deserialize.
+   * @param {boolean} serialize If `true`, reserialize the deserialized objects.
    * @returns {Array<Node> | Array<Object>} An array of node instances if `serialize = false`; an array of json objects otherwise.
    */
   static nodefy(data, serialize)

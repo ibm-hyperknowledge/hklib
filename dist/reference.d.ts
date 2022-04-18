@@ -20,6 +20,13 @@ declare class Reference extends Node {
      *
      */
     public ref: string | null;
+    type: string;
+    serialize: () => {
+        id: any;
+        type: string;
+        ref: any;
+        parent: any;
+    };
 }
 declare namespace Reference {
     const type: string;

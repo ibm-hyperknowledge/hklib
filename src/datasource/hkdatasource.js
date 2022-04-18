@@ -53,7 +53,8 @@ class HKDatasource
 
   /**
    * @callback OperationCallback
-   * @param err An error object that indicate if the operation was succesful or not
+   * @param {Error|null} err An error object that indicate if the operation was succesful or not
+   * @param {Object} data 
    */
   /**
    * Get information about the current IDB
@@ -93,10 +94,6 @@ class HKDatasource
   }
 
   /**
-   * @callback OperationCallback
-   * @param err An error object that indicate if the operation was succesful or not
-   */
-  /**
    * Get version of the current HKBase
    *
    * @param {OperationCallback} callback Response callback
@@ -133,10 +130,7 @@ class HKDatasource
     });
   }
 
-  /**
-   * @callback OperationCallback
-   * @param err An error object that indicate if the operation was succesful or not
-   */
+  
   /**
    * Get a list of the current external parses that HKBase has implemented.
    *
@@ -221,13 +215,16 @@ class HKDatasource
   }
 
   /**
-   * @callback OperationCallback
-   * @param err An error object that indicate if the operation was succesful or not
+   * Callback function for `createRepository`
+   *
+   * @callback AdminRepositoryCallback
+   * @param {Error} err Error message/object (null in case of success)
+   * @param {string} responseLog call's response log
    */
   /**
    * Create the current repository
    *
-   * @param {OperationCallback} callback Response callback
+   * @param {AdminRepositoryCallback} callback Response callback
    */
   createRepository(callback = () => { })
   {
@@ -255,14 +252,11 @@ class HKDatasource
     });
   }
 
-  /**
-   * @callback OperationCallback
-   * @param err An error object that indicate if the operation was succesful or not
-   */
+  
   /**
    * Drop the current repository
    *
-   * @param {OperationCallback} callback Response callback
+   * @param {AdminRepositoryCallback} callback Response callback
    */
   dropRepository(callback = () => { })
   {
@@ -371,7 +365,7 @@ class HKDatasource
    * Remove entities from a hkbase
    *
    * @param {Array | object} params Array of ids or filter to math entities to be removed @see filterEntities
-   * @param {OperationCallback} callback Response callback
+   * @param {AddEntitiesCallback} callback Response callback
    */
   removeEntities(ids, callback)
   {
@@ -419,7 +413,7 @@ class HKDatasource
   /**
    * @callback GetEntitiesCallback
    * @param {string} err An error object that indicate if the operation was succesful or not
-   * @param {object} entities A dictionary of entities indexed by id
+   * @param {Object.<string, HKEntity>} entities A dictionary of entities indexed by id
    */
   /**
    * Get entities from a hkbase
@@ -639,7 +633,7 @@ class HKDatasource
    *
    * `{"parent":"parent_context", {"properties" : {"name" : "bar"}` - Combined filter
    *
-   * @param {object} filter The CSS filter
+   * @param {object | string} filter The CSS filter
    * @param {GetEntitiesCallback} callback Callback with the entities
    */
   filterEntities(filter, callback = () => { })
@@ -1041,8 +1035,8 @@ class HKDatasource
    * Import a RDF file from the filesystem
    * @param {string} filePath The path to the file
    * @param {object} options a set of options to customize the importation
-   * @param {string} options.contentType the mimeType of the serialization for the RDF data
-   * @param {string} options.context the target context to import the entities
+   * @param {string} [options.contentType] the mimeType of the serialization for the RDF data
+   * @param {string} [options.context] the target context to import the entities
    * @param {OperationCallback} callback Response callback
    */
   importRDFFile(filePath, options, callback = () => { })

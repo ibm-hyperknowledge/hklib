@@ -32,34 +32,27 @@ declare class HKDatasource {
     graphName: string;
     /**
      * @callback OperationCallback
-     * @param err An error object that indicate if the operation was succesful or not
+     * @param {Error|null} err An error object that indicate if the operation was succesful or not
+     * @param {Object} data
      */
     /**
      * Get information about the current IDB
      *
      * @param {OperationCallback} callback Response callback
      */
-    getInfo(callback?: (err: any) => any): void;
-    /**
-     * @callback OperationCallback
-     * @param err An error object that indicate if the operation was succesful or not
-     */
+    getInfo(callback?: (err: Error | null, data: Object) => any): void;
     /**
      * Get version of the current HKBase
      *
      * @param {OperationCallback} callback Response callback
      */
-    getVersion(callback?: (err: any) => any): void;
-    /**
-     * @callback OperationCallback
-     * @param err An error object that indicate if the operation was succesful or not
-     */
+    getVersion(callback?: (err: Error | null, data: Object) => any): void;
     /**
      * Get a list of the current external parses that HKBase has implemented.
      *
      * @param {OperationCallback} callback Response callback
      */
-    getExternalParsersInfo(callback?: (err: any) => any): void;
+    getExternalParsersInfo(callback?: (err: Error | null, data: Object) => any): void;
     /**
      * Callback function for `addEntities`
      *
@@ -74,25 +67,24 @@ declare class HKDatasource {
      */
     getRepositories(callback?: (err: Error, repositories: any[]) => any): void;
     /**
-     * @callback OperationCallback
-     * @param err An error object that indicate if the operation was succesful or not
+     * Callback function for `createRepository`
+     *
+     * @callback AdminRepositoryCallback
+     * @param {Error} err Error message/object (null in case of success)
+     * @param {string} responseLog call's response log
      */
     /**
      * Create the current repository
      *
-     * @param {OperationCallback} callback Response callback
+     * @param {AdminRepositoryCallback} callback Response callback
      */
-    createRepository(callback?: (err: any) => any): void;
-    /**
-     * @callback OperationCallback
-     * @param err An error object that indicate if the operation was succesful or not
-     */
+    createRepository(callback?: (err: Error, responseLog: string) => any): void;
     /**
      * Drop the current repository
      *
-     * @param {OperationCallback} callback Response callback
+     * @param {AdminRepositoryCallback} callback Response callback
      */
-    dropRepository(callback?: (err: any) => any): void;
+    dropRepository(callback?: (err: Error, responseLog: string) => any): void;
     /**
      * Callback function for `addEntities`
      *
@@ -111,13 +103,13 @@ declare class HKDatasource {
      * Remove entities from a hkbase
      *
      * @param {Array | object} params Array of ids or filter to math entities to be removed @see filterEntities
-     * @param {OperationCallback} callback Response callback
+     * @param {AddEntitiesCallback} callback Response callback
      */
-    removeEntities(ids: any, callback: (err: any) => any): void;
+    removeEntities(ids: any, callback: (err: Error, entities: any[]) => any): void;
     /**
      * @callback GetEntitiesCallback
      * @param {string} err An error object that indicate if the operation was succesful or not
-     * @param {object} entities A dictionary of entities indexed by id
+     * @param {Object.<string, HKEntity>} entities A dictionary of entities indexed by id
      */
     /**
      * Get entities from a hkbase
@@ -125,14 +117,18 @@ declare class HKDatasource {
      * @param {Array} ids Array of ids to retrieve their respective entities
      * @param {GetEntitiesCallback} callback Callback with the entities
      */
-    getEntities(ids: any[], callback?: (err: string, entities: object) => any): void;
+    getEntities(ids: any[], callback?: (err: string, entities: {
+        [x: string]: HKEntity;
+    }) => any): void;
     /**
      * Fetch entities from a context
      *
      * @param {string} context The context id to retrieve their nested entities. May be null to get the `body` context.
      * @param {GetEntitiesCallback} callback Callback with the entities
      */
-    fetchContext(context: string, callback?: (err: string, entities: object) => any): void;
+    fetchContext(context: string, callback?: (err: string, entities: {
+        [x: string]: HKEntity;
+    }) => any): void;
     /**
      * Get entities from a context
      *
@@ -144,7 +140,9 @@ declare class HKDatasource {
      * @param {object} payload A dictionary containing options when returning the entities from the context.
      * @param {GetEntitiesCallback} callback Callback with the entities
      */
-    getContextChildren(contextId: string | null, options?: object | null | undefined, payload?: object, callback?: (err: string, entities: object) => any): void;
+    getContextChildren(contextId: string | null, options?: object | null | undefined, payload?: object, callback?: (err: string, entities: {
+        [x: string]: HKEntity;
+    }) => any): void;
     /**
      * Get an entity from its identifier
      *
@@ -154,7 +152,9 @@ declare class HKDatasource {
      * @param {object} payload A dictionary containing options when returning the entities.
      * @param {GetEntitiesCallback} callback Callback with the entities
      */
-    getEntityById(entityId: string, options?: object | null | undefined, payload?: object, callback?: (err: string, entities: object) => any): Promise<void>;
+    getEntityById(entityId: string, options?: object | null | undefined, payload?: object, callback?: (err: string, entities: {
+        [x: string]: HKEntity;
+    }) => any): Promise<void>;
     /**
      * Filter entities using CSS pattern `(TODO: document it better)`
      *
@@ -168,10 +168,12 @@ declare class HKDatasource {
      *
      * `{"parent":"parent_context", {"properties" : {"name" : "bar"}` - Combined filter
      *
-     * @param {object} filter The CSS filter
+     * @param {object | string} filter The CSS filter
      * @param {GetEntitiesCallback} callback Callback with the entities
      */
-    filterEntities(filter: object, callback?: (err: string, entities: object) => any): void;
+    filterEntities(filter: object | string, callback?: (err: string, entities: {
+        [x: string]: HKEntity;
+    }) => any): void;
     /**
      * Filter entities Ids using CSS pattern `(TODO: document it better)`
      *
@@ -188,7 +190,9 @@ declare class HKDatasource {
      * @param {object} filter The CSS filter
      * @param {GetEntitiesCallback} callback Callback with the entities ids
      */
-    filterEntitiesLazy(filter: object, callback?: (err: string, entities: object) => any): void;
+    filterEntitiesLazy(filter: object, callback?: (err: string, entities: {
+        [x: string]: HKEntity;
+    }) => any): void;
     /**
      * @callback QueryResultsCallback
      * @param err An error object that indicate if the operation was succesful or not
@@ -225,26 +229,30 @@ declare class HKDatasource {
      * @param {[string]} ids An array of id of entities to get related links
      * @param {GetEntitiesCallback} callback Callback with the entities
      */
-    getLinks(ids: [string], callback?: (err: string, entities: object) => any): void;
+    getLinks(ids: [string], callback?: (err: string, entities: {
+        [x: string]: HKEntity;
+    }) => any): void;
     /**
    * Get connectors.
    *
    * @param {[string]} contextIds An array of id of contexts to get related connectors
    * @param {GetEntitiesCallback} callback Callback with the entities
    */
-    getConnectors(contextIds?: [string], callback?: (err: string, entities: object) => any): void;
+    getConnectors(contextIds?: [string], callback?: (err: string, entities: {
+        [x: string]: HKEntity;
+    }) => any): void;
     /**
      * Import a RDF file from the filesystem
      * @param {string} filePath The path to the file
      * @param {object} options a set of options to customize the importation
-     * @param {string} options.contentType the mimeType of the serialization for the RDF data
-     * @param {string} options.context the target context to import the entities
+     * @param {string} [options.contentType] the mimeType of the serialization for the RDF data
+     * @param {string} [options.context] the target context to import the entities
      * @param {OperationCallback} callback Response callback
      */
     importRDFFile(filePath: string, options: {
-        contentType: string;
-        context: string;
-    }, callback?: (err: any) => any): void;
+        contentType?: string | undefined;
+        context?: string | undefined;
+    }, callback?: (err: Error | null, data: Object) => any): void;
     /**
      * Import a RDF data
      * @param {string} data the contents of the RDF
@@ -256,7 +264,7 @@ declare class HKDatasource {
     importRDF(data: string, options: {
         contentType: string;
         context: string;
-    }, callback?: (err: any) => any): void;
+    }, callback?: (err: Error | null, data: Object) => any): void;
     /**
      * Import data from an external database, like Wordnet, DBpedia...
      * @param {object} data a set of needed information to be considered when importing
@@ -268,7 +276,7 @@ declare class HKDatasource {
     importFrom(data: object, options: {
         context: string;
         base: string;
-    }, callback?: (err: any) => any): void;
+    }, callback?: (err: Error | null, data: Object) => any): void;
     /**
      * Will return a list of entities similar to the given entity
      *
@@ -542,6 +550,7 @@ declare class HKDatasource {
     import(data: string, options: {
         contentType: string;
         context: string;
-    }, callback: (err: any) => any): void;
+    }, callback: (err: Error | null, data: Object) => any): void;
     getAuthToken(authSecret: any, expiresIn?: number): any;
 }
+import HKEntity = require("../hkentity");
