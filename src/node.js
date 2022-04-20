@@ -7,6 +7,8 @@
 
 const Types = require("./types");
 const HKEntity = require("./hkentity");
+const FI = require("./fi/fi");
+const FIAnchor = require("./fi/fianchor");
 
 class Node extends HKEntity
 {
@@ -89,6 +91,36 @@ class Node extends HKEntity
       type: type,
       properties: properties
     };
+  }
+
+  /**
+   * Adds FI anchor to this node. If adding FI, base artifact must match this node's id.
+   * 
+   * @param {FI|FIAnchor} fi 
+   * @param {object} properties 
+   */
+  addFIAnchor(fi, properties)
+  {
+    if (fi instanceof FI)
+    {
+      const base = fi.getBaseArtifact();
+      if (this.id !== base.toString())
+      {
+        throw Error("Invalid base artifact.")
+      } else
+      {
+        //then, we can use the anchor
+        const anchorTail = fi.toStringTail();
+        if (anchorTail)
+        {
+          this.addInterface(anchorTail, 'fi', properties);
+        }
+      }
+    } else if (fi instanceof FIAnchor)
+    {
+      this.addInterface(fi, 'fi', properties);
+    }
+
   }
 
   /**

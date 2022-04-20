@@ -17,7 +17,7 @@ exports.HKLink = require("./link");
 exports.Trail = require("./trail");
 exports.HKTrail = require("./trail");
 exports.HKEntity = require("./hkentity");
-exports.HKGraph = require("./hkgraph")
+exports.HKGraph = require("./hkgraph");
 
 exports.VirtualNode = require("./virtualnode");
 exports.HKVirtualNode = require("./virtualnode");
@@ -67,4 +67,7 @@ exports.HKRepository = require("./datasource/hkrepository");
 
 exports.GraphBuilder = require("./graphbuilder");
 
+exports.FI = require("./fi/fi");
+exports.FIOperator = require("./fi/fioperator")
+exports.FIAnchor = require("./fi/fianchor")
 

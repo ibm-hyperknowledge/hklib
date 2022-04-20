@@ -1724,6 +1724,44 @@ class HKDatasource
     });
   }
 
+
+  /**
+   * Asks HKBase to resolve an Fragment Identifier (FI) 
+   *
+   * @param {Array} fi FI string
+   * @param {GetEntitiesCallback} callback Callback with the Fragment Data or JSON Description, and content type
+   */
+  resolveFI(fi, callback = () => { })
+  {
+    let url = this.url + "repository/" + this.graphName + "/fi/" + encodeURIComponent(fi);
+
+    request.get(url, this.options, (err, res) =>
+    {
+      if (!err)
+      {
+        if (requestCompletedWithSuccess(res.statusCode))
+        {
+          try
+          {
+            callback(null, res.body, res.headers.contentType);
+          }
+          catch (exp)
+          {
+            callback(exp)
+          }
+        }
+        else
+        {
+          callback(`Server responded with ${res.statusCode}. ${res.body}`);
+        }
+      }
+      else
+      {
+        callback(err);
+      }
+    });
+  }
+ 
   /**
    * @typedef {object} StoredQueryRunConfiguration
    * @property {object} [parameters] a key value bind of stored query parameters to values

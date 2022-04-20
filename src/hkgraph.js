@@ -638,6 +638,7 @@ class HKGraph
   serialize()
   {
     let out = {
+      type: 'graph',
       nodes: this.nodes,
       virtualNodes: this.virtualNodes,
       links: this.links,

@@ -478,6 +478,13 @@ declare class HKDatasource {
         parameters?: any[] | undefined;
     } | undefined) => any) | undefined): void;
     /**
+     * Asks HKBase to resolve an Fragment Identifier (FI)
+     *
+     * @param {Array} fi FI string
+     * @param {GetEntitiesCallback} callback Callback with the Fragment Data or JSON Description, and content type
+     */
+    resolveFI(fi: any[], callback?: (err: string, entities: object) => any): void;
+    /**
      * @typedef {object} StoredQueryRunConfiguration
      * @property {object} [parameters] a key value bind of stored query parameters to values
      * @property {object} [options] run options
