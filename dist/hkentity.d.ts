@@ -8,10 +8,10 @@ declare class HKEntity {
      *  Properties of this node.
      *
      * @public
-     * @type {Object.<string, Object>}
+     * @type {Object.<string, string | number | string[] | number[] | Object>}
      * */
     public properties: {
-        [x: string]: Object;
+        [x: string]: string | number | string[] | number[] | Object;
     };
     /**
      * Metaproperties of this node. It should have at least the same keys as `properties`.
