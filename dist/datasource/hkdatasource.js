@@ -11,6 +11,9 @@ const HKEntity = require("../hkentity");
 const deserialize = require("../deserialize");
 const PARSE_FAILED_MESSAGE = "Failed to parse server response";
 const UNEXPECTED_NULL_DATA = "Unexpected empty data on parsing";
+const http = require("http");
+const https = require("https");
+const FormData = require('form-data');
 class HKDatasource {
     /**
      * Creates a datasource connected to a hkbase
@@ -726,6 +729,47 @@ class HKDatasource {
         });
     }
     /**
+     * Import a RDF file from the filesystem
+     * @param {string} file The file
+     * @param {object} options a set of options to customize the importation
+     * @param {string} [options.contentType] the mimeType of the serialization for the RDF data
+     * @param {string} [options.context] the target context to import the entities
+     * @param {OperationCallback} callback Response callback
+     */
+    async importRDFFileStream(file, options, callback = () => { }) {
+        const context = options.context || null;
+        let url = `${this.url}repository/${this.graphName}/rdf/${context}/stream`;
+        let data = new FormData();
+        // const fileStream = fs.createReadStream(file);
+        data.append('file', file, { filename: file.name, contentType: "application/octet-stream" });
+        try {
+            const config = {
+                headers: {
+                    "Content-Type": "application/octet-stream",
+                    "context-parent": context
+                },
+                ...getDefaultAxiosConfig()
+            };
+            const response = await axios.put(url, data, config);
+            if (requestCompletedWithSuccess(response.statusCode)) {
+                let out;
+                try {
+                    out = JSON.parse(response.body);
+                }
+                catch (err) {
+                    out = null;
+                }
+                callback(null, out);
+            }
+            else {
+                callback(stringifyResponseLog(response));
+            }
+        }
+        catch (err) {
+            callback(err);
+        }
+    }
+    /**
      * Import a RDF data
      * @param {string} data the contents of the RDF
      * @param {object} options a set of options to customize the importation
@@ -1323,6 +1367,15 @@ class HKDatasource {
         return HKDatasource.getAuthToken(authSecret, expiresIn);
     }
 }
+function getDefaultAxiosConfig() {
+    return {
+        httpAgent: new http.Agent({ keepAlive: true }),
+        httpsAgent: new https.Agent({ keepAlive: true }),
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity
+    };
+}
+;
 function convertEntities(raw) {
     let data = null;
     try {

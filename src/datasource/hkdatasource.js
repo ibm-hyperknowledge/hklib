@@ -17,6 +17,10 @@ const deserialize = require("../deserialize");
 const PARSE_FAILED_MESSAGE = "Failed to parse server response";
 const UNEXPECTED_NULL_DATA = "Unexpected empty data on parsing";
 
+const http = require("http");
+const https = require("https");
+
+const  FormData = require('form-data');
 
 class HKDatasource
 {
@@ -53,7 +57,8 @@ class HKDatasource
 
   /**
    * @callback OperationCallback
-   * @param err An error object that indicate if the operation was succesful or not
+   * @param {Error|null} err An error object that indicate if the operation was succesful or not
+   * @param {Object} data 
    */
   /**
    * Get information about the current IDB
@@ -93,10 +98,6 @@ class HKDatasource
   }
 
   /**
-   * @callback OperationCallback
-   * @param err An error object that indicate if the operation was succesful or not
-   */
-  /**
    * Get version of the current HKBase
    *
    * @param {OperationCallback} callback Response callback
@@ -133,10 +134,7 @@ class HKDatasource
     });
   }
 
-  /**
-   * @callback OperationCallback
-   * @param err An error object that indicate if the operation was succesful or not
-   */
+  
   /**
    * Get a list of the current external parses that HKBase has implemented.
    *
@@ -221,13 +219,16 @@ class HKDatasource
   }
 
   /**
-   * @callback OperationCallback
-   * @param err An error object that indicate if the operation was succesful or not
+   * Callback function for `createRepository`
+   *
+   * @callback AdminRepositoryCallback
+   * @param {Error} err Error message/object (null in case of success)
+   * @param {string} responseLog call's response log
    */
   /**
    * Create the current repository
    *
-   * @param {OperationCallback} callback Response callback
+   * @param {AdminRepositoryCallback} callback Response callback
    */
   createRepository(callback = () => { })
   {
@@ -255,14 +256,11 @@ class HKDatasource
     });
   }
 
-  /**
-   * @callback OperationCallback
-   * @param err An error object that indicate if the operation was succesful or not
-   */
+  
   /**
    * Drop the current repository
    *
-   * @param {OperationCallback} callback Response callback
+   * @param {AdminRepositoryCallback} callback Response callback
    */
   dropRepository(callback = () => { })
   {
@@ -371,7 +369,7 @@ class HKDatasource
    * Remove entities from a hkbase
    *
    * @param {Array | object} params Array of ids or filter to math entities to be removed @see filterEntities
-   * @param {OperationCallback} callback Response callback
+   * @param {AddEntitiesCallback} callback Response callback
    */
   removeEntities(ids, callback)
   {
@@ -419,7 +417,7 @@ class HKDatasource
   /**
    * @callback GetEntitiesCallback
    * @param {string} err An error object that indicate if the operation was succesful or not
-   * @param {object} entities A dictionary of entities indexed by id
+   * @param {Object.<string, HKEntity>} entities A dictionary of entities indexed by id
    */
   /**
    * Get entities from a hkbase
@@ -590,7 +588,7 @@ class HKDatasource
    *
    * `{"parent":"parent_context", {"properties" : {"name" : "bar"}` - Combined filter
    *
-   * @param {object} filter The CSS filter
+   * @param {object | string} filter The CSS filter
    * @param {GetEntitiesCallback} callback Callback with the entities
    */
   filterEntities(filter, callback = () => { })
@@ -949,51 +947,51 @@ class HKDatasource
    * @param {[string]} contextIds An array of id of contexts to get related connectors
    * @param {GetEntitiesCallback} callback Callback with the entities
    */
-     getConnectors(contextIds = null, callback = () => { })
-     {
-       let url = `${this.url}repository/${this.graphName}/connectors/`;
-   
-       let params = {
-         headers: { "content-type": "application/json" },
-         body: JSON.stringify(contextIds)
-       };
-   
-       Object.assign(params, this.options);
-   
-       request.post(url, params, (err, res) =>
-       {
-         if (!err)
-         {
-           if (requestCompletedWithSuccess(res.statusCode))
-           {
-             try
-             {
-               let entities = convertEntities(res.body);
-               callback(null, entities);
-             }
-             catch (exp)
-             {
-               callback(exp);
-             }
-           }
-           else
-           {
-             callback(stringifyResponseLog(res));
-           }
-         }
-         else
-         {
-           callback(err);
-         }
-       });
-     }
+    getConnectors(contextIds = null, callback = () => { })
+    {
+      let url = `${this.url}repository/${this.graphName}/connectors/`;
+  
+      let params = {
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(contextIds)
+      };
+  
+      Object.assign(params, this.options);
+  
+      request.post(url, params, (err, res) =>
+      {
+        if (!err)
+        {
+          if (requestCompletedWithSuccess(res.statusCode))
+          {
+            try
+            {
+              let entities = convertEntities(res.body);
+              callback(null, entities);
+            }
+            catch (exp)
+            {
+              callback(exp);
+            }
+          }
+          else
+          {
+            callback(stringifyResponseLog(res));
+          }
+        }
+        else
+        {
+          callback(err);
+        }
+      });
+    }
 
   /**
    * Import a RDF file from the filesystem
    * @param {string} filePath The path to the file
    * @param {object} options a set of options to customize the importation
-   * @param {string} options.contentType the mimeType of the serialization for the RDF data
-   * @param {string} options.context the target context to import the entities
+   * @param {string} [options.contentType] the mimeType of the serialization for the RDF data
+   * @param {string} [options.context] the target context to import the entities
    * @param {OperationCallback} callback Response callback
    */
   importRDFFile(filePath, options, callback = () => { })
@@ -1030,6 +1028,64 @@ class HKDatasource
       }
     });
   }
+
+  /**
+   * Import a RDF file from the filesystem
+   * @param {string} file The file
+   * @param {object} options a set of options to customize the importation
+   * @param {string} [options.contentType] the mimeType of the serialization for the RDF data
+   * @param {string} [options.context] the target context to import the entities
+   * @param {OperationCallback} callback Response callback
+   */
+   async importRDFFileStream(file, options, callback = () => { })
+   {
+     const context = options.context || null;
+    
+    let url = `${this.url}repository/${this.graphName}/rdf/${context}/stream`;
+
+
+    let data = new FormData();
+
+    // const fileStream = fs.createReadStream(file);
+    
+    data.append('file', file, {filename: file.name, contentType: "application/octet-stream"});
+
+    try
+    {
+      const config = {
+        headers: {
+          "Content-Type": "application/octet-stream",
+          "context-parent": context
+        },
+        ...getDefaultAxiosConfig()
+      }
+
+      const response = await axios.put(url, data, config);
+
+      if (requestCompletedWithSuccess(response.statusCode))
+        {
+          let out;
+          try
+          {
+            out = JSON.parse(response.body);
+          }
+          catch (err)
+          {
+            out = null;
+          }
+          callback(null, out);
+        }
+
+        else
+        {
+          callback(stringifyResponseLog(response));
+        }
+    }
+    catch(err)
+    {
+      callback(err);
+    }
+   }
 
   /**
    * Import a RDF data
@@ -1845,6 +1901,16 @@ class HKDatasource
   }
 
 }
+
+function getDefaultAxiosConfig()
+{
+  return {
+    httpAgent: new http.Agent({keepAlive: true}),
+    httpsAgent: new https.Agent({keepAlive: true}),
+    maxContentLength: Infinity,
+    maxBodyLength: Infinity
+  };
+};
 
 function convertEntities(raw)
 {
