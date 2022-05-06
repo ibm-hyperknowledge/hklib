@@ -61,14 +61,6 @@ declare class Node extends HKEntity {
         };
     };
     /**
-     * @public
-     * @type {Object.<string, string | number | Object>
-     */
-    public properties: {
-        [x: string]: string | number | Object;
-    };
-    metaProperties: any;
-    /**
      *
      * @param {string} key Id of the interface
      * @param {string} type Type of the interface (anchor, etc)
@@ -79,6 +71,13 @@ declare class Node extends HKEntity {
     addInterface(key: string, type: string, properties: {
         [x: string]: Object;
     }): void;
+    /**
+     * Adds FI anchor to this node. If adding FI, base artifact must match this node's id.
+     *
+     * @param {FI|FIAnchor} fi
+     * @param {object} properties
+     */
+    addFIAnchor(fi: FI | FIAnchor, properties: object): void;
     /**
      * Serializes this node to a plain json object.
      *
@@ -92,3 +91,5 @@ declare namespace Node {
     const type: string;
 }
 import HKEntity = require("./hkentity");
+import FI = require("./fi/fi");
+import FIAnchor = require("./fi/fianchor");

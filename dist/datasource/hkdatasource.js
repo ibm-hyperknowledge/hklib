@@ -11,6 +11,9 @@ const HKEntity = require("../hkentity");
 const deserialize = require("../deserialize");
 const PARSE_FAILED_MESSAGE = "Failed to parse server response";
 const UNEXPECTED_NULL_DATA = "Unexpected empty data on parsing";
+const http = require("http");
+const https = require("https");
+const FormData = require('form-data');
 class HKDatasource {
     /**
      * Creates a datasource connected to a hkbase
@@ -365,14 +368,14 @@ class HKDatasource {
      * Get entities from a context
      *
      * @param {string | null} contextId The context id to retrieve their nested entities. May be null to get the `body` context.
-     * @param {object?} [options] Options to get context children
+     * @param {object} options Options to get context children
      * @param {boolean?} [options.lazy] If set true, will include only the main fields in the results
      * @param {boolean?} [options.nested] If set true, will walk through nested contexts
      * @param {boolean?} [options.includeContextOnResults] If set true, will include the context data in the results
      * @param {object} payload A dictionary containing options when returning the entities from the context.
      * @param {GetEntitiesCallback} callback Callback with the entities
      */
-    getContextChildren(contextId, options = {}, payload = {}, callback = () => { }) {
+    getContextChildren(contextId, options, payload, callback) {
         let url = `${this.url}repository/${this.graphName}/context/${contextId}`;
         if (options) {
             url += toQueryString(options);
@@ -405,43 +408,6 @@ class HKDatasource {
                 callback(err);
             }
         });
-    }
-    /**
-     * Get an entity from its identifier
-     *
-     * @param {string} entityId The identifier of the entity to be fetched
-     * @param {object?} [options] Options to get entity
-     * @param {boolean?} [options.parent] The entity parent
-     * @param {object} payload A dictionary containing options when returning the entities.
-     * @param {GetEntitiesCallback} callback Callback with the entities
-     */
-    async getEntityById(entityId, options = {}, payload = {}, callback = () => { }) {
-        let url = `${this.url}repository/${this.graphName}/entity/${entityId}`;
-        if (options) {
-            url += toQueryString(options);
-        }
-        const config = {
-            method: 'POST',
-            url: url,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: payload,
-            json: true
-        };
-        Object.assign(config, this.options);
-        try {
-            let res = await axios(config);
-            if (requestCompletedWithSuccess(res.status)) {
-                callback(null, res.data);
-            }
-            else {
-                callback(`Server responded with ${res.status}. ${res.data}`);
-            }
-        }
-        catch (err) {
-            callback(err);
-        }
     }
     /**
      * Filter entities using CSS pattern `(TODO: document it better)`
@@ -761,6 +727,47 @@ class HKDatasource {
                 });
             }
         });
+    }
+    /**
+     * Import a RDF file from the filesystem
+     * @param {string} file The file
+     * @param {object} options a set of options to customize the importation
+     * @param {string} [options.contentType] the mimeType of the serialization for the RDF data
+     * @param {string} [options.context] the target context to import the entities
+     * @param {OperationCallback} callback Response callback
+     */
+    async importRDFFileStream(file, options, callback = () => { }) {
+        const context = options.context || null;
+        let url = `${this.url}repository/${this.graphName}/rdf/${context}/stream`;
+        let data = new FormData();
+        // const fileStream = fs.createReadStream(file);
+        data.append('file', file, { filename: file.name, contentType: "application/octet-stream" });
+        try {
+            const config = {
+                headers: {
+                    "Content-Type": "application/octet-stream",
+                    "context-parent": context
+                },
+                ...getDefaultAxiosConfig()
+            };
+            const response = await axios.put(url, data, config);
+            if (requestCompletedWithSuccess(response.statusCode)) {
+                let out;
+                try {
+                    out = JSON.parse(response.body);
+                }
+                catch (err) {
+                    out = null;
+                }
+                callback(null, out);
+            }
+            else {
+                callback(stringifyResponseLog(response));
+            }
+        }
+        catch (err) {
+            callback(err);
+        }
     }
     /**
      * Import a RDF data
@@ -1268,6 +1275,33 @@ class HKDatasource {
         });
     }
     /**
+     * Asks HKBase to resolve an Fragment Identifier (FI)
+     *
+     * @param {Array} fi FI string
+     * @param {GetEntitiesCallback} callback Callback with the Fragment Data or JSON Description, and content type
+     */
+    resolveFI(fi, callback = () => { }) {
+        let url = this.url + "repository/" + this.graphName + "/fi/" + encodeURIComponent(fi);
+        request.get(url, this.options, (err, res) => {
+            if (!err) {
+                if (requestCompletedWithSuccess(res.statusCode)) {
+                    try {
+                        callback(null, res.body, res.headers.contentType);
+                    }
+                    catch (exp) {
+                        callback(exp);
+                    }
+                }
+                else {
+                    callback(`Server responded with ${res.statusCode}. ${res.body}`);
+                }
+            }
+            else {
+                callback(err);
+            }
+        });
+    }
+    /**
      * @typedef {object} StoredQueryRunConfiguration
      * @property {object} [parameters] a key value bind of stored query parameters to values
      * @property {object} [options] run options
@@ -1360,6 +1394,15 @@ class HKDatasource {
         return HKDatasource.getAuthToken(authSecret, expiresIn);
     }
 }
+function getDefaultAxiosConfig() {
+    return {
+        httpAgent: new http.Agent({ keepAlive: true }),
+        httpsAgent: new https.Agent({ keepAlive: true }),
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity
+    };
+}
+;
 function convertEntities(raw) {
     let data = null;
     try {

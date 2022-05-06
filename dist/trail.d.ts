@@ -8,12 +8,10 @@ declare class Trail extends HKEntity {
     constructor(id: any, parent: any, ...args: any[]);
     id: any;
     parent: any;
-    properties: any;
     metaproperties: any;
     interfaces: any;
     children: any;
     steps: any[] | undefined;
-    type: string;
     addStep(key: any, properties: any): void;
     addInterface(key: any, type: any, properties: any): void;
     createLinksFromSteps(): Connector[];

@@ -133,28 +133,20 @@ declare class HKDatasource {
      * Get entities from a context
      *
      * @param {string | null} contextId The context id to retrieve their nested entities. May be null to get the `body` context.
-     * @param {object?} [options] Options to get context children
+     * @param {object} options Options to get context children
      * @param {boolean?} [options.lazy] If set true, will include only the main fields in the results
      * @param {boolean?} [options.nested] If set true, will walk through nested contexts
      * @param {boolean?} [options.includeContextOnResults] If set true, will include the context data in the results
      * @param {object} payload A dictionary containing options when returning the entities from the context.
      * @param {GetEntitiesCallback} callback Callback with the entities
      */
-    getContextChildren(contextId: string | null, options?: object | null | undefined, payload?: object, callback?: (err: string, entities: {
+    getContextChildren(contextId: string | null, options: {
+        lazy?: boolean | null | undefined;
+        nested?: boolean | null | undefined;
+        includeContextOnResults?: boolean | null | undefined;
+    }, payload: object, callback: (err: string, entities: {
         [x: string]: HKEntity;
     }) => any): void;
-    /**
-     * Get an entity from its identifier
-     *
-     * @param {string} entityId The identifier of the entity to be fetched
-     * @param {object?} [options] Options to get entity
-     * @param {boolean?} [options.parent] The entity parent
-     * @param {object} payload A dictionary containing options when returning the entities.
-     * @param {GetEntitiesCallback} callback Callback with the entities
-     */
-    getEntityById(entityId: string, options?: object | null | undefined, payload?: object, callback?: (err: string, entities: {
-        [x: string]: HKEntity;
-    }) => any): Promise<void>;
     /**
      * Filter entities using CSS pattern `(TODO: document it better)`
      *
@@ -253,6 +245,18 @@ declare class HKDatasource {
         contentType?: string | undefined;
         context?: string | undefined;
     }, callback?: (err: Error | null, data: Object) => any): void;
+    /**
+     * Import a RDF file from the filesystem
+     * @param {string} file The file
+     * @param {object} options a set of options to customize the importation
+     * @param {string} [options.contentType] the mimeType of the serialization for the RDF data
+     * @param {string} [options.context] the target context to import the entities
+     * @param {OperationCallback} callback Response callback
+     */
+    importRDFFileStream(file: string, options: {
+        contentType?: string | undefined;
+        context?: string | undefined;
+    }, callback?: (err: Error | null, data: Object) => any): Promise<void>;
     /**
      * Import a RDF data
      * @param {string} data the contents of the RDF
@@ -491,6 +495,13 @@ declare class HKDatasource {
          */
         parameters?: any[] | undefined;
     } | undefined) => any) | undefined): void;
+    /**
+     * Asks HKBase to resolve an Fragment Identifier (FI)
+     *
+     * @param {Array} fi FI string
+     * @param {GetEntitiesCallback} callback Callback with the Fragment Data or JSON Description, and content type
+     */
+    resolveFI(fi: any[], callback?: (err: string, entities: object) => any): void;
     /**
      * @typedef {object} StoredQueryRunConfiguration
      * @property {object} [parameters] a key value bind of stored query parameters to values

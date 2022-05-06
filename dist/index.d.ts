@@ -70,3 +70,6 @@ export { default as HKDatasource } from "./datasource/hkdatasource";
 export { default as HKRepository } from "./datasource/hkrepository";
 export { default as GraphBuilder } from "./graphbuilder";
 
+export { FI } from "./fi/fi";
+export { FIOperator } from "./fi/fioperator";
+export { FIAnchor } from "./fi/fianchor";

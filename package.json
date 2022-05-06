@@ -1,6 +1,6 @@
 {
   "name": "hklib",
-  "version": "4.4.1",
+  "version": "5.0.0",
   "main": "dist/index.js",
   "author": "IBM Research",
   "types": "dist/index.d.ts",
@@ -43,11 +43,13 @@
     "amqplib": "^0.8.0",
     "axios": "^0.26.0",
     "body-parser": "^1.19.0",
+    "ebnf": "^1.9.0",
     "express": "^4.17.1",
+    "form-data": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
     "nearley": "^2.20.1",
-    "ninja-util": "^1.2.3",
     "netcat": "^1.5.0",
+    "ninja-util": "^1.2.3",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.8",
     "shortid": "^2.2.14"
