@@ -57,3 +57,6 @@ exports.Constants = require("./constants");
 exports.HKDatasource = require("./datasource/hkdatasource");
 exports.HKRepository = require("./datasource/hkrepository");
 exports.GraphBuilder = require("./graphbuilder");
+exports.FI = require("./fi/fi");
+exports.FIOperator = require("./fi/fioperator");
+exports.FIAnchor = require("./fi/fianchor");
