@@ -1,4 +1,8 @@
 "use strict";
+/*
+ * Copyright (c) 2016-present, IBM Research
+ * Licensed under The MIT License [see LICENSE for details]
+ */
 const grammar = require('./grammar.js');
 const FIOperator = require('./fioperator.js');
 const FIAnchor = require("./fianchor");
