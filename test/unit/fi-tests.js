@@ -8,11 +8,6 @@ const expect = require("chai").expect;
 
 const FI = require("../../src/fi/fi");
 
-
-
-
-
-
 describe("Testing FI api:", () => {
 
     describe("Testing parsing and toString back:", () => {

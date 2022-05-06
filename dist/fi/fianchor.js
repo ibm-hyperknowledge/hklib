@@ -4,7 +4,6 @@
  * Licensed under The MIT License [see LICENSE for details]
  */
 const FIOperator = require("./fioperator");
-//const PARSER = new EBNF.Grammars.W3C.Parser(grammar);
 class FIAnchor {
     /**
      * Create a new Anchor instance based on an FI (or string representing an FI) and a

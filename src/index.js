@@ -67,7 +67,7 @@ exports.HKRepository = require("./datasource/hkrepository");
 
 exports.GraphBuilder = require("./graphbuilder");
 
-exports.FI = require("./fi/fi");
-exports.FIOperator = require("./fi/fioperator")
-exports.FIAnchor = require("./fi/fianchor")
+exports.FI          = require("./fi/fi");
+exports.FIOperator  = require("./fi/fioperator");
+exports.FIAnchor    = require("./fi/fianchor");
 

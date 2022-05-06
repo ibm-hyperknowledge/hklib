@@ -248,8 +248,6 @@ class IriHKID extends HKID
 }
 
 
-//Try to emulate lark idiom for parsing
-
 function postProcessTree(ast)
 {
     return processFijs(ast);
@@ -330,7 +328,7 @@ function processJsonPlus(ast)
         case 'object': return processObject(ast);
         case 'array': return processArray(ast);
         case 'number': return JSON.parse(ast.text);
-        case 'string': return ast.text.substring(1, ast.text.length - 1); //return JSON.parse(ast.text);
+        case 'string': return ast.text.substring(1, ast.text.length - 1); 
     }
 }
 

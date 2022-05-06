@@ -5,8 +5,6 @@
 
 const FIOperator = require("./fioperator");
 
-//const PARSER = new EBNF.Grammars.W3C.Parser(grammar);
-
 
 class FIAnchor 
 {
