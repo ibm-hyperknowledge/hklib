@@ -5,7 +5,7 @@
  */
 const tslib_1 = require("tslib");
 const types_1 = require("./types");
-const context_1 = (0, tslib_1.__importDefault)(require("./context"));
+const context_1 = tslib_1.__importDefault(require("./context"));
 class VirtualContext extends context_1.default {
     /** Constructs a new virtual context object.
      *
