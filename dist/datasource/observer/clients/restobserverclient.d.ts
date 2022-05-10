@@ -25,6 +25,5 @@ declare class RestObserverClient extends ConfigurableObserverClient {
     _address: string;
     _listeningPath: string | null;
     _server: any;
-    deinit(): Promise<void>;
 }
 import ConfigurableObserverClient = require("./configurableobserverclient");

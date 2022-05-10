@@ -5,7 +5,7 @@
  */
 const tslib_1 = require("tslib");
 const types_1 = require("./types");
-const link_1 = tslib_1.__importDefault(require("./link"));
+const link_1 = (0, tslib_1.__importDefault)(require("./link"));
 class VirtualLink extends link_1.default {
     constructor(id, parent) {
         super(id, parent);

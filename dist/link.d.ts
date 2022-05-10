@@ -54,8 +54,6 @@ declare class Link extends HKEntity {
             [x: string]: Object;
         };
     };
-    properties: any;
-    metaProperties: any;
     /**
      * Adds a new bind to this role;
      *
