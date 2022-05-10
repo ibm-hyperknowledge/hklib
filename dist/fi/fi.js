@@ -250,6 +250,14 @@ function processObject(ast) {
     }
     return object;
 }
+function processArray(ast) {
+    let array = [];
+    for (let child of ast.children) {
+        let number = processJsonPlus(child);
+        array.push(number);
+    }
+    return array;
+}
 function processMember(ast) {
     let key;
     if (ast.children[0].type === 'string') {
