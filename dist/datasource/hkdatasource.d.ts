@@ -247,13 +247,13 @@ declare class HKDatasource {
     }, callback?: (err: Error | null, data: Object) => any): void;
     /**
      * Import a RDF file from the filesystem
-     * @param {string} file The file
+     * @param {File} files files
      * @param {object} options a set of options to customize the importation
      * @param {string} [options.contentType] the mimeType of the serialization for the RDF data
      * @param {string} [options.context] the target context to import the entities
      * @param {OperationCallback} callback Response callback
      */
-    importRDFFileStream(file: string, options: {
+    importRDFFileStream(files: File, options: {
         contentType?: string | undefined;
         context?: string | undefined;
     }, callback?: (err: Error | null, data: Object) => any): Promise<void>;

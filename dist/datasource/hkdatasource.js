@@ -730,27 +730,29 @@ class HKDatasource {
     }
     /**
      * Import a RDF file from the filesystem
-     * @param {string} file The file
+     * @param {File} files files
      * @param {object} options a set of options to customize the importation
      * @param {string} [options.contentType] the mimeType of the serialization for the RDF data
      * @param {string} [options.context] the target context to import the entities
      * @param {OperationCallback} callback Response callback
      */
-    async importRDFFileStream(file, options, callback = () => { }) {
+    async importRDFFileStream(files, options, callback = () => { }) {
         const context = options.context || null;
-        let url = `${this.url}repository/${this.graphName}/rdf/${context}/stream`;
-        let data = new FormData();
-        // const fileStream = fs.createReadStream(file);
-        data.append('file', file, { filename: file.name, contentType: "application/octet-stream" });
+        let url = `${this.url}repository/${this.graphName}/rdf/bulk`;
+        const formData = new FormData();
+        for (let i = 0; i < files.length; i++) {
+            formData.append("files", files[i]);
+        }
+        // let "Content-Type": "multipart/form-data"
         try {
             const config = {
                 headers: {
-                    "Content-Type": "application/octet-stream",
-                    "context-parent": context
+                    "context-parent": context,
+                    "Content-Type": "multipart/form-data"
                 },
                 ...getDefaultAxiosConfig()
             };
-            const response = await axios.put(url, data, config);
+            const response = await axios.post(url, formData, config);
             if (requestCompletedWithSuccess(response.statusCode)) {
                 let out;
                 try {
