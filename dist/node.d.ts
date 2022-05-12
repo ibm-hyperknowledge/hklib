@@ -72,6 +72,13 @@ declare class Node extends HKEntity {
         [x: string]: Object;
     }): void;
     /**
+     * Adds FI anchor to this node. If adding FI, base artifact must match this node's id.
+     *
+     * @param {FI|FIAnchor} fi
+     * @param {object} properties
+     */
+    addFIAnchor(fi: FI | FIAnchor, properties: object): void;
+    /**
      * Serializes this node to a plain json object.
      *
      * @returns {Object.<string,any>} a plain json object with recursively serialized fields.
@@ -84,3 +91,5 @@ declare namespace Node {
     const type: string;
 }
 import HKEntity = require("./hkentity");
+import FI = require("./fi/fi");
+import FIAnchor = require("./fi/fianchor");
