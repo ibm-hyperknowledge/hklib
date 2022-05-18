@@ -37,7 +37,15 @@ class HKDatasource {
         else if (options.authSecret) {
             this.options.auth = { bearer: HKDatasource.getAuthToken(options.authSecret, null) };
         }
+        const _httpAgent = new http.Agent({ keepAlive: true });
+        const _httpsAgent = new https.Agent({ keepAlive: true });
         this.graphName = repository;
+        const instance = axios.create({
+            httpAgent: _httpAgent,
+            httpsAgent: _httpsAgent,
+            timeout: 20 * 60 * 1000,
+            timeoutErrorMessage: "Timeout while accessing Jena Fuseki"
+        });
     }
     /**
      * @callback OperationCallback
@@ -1401,7 +1409,8 @@ function getDefaultAxiosConfig() {
         httpAgent: new http.Agent({ keepAlive: true }),
         httpsAgent: new https.Agent({ keepAlive: true }),
         maxContentLength: Infinity,
-        maxBodyLength: Infinity
+        maxBodyLength: Infinity,
+        timeout: 20 * 60 * 1000, // 20 min
     };
 }
 function convertEntities(raw) {
