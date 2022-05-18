@@ -39,7 +39,7 @@ class Connector extends HKEntity {
          * @public
          * @type {Object.<string, string>}
          */
-        this.roles = {};
+        this.roles = roles || {};
         /**
          *  Type of this entity.
          *
