@@ -225,11 +225,11 @@ declare class HKDatasource {
         [x: string]: HKEntity;
     }) => any): void;
     /**
-   * Get connectors.
-   *
-   * @param {[string]} contextIds An array of id of contexts to get related connectors
-   * @param {GetEntitiesCallback} callback Callback with the entities
-   */
+     * Get connectors.
+     *
+     * @param {[string]} contextIds An array of id of contexts to get related connectors
+     * @param {GetEntitiesCallback} callback Callback with the entities
+     */
     getConnectors(contextIds?: [string], callback?: (err: string, entities: {
         [x: string]: HKEntity;
     }) => any): void;
@@ -247,14 +247,14 @@ declare class HKDatasource {
     }, callback?: (err: Error | null, data: Object) => any): void;
     /**
      * Import a RDF file from the filesystem
-     * @param {string} file The file
+     * @param {[File]} files files to be imported
      * @param {object} options a set of options to customize the importation
-     * @param {string} [options.contentType] the mimeType of the serialization for the RDF data
+     * @param {string} [options.mimeType] the mimeType for the RDF data
      * @param {string} [options.context] the target context to import the entities
      * @param {OperationCallback} callback Response callback
      */
-    importRDFFileStream(file: string, options: {
-        contentType?: string | undefined;
+    importRDFFileStream(files: [File], options: {
+        mimeType?: string | undefined;
         context?: string | undefined;
     }, callback?: (err: Error | null, data: Object) => any): Promise<void>;
     /**
