@@ -666,11 +666,11 @@ class HKDatasource {
         });
     }
     /**
-   * Get connectors.
-   *
-   * @param {[string]} contextIds An array of id of contexts to get related connectors
-   * @param {GetEntitiesCallback} callback Callback with the entities
-   */
+     * Get connectors.
+     *
+     * @param {[string]} contextIds An array of id of contexts to get related connectors
+     * @param {GetEntitiesCallback} callback Callback with the entities
+     */
     getConnectors(contextIds = null, callback = () => { }) {
         let url = `${this.url}repository/${this.graphName}/connectors/`;
         let params = {
@@ -730,9 +730,9 @@ class HKDatasource {
     }
     /**
      * Import a RDF file from the filesystem
-     * @param {File} files files
+     * @param {[File]} files files to be imported
      * @param {object} options a set of options to customize the importation
-     * @param {string} [options.contentType] the mimeType of the serialization for the RDF data
+     * @param {string} [options.mimeType] the mimeType for the RDF data
      * @param {string} [options.context] the target context to import the entities
      * @param {OperationCallback} callback Response callback
      */
@@ -741,9 +741,9 @@ class HKDatasource {
         let url = `${this.url}repository/${this.graphName}/rdf/bulk`;
         const formData = new FormData();
         for (let i = 0; i < files.length; i++) {
-            formData.append("files", files[i]);
+            formData.append("file", files[i]);
+            formData.append(files[i].name, options["mimeType"]);
         }
-        // let "Content-Type": "multipart/form-data"
         try {
             const config = {
                 headers: {
@@ -753,7 +753,7 @@ class HKDatasource {
                 ...getDefaultAxiosConfig()
             };
             const response = await axios.post(url, formData, config);
-            if (requestCompletedWithSuccess(response.statusCode)) {
+            if (requestCompletedWithSuccess(response.status)) {
                 let out;
                 try {
                     out = JSON.parse(response.body);
@@ -1404,7 +1404,6 @@ function getDefaultAxiosConfig() {
         maxBodyLength: Infinity
     };
 }
-;
 function convertEntities(raw) {
     let data = null;
     try {

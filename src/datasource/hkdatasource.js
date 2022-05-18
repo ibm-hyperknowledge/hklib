@@ -941,50 +941,50 @@ class HKDatasource
     });
   }
 
-    /**
+  /**
    * Get connectors.
    *
    * @param {[string]} contextIds An array of id of contexts to get related connectors
    * @param {GetEntitiesCallback} callback Callback with the entities
    */
-    getConnectors(contextIds = null, callback = () => { })
+  getConnectors(contextIds = null, callback = () => { })
+  {
+    let url = `${this.url}repository/${this.graphName}/connectors/`;
+
+    let params = {
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(contextIds)
+    };
+
+    Object.assign(params, this.options);
+
+    request.post(url, params, (err, res) =>
     {
-      let url = `${this.url}repository/${this.graphName}/connectors/`;
-  
-      let params = {
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(contextIds)
-      };
-  
-      Object.assign(params, this.options);
-  
-      request.post(url, params, (err, res) =>
+      if (!err)
       {
-        if (!err)
+        if (requestCompletedWithSuccess(res.statusCode))
         {
-          if (requestCompletedWithSuccess(res.statusCode))
+          try
           {
-            try
-            {
-              let entities = convertEntities(res.body);
-              callback(null, entities);
-            }
-            catch (exp)
-            {
-              callback(exp);
-            }
+            let entities = convertEntities(res.body);
+            callback(null, entities);
           }
-          else
+          catch (exp)
           {
-            callback(stringifyResponseLog(res));
+            callback(exp);
           }
         }
         else
         {
-          callback(err);
+          callback(stringifyResponseLog(res));
         }
-      });
-    }
+      }
+      else
+      {
+        callback(err);
+      }
+    });
+  }
 
   /**
    * Import a RDF file from the filesystem
@@ -1031,24 +1031,25 @@ class HKDatasource
 
   /**
    * Import a RDF file from the filesystem
-   * @param {File} files files
+   * @param {[File]} files files to be imported
    * @param {object} options a set of options to customize the importation
-   * @param {string} [options.contentType] the mimeType of the serialization for the RDF data
+   * @param {string} [options.mimeType] the mimeType for the RDF data
    * @param {string} [options.context] the target context to import the entities
    * @param {OperationCallback} callback Response callback
    */
-   async importRDFFileStream(files, options, callback = () => { })
-   {
-     const context = options.context || null;
+  async importRDFFileStream(files, options, callback = () => { })
+  {
+    const context = options.context || null;
 
     let url = `${this.url}repository/${this.graphName}/rdf/bulk`;
 
     const formData = new FormData();
-    for(let i =0; i < files.length; i++) {
-        formData.append("files", files[i]);
+    for (let i = 0; i < files.length; i++)
+    {
+      formData.append("file", files[i]);
+      formData.append(files[i].name, options["mimeType"]);
     }
 
-    // let "Content-Type": "multipart/form-data"
     try
     {
       const config = {
@@ -1061,30 +1062,30 @@ class HKDatasource
 
       const response = await axios.post(url, formData, config);
 
-      if (requestCompletedWithSuccess(response.statusCode))
+      if (requestCompletedWithSuccess(response.status))
+      {
+        let out;
+        try
         {
-          let out;
-          try
-          {
-            out = JSON.parse(response.body);
-          }
-          catch (err)
-          {
-            out = null;
-          }
-          callback(null, out);
+          out = JSON.parse(response.body);
         }
+        catch (err)
+        {
+          out = null;
+        }
+        callback(null, out);
+      }
 
-        else
-        {
-          callback(stringifyResponseLog(response));
-        }
+      else
+      {
+        callback(stringifyResponseLog(response));
+      }
     }
-    catch(err)
+    catch (err)
     {
       callback(err);
     }
-   }
+  }
 
   /**
    * Import a RDF data
@@ -1947,7 +1948,7 @@ function getDefaultAxiosConfig()
     maxContentLength: Infinity,
     maxBodyLength: Infinity
   };
-};
+}
 
 function convertEntities(raw)
 {
