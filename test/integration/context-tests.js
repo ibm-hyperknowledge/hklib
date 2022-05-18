@@ -99,14 +99,16 @@ describe("Contexts integration tests:", () => {
       if (err) throw err;
 
       const payload = {
-        "hkTypes": ["node"],
+        "hkTypes": ["node"]
+      }
+
+      const options = {
         "nested": false,
         "includeContextOnResults": false
       }
       
-      HKDatasource.getContextChildren(context.id, payload, payload, (err, data)=>{
+      HKDatasource.getContextChildren(context.id, options, payload, (err, data)=>{
         if (err) throw err;
-        
         expect([node.id]).to.be.deep.equal(Object.keys(data));
         done();
       })
@@ -122,14 +124,17 @@ describe("Contexts integration tests:", () => {
       if (err) throw err;
 
       const payload = {
-        "hkTypes": ["context"],
-        "nested": false,
-        "lazy": false,
-        "includeContextOnResults": false,
+        "hkTypes": ["virtualcontext"],
         "fieldsToInclude": { "fields": ["id", "parent", "type"], "properties": ["virtualsrc"]} 
       }
+
+      const options ={
+        "includeContextOnResults": false, 
+        "nested": false,
+        "lazy": false,
+      }
       
-      HKDatasource.getContextChildren(context.id, payload, payload, (err, data)=>{
+      HKDatasource.getContextChildren(context.id, options, payload, (err, data)=>{
         if (err) throw err;
         expect(vContext.id).to.be.deep.equal(Object.values(data)[0].id);
         expect(vContext.parent).to.be.deep.equal(Object.values(data)[0].parent);
