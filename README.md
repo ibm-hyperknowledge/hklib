@@ -12,7 +12,7 @@ npm install hklib
 # Usage 
 To include HKLib on your js file and use its features, you can do as follows:
 ```js 
-const HKLib = require("hklib")
+const HKLib = require("hklib");
 ```
 # Connecting to HKBase
 
@@ -33,15 +33,16 @@ It receives as parameters the base URL of the HKBase, the name of a repository a
 Once the name of a repository is defined in the datasource object, you can call the following method to create this repository:
 ```js
 let datasource = new HKDatasource("https://hkbase-dev.mybluemix.net/", "testRepository", token);
-datasource.createRepository((err,  data)=>
+datasource.createRepository((err,  data) =>
 {
-	if(!err){
+	if(!err)
+	{
 		callback(datasource.graphName);
 	}
-    else
-    {
-        callback(err);
-    }
+	else
+	{
+        	callback(err);
+	}
 });
 ``` 
 Once the operation is concluded, whether it was successful or not, a callback function will be invoked with the informed parameter. 
@@ -52,15 +53,15 @@ If you have a datasource object connected to a HKBase, you can get a list with a
 ```js
 datasource.getRepositories((err, data) =>
 {
-    if(!err)
-    {
-	    //data is a list with all repositories currently on HKBase
-        callback(data)
-    }
-    else
-    {
-        callback(err)
-    }
+	if(!err)
+	{
+	    	//data is a list with all repositories currently on HKBase
+		callback(data);
+	}
+	else
+	{
+		callback(err);
+	}
 });
 ```
 If the operation is successful, a callback function will be invoked with the list of repositories as a parameter.
@@ -70,13 +71,15 @@ If the operation is successful, a callback function will be invoked with the lis
 To delete a repository, the datasource object has to be connected to the repository that you want to drop. For example:
 ```js
 let datasource = new HKDatasource("https://hkbase-dev.mybluemix.net/", "testRepository", token);
-datasource.dropRepository((err,  data)=>
+datasource.dropRepository((err,  data) =>
 {
-	if(!err){
+	if(!err)
+	{
 		callback(datasource.graphName);
 	}
-	else{
-		callback(err)
+	else
+	{
+		callback(err);
 	}
 });
 ```
@@ -89,12 +92,12 @@ HKLib supports several operations with entities, such as creating entities (cont
 To create a new context, you have to include the HKLib class for Contexts to your file. After that, you can use the following method to create a context:
 ```js
 const  Context  =  HKLib.Context;
-let context = new Context("Name of Context")
+let context = new Context("Name of Context");
 ```
 The example above creates a context in the root of your repository. If you want to insert a context inside of an existing context, you have to put the name of the existing context besides the name of the new context. For example, let's create the context Geological Structures, and them create a new context Salt Diapir, inserting it inside of the "Geological Structures" context.
 ```js
-let context1 = new Context("GeologicalStructures")
-let context2 = new Context("SaltDiapir",context1.id)
+let context1 = new Context("GeologicalStructures");
+let context2 = new Context("SaltDiapir",context1.id);
 ```
 The name of an entity is called its **id**. Id's should not contain spaces, and should be unique.
 
@@ -136,12 +139,15 @@ entities.push(n1.serialize());
 After creating a node, you have to add this node to the entities array, and serialize the entity you just created - this will convert it from object to Hyperknowledge format, which will be ready to be added to HKBase. To add any type of entity on Hyperknowledge to HKBase, you will have to use the datasource object. 
 
 ```js
-datasource.addEntities(entities,  (err,  data)=>{
-	if(!err){
+datasource.addEntities(entities,  (err,  data) =>
+{
+	if(!err)
+	{
 		//Include your code here
 	}
-	else{
-		console.log(err)
+	else
+	{
+		console.log(err);
 	}
 });
 ```
