@@ -66,7 +66,7 @@
     "graph",
     "driver"
   ],
-  "scripts": { 
+  "scripts": {
     "build": "rm -rf dist; tsc; ./prepend-copyright-notice-d-ts.sh; cp index.d.ts.tocopy dist/index.d.ts",
     "integration-tests": "mocha test/integration test/integration/setup.json --timeout 360000 --forbid-only",
     "unit-tests": "mocha test/unit --timeout 360000 --forbid-only",
