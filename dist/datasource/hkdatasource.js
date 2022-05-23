@@ -384,7 +384,7 @@ class HKDatasource {
      * @param {GetEntitiesCallback} callback Callback with the entities
      */
     getContextChildren(contextId, options, payload, callback) {
-        let url = `${this.url}repository/${this.graphName}/context/${contextId}`;
+        let url = `${this.url}repository/${this.graphName}/context/${encodeURIComponent(contextId)}`;
         if (options) {
             url += toQueryString(options);
         }
