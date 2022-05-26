@@ -758,6 +758,7 @@ class HKDatasource {
                     "context-parent": context,
                     "Content-Type": "multipart/form-data"
                 },
+                params: options,
                 ...getDefaultAxiosConfig()
             };
             const response = await axios.post(url, formData, config);
