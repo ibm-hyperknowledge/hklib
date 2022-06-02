@@ -27,7 +27,7 @@ An IBM Hyperlinked Knowledge Graph (HKG, or Hyperknowledge graph), is a knowledg
 
 <p align="center">
 
-<img  src="images/FactWithKey.jpg"  alt="Image's alias"  width="65%"  height="65%">
+<img  src="docs/images/FactWithKey.jpg"   width="65%"  height="65%">
 
 </p>
 
@@ -38,7 +38,7 @@ A node is the basic unit of information, which represents an entity. In this cas
 
 <p align="center">
 
-<img  src="images/seismicimage.png"  alt="Image's alias"  width="80%"  height="80%">
+<img  src="docs/images/seismicimage.png"   width="80%"  height="80%">
 
 </p>
 
@@ -49,7 +49,7 @@ Connectors and links establish relations between anchors of nodes. Connectors de
 
 <p align="center">
 
-<img  src="images/Connectors.jpg"  alt="Image's alias"  width="40%"  height="40%">
+<img  src="docs/images/Connectors.jpg"   width="40%"  height="40%">
 
 </p>
   
@@ -65,7 +65,7 @@ Three different tools can be used for accessing an HKBase: the Knowledge Explore
 
 <p align="center">
 
-<img  src="images/Architecture.jpg"  alt="Image's alias"  width="50%"  height="50%">
+<img  src="docs/images/Architecture.jpg"   width="50%"  height="50%">
 
 </p>
 
@@ -73,7 +73,7 @@ The KES is a UI that showcases a graphical representation of the data stored in 
 
 <p align="center">
 
-<img  src="images/KESHome.png"  alt="Image's alias"  width="75%"  height="75%">
+<img  src="docs/images/KESHome.png"   width="75%"  height="75%">
 
 </p>
 
