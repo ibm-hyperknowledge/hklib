@@ -1,14 +1,14 @@
 # Hyperknowledge Library (HKLib)
 
-Javascript library that implements the core Hyperknowledge constructs used by Hyperknowledge Base (HKBase) service. The main purpose of this library is to serve as an API for NodeJS developers that want to use Hyperknowledge within their own applications and interact with HKBases programatically.
+Javascript/Typescript library that implements the core Hyperknowledge constructs used by Hyperknowledge Base (HKBase) service. The main purpose of this library is to serve as an API for NodeJS developers that want to use Hyperknowledge within their applications and interact with HKBases programmatically.
 
 ## What is Hyperknowledge?
   
-IBM Hyperlinked Knowledge, or Hyperknowledge, for short, is a framework that provides mechanisms to represent high-level semantic concepts and unstructured data in the same knowledge representation. By semantic concepts we mean abstract descriptions regarding linked data, such as facts about subjects or specialized knowledge from a given domain formally described by ontologies. By unstructured data we mean raw data, such as image, audio, text, video (multimedia content), machine learning models, programs (executable content) or source codes, to name a few.
+IBM Hyperlinked Knowledge, or Hyperknowledge, for short, is a framework that provides mechanisms to represent high-level semantic concepts and unstructured data in the same knowledge representation. By semantic concepts, we mean abstract descriptions regarding linked data, such as facts about subjects or specialized knowledge from a given domain formally described by ontologies. By unstructured data we mean raw data, such as images, audio, text, video (multimedia content), machine learning models, programs (executable content), or source codes, to name a few.
 
 ### An Introduction
 
-Traditional knowledge graphs are too low-level and static. They rely on plain nodes and edges to describe data objects and facts, usually assuming a fixed theory of knowledge representation. Due to the lack of structuring elements in their data models, in traditional knowledge graphs it is hard to represent entities at different levels of abstraction or to combine multiple knowledge and reasoning paradigms in the same representation. Particularly troublesome are the representation of context, time, change, and general computation, which are still considered open challenges by the research community [[Bonatti-P-A-2018](http://drops.dagstuhl.de/opus/volltexte/2019/10328/pdf/dagrep_v008_i009_p029_18371.pdf), [Noy-N-2019](https://dl.acm.org/doi/pdf/10.1145/3331166?download=true)].
+Traditional knowledge graphs are too low-level and static. They rely on plain nodes and edges to describe data objects and facts, usually assuming a fixed theory of knowledge representation. Due to the lack of structuring elements in their data models, in traditional knowledge graphs, it is hard to represent entities at different levels of abstraction or to combine multiple knowledge and reasoning paradigms in the same representation. Particularly troublesome are the representations of context, time, change, and general computation, which are still considered open challenges by the research community [[Bonatti-P-A-2018](http://drops.dagstuhl.de/opus/volltexte/2019/10328/pdf/dagrep_v008_i009_p029_18371.pdf), [Noy-N-2019](https://dl.acm.org/doi/pdf/10.1145/3331166?download=true)].
 
   
 An IBM Hyperlinked Knowledge Graph (HKG, or Hyperknowledge graph), is a knowledge graph in the sense that it is a graph-based model for combining multimodal data and knowledge at scale. But an HKG goes beyond traditional knowledge graphs in at least three aspects:
@@ -32,7 +32,7 @@ An IBM Hyperlinked Knowledge Graph (HKG, or Hyperknowledge graph), is a knowledg
 </p>
 
   
-A node is the basic unit of information, which represents an entity. In this case, both "Salt Diapir" and "Geological Pattern" are concept nodes. A node's fragments, that is, segments of a nodes' information are called anchors. Examples of anchors are a region of interest in an image or a clip in a video. They act as markers for referencing those portions of data. In this example, the only anchor these two nodes have is the one that represents them as a whole. However, here is an example of anchors in media (for instance, in a seismic image featuring geological patterns):
+A node is the basic unit of information, which represents an entity. In this case, both "Salt Diapir" and "Geological Pattern" are concept nodes. A node's fragments, that is, segments of a node's information are called anchors. Examples of anchors are a region of interest in an image or a clip in a video. They act as markers for referencing those portions of data. In this example, the only anchor these two nodes have is the one that represents them as a whole. However, here is an example of anchors in media (for instance, in a seismic image featuring geological patterns):
 
   
 
@@ -54,12 +54,12 @@ Connectors and links establish relations between anchors of nodes. Connectors de
 </p>
   
 
-Finally, Hyperknowledge favors compositionality by means of contexts, which are containers for other entities – including other contexts, recursively – allowing a hierarchical organization of data, as well as grouping entities and relationships.
+Finally, Hyperknowledge favors compositionality through contexts, which are containers for other entities – including other contexts, recursively – allowing a hierarchical organization of data, as well as grouping of entities and relationships.
 
 ### Requirements to use Hyperknowledge
 </br>
 
-To use Hyperknowledge and its features, you have to access a HKBase - a hybrid database system based on Hyperknowledge. HKBase has been designed to use Hyperknowledge as both its internal data model and for external APIs. With an HKBase, you will be able to manage data and retrieve information.
+To use Hyperknowledge and its features, you have to access an HKBase - a hybrid database system based on Hyperknowledge. HKBase has been designed to use Hyperknowledge as both its internal data model and for external APIs. With an HKBase, you will be able to manage data and retrieve information.
 
 Three different tools can be used for accessing an HKBase: the Knowledge Explorer System (KES), the HKLib, and the [HKpy]((https://github.com/ibm-hyperknowledge/hkpy.git)).
 
@@ -69,7 +69,7 @@ Three different tools can be used for accessing an HKBase: the Knowledge Explore
 
 </p>
 
-The KES is a UI that showcases a graphical representation of the data stored in the HKBase. Besides visualisation, the KES allows users to curate the knowledge represented in the base (by creating, removing, or updating entities and/or relationships, and organizing knowledge) and offers a query interface for knowledge retrieval. This version of the KES is a trial version, with limited storage, processing, memory, and persistance.
+The KES is a UI that showcases a graphical representation of the data stored in the HKBase. Besides visualization, the KES allows users to curate the knowledge represented in the base (by creating, removing, or updating entities and/or relationships, and organizing knowledge) and offers a query interface for knowledge retrieval. This version of the KES is a trial version, with limited storage, processing, memory, and persistence.
 
 <p align="center">
 
@@ -96,7 +96,7 @@ const HKLib = require("hklib");
 
 ### Connecting to HKBase
 
-To have access to HKBase, you will have to create a datasource object. First, you have to include the HKLib class for datasources, HKDatasource. After including the HKDatasource class to your file, you can use the following method to create a datasource connected to a HKBase in a specific repository (you may need an authentication token):
+To have access to HKBase, you will have to create a datasource object. First, you have to include the HKLib class for datasources, HKDatasource. After including the HKDatasource class in your file, you can use the following method to create a datasource connected to an HKBase in a specific repository (you may need an authentication token):
 
 ```js
 const HKDatasource = HKLib.HKDatasource;
@@ -106,9 +106,9 @@ let datasource = new HKDatasource("<HKBase's URL, repository's name>", token);
 ```js
 let datasource = new HKDatasource("https://hkbase-dev.mybluemix.net/", "testRepository", "exampleToken");
 ```
-It receives as parameters the base URL of the HKBase, the name of a repository and an authentication token. The repository may or may not exist - in case it does, the datasource will be connected to the informed repository and every operation will be performed on this repository. In case the repository does not exist, the datasource object can be used to create the informed repository, as the next topic will show.
+It receives as parameters the base URL of the HKBase, the name of a repository, and an authentication token. The repository may or may not exist - in case it does, the datasource will be connected to the informed repository and every operation will be performed on this repository. In case the repository does not exist, the datasource object can be used to create the informed repository, as the next topic will show.
 
-### Create new repository
+### Create a new repository
 
 Once the name of a repository is defined in the datasource object, you can call the following method to create this repository:
 ```js
@@ -129,7 +129,7 @@ Once the operation is concluded, whether it was successful or not, a callback fu
 
 ### Get all repositories
 
-If you have a datasource object connected to a HKBase, you can get a list with all the repositories on that base with the following method:
+If you have a datasource object connected to an HKBase, you can get a list with all the repositories on that base with the following method:
 ```js
 datasource.getRepositories((err, data) =>
 {
@@ -169,21 +169,21 @@ datasource.dropRepository((err,  data) =>
 HKLib supports several operations with entities, such as creating entities (contexts, nodes, links), adding them to a repository, retrieving entities, and removing them. The following sections will explain each of these functionalities.
 
 #### Create a Context
-To create a new context, you have to include the HKLib class for Contexts to your file. After that, you can use the following method to create a context:
+To create a new context, you have to include the HKLib class for Contexts in your file. After that, you can use the following method to create a context:
 ```js
 const  Context  =  HKLib.Context;
 let context = new Context("Name of Context");
 ```
-The example above creates a context in the root of your repository. If you want to insert a context inside of an existing context, you have to put the name of the existing context besides the name of the new context. For example, let's create the context Geological Structures, and them create a new context Salt Diapir, inserting it inside of the "Geological Structures" context.
+The example above creates a context in the root of your repository. If you want to insert a context inside of an existing context, you have to put the name of the existing context besides the name of the new context. For example, let's create the context Geological Structures, and then create a new context Salt Diapir, inserting it inside of the "Geological Structures" context.
 ```js
 let context1 = new Context("GeologicalStructures");
 let context2 = new Context("SaltDiapir",context1.id);
 ```
-The name of an entity is called its **id**. Id's should not contain spaces, and should be unique.
+The name of an entity is called its **id**. Ids should not contain spaces and should be unique.
 
 #### Create a Node
 
-To create a node using HKLib, you have to include the HKLib class for Nodes to your file.
+To create a node using HKLib, you have to include the HKLib class for Nodes in your file.
 ```js
 const  Node  =  HKLib.Node;
 ```
@@ -200,7 +200,7 @@ For example, let's create a simple node:
 ```js
 let n1 = new Node("SaltDiapir", null);
 ```
-Before assigning a node to a context, the context has to already exist.  For example, we created the context *GeographicPatterns*, now I am going to add the node *SaltDiapir* to this context.
+Before assigning a node to a context, the context has to already exist.  For example, we created the context *GeographicPatterns*, and now I am going to add the node *SaltDiapir* to this context.
 
 ```js
 let n1 = new Node("SaltDiapir", "GeographicPatterns");
@@ -213,7 +213,7 @@ For example, let's create a simple node:
 let n1 = new Node("SaltDiapir", null);
 entities.push(n1.serialize());
 ```
-After creating a node, you have to add this node to the entities array, and serialize the entity you just created - this will convert it from object to Hyperknowledge format, which will be ready to be added to HKBase. To add any type of entity on Hyperknowledge to HKBase, you will have to use the datasource object. 
+After creating a node, you have to add this node to the *entities* array, and serialize the entity you just created - this will convert it from object to Hyperknowledge format, which will be ready to be added to HKBase. To add any type of entity on Hyperknowledge to HKBase, you will have to use the datasource object. 
 
 ```js
 datasource.addEntities(entities,  (err,  data) =>
