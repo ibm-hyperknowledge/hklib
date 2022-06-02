@@ -25,33 +25,33 @@ An IBM Hyperlinked Knowledge Graph (HKG, or Hyperknowledge graph), is a knowledg
  Hyperknowledge has four basic elements for representing knowledge: **nodes**, **links**, **connectors**, and **contexts**. A domain in which Hyperknowledge can be useful is that of geology, and this is the representation of a simple fact in that domain (a salt diapir is a geological pattern):
 
 
-<center>
+<p align="center">
 
 <img  src="images/FactWithKey.jpg"  alt="Image's alias"  width="65%"  height="65%">
 
-</center>
+</p>
 
   
 A node is the basic unit of information, which represents an entity. In this case, both "Salt Diapir" and "Geological Pattern" are concept nodes. A node's fragments, that is, segments of a nodes' information are called anchors. Examples of anchors are a region of interest in an image or a clip in a video. They act as markers for referencing those portions of data. In this example, the only anchor these two nodes have is the one that represents them as a whole. However, here is an example of anchors in media (for instance, in a seismic image featuring geological patterns):
 
   
 
-<center>
+<p align="center">
 
 <img  src="images/seismicimage.png"  alt="Image's alias"  width="80%"  height="80%">
 
-</center>
+</p>
 
   
 Connectors and links establish relations between anchors of nodes. Connectors define the semantics of a relation, as well as their structure indicating which roles are assigned to each node involved. Links, on the other hand, define relationships - they are instances of a given relation. In Hyperknowledge, links represent N-ary relationships among entities through their anchors.
 
   
 
-<center>
+<p align="center">
 
 <img  src="images/Connectors.jpg"  alt="Image's alias"  width="40%"  height="40%">
 
-</center>
+</p>
   
 
 Finally, Hyperknowledge favors compositionality by means of contexts, which are containers for other entities – including other contexts, recursively – allowing a hierarchical organization of data, as well as grouping entities and relationships.
@@ -63,19 +63,19 @@ To use Hyperknowledge and its features, you have to access a HKBase - a hybrid d
 
 Three different tools can be used for accessing an HKBase: the Knowledge Explorer System (KES), the HKLib, and the [HKpy]((https://github.com/ibm-hyperknowledge/hkpy.git)).
 
-<center>
+<p align="center">
 
 <img  src="images/Architecture.jpg"  alt="Image's alias"  width="50%"  height="50%">
 
-</center>
+</p>
 
-The KES is a UI that showcases a graphical representation of the data stored in the HKBase. Besides visualisation, the KES allows users to curate the knowledge represented in the base (by creating, removing, or updating entities and/or relationships, and organizing knowledge) and offers a query interface for knowledge retrieval.
+The KES is a UI that showcases a graphical representation of the data stored in the HKBase. Besides visualisation, the KES allows users to curate the knowledge represented in the base (by creating, removing, or updating entities and/or relationships, and organizing knowledge) and offers a query interface for knowledge retrieval. This version of the KES is a trial version, with limited storage, processing, memory, and persistance.
 
-<center>
+<p align="center">
 
 <img  src="images/KESHome.png"  alt="Image's alias"  width="75%"  height="75%">
 
-</center>
+</p>
 
 HKLib is a NodeJS library that allows access to all HKBase functionalities via JavaScript code.
 [HKpy](https://github.com/ibm-hyperknowledge/hkpy.git) allows you to do the same, but via Python code.
