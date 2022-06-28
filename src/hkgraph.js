@@ -86,7 +86,7 @@ class HKGraph
       oldEntity.className = entity.className;
     }
 
-    if (entity.type === HKTypes.NODE || entity.type === Types.TRAIL || entity.type === HKTypes.REFERENCE || entity.type === HKTypes.CONTEXT || entity.type === HKTypes.VIRTUAL_NODE || entity.type === HKTypes.VIRTUAL_CONTEXT || entity.type === Types.ACTION)
+    if (entity.type === HKTypes.NODE || entity.type === HKTypes.TRAIL || entity.type === HKTypes.REFERENCE || entity.type === HKTypes.CONTEXT || entity.type === HKTypes.VIRTUAL_NODE || entity.type === HKTypes.VIRTUAL_CONTEXT || entity.type === HKTypes.ACTION)
     {
       oldEntity.interfaces = entity.interfaces;
     }
