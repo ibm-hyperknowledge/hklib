@@ -1,0 +1,115 @@
+{
+  "_from": "git+ssh://git@github.ibm.com:keg-core/linked-list.git",
+  "_id": "linked-list@3.0.1",
+  "_inBundle": false,
+  "_integrity": "",
+  "_location": "/linked-list",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "linked-list@git+ssh://git@github.ibm.com:keg-core/linked-list.git",
+    "name": "linked-list",
+    "escapedName": "linked-list",
+    "rawSpec": "git+ssh://git@github.ibm.com:keg-core/linked-list.git",
+    "saveSpec": "git+ssh://git@github.ibm.com:keg-core/linked-list.git",
+    "fetchSpec": "git@github.ibm.com:keg-core/linked-list.git",
+    "gitCommittish": null
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "git+ssh://git@github.ibm.com:keg-core/linked-list.git#778981762dbdcbf5f10b031345ce9756c29e0915",
+  "_spec": "linked-list@git+ssh://git@github.ibm.com:keg-core/linked-list.git",
+  "_where": "/Users/gabrielapinheiro/ghe/keg/hklib",
+  "author": {
+    "name": "Titus Wormer",
+    "email": "tituswormer@gmail.com",
+    "url": "https://wooorm.com"
+  },
+  "bugs": {
+    "url": "https://github.com/wooorm/linked-list/issues"
+  },
+  "bundleDependencies": false,
+  "contributors": [
+    {
+      "name": "Titus Wormer",
+      "email": "tituswormer@gmail.com",
+      "url": "https://wooorm.com"
+    },
+    {
+      "name": "Blake Embrey",
+      "email": "hello@blakeembrey.com"
+    },
+    {
+      "name": "Regev Brody",
+      "email": "regevbr@gmail.com"
+    }
+  ],
+  "deprecated": false,
+  "description": "Minimalistic linked lists",
+  "devDependencies": {
+    "@types/tape": "^4.0.0",
+    "c8": "^7.0.0",
+    "prettier": "^2.0.0",
+    "remark-cli": "^9.0.0",
+    "remark-preset-wooorm": "^8.0.0",
+    "tape": "^5.0.0",
+    "xo": "^0.38.0"
+  },
+  "files": [
+    "index.cjs",
+    "index.d.ts"
+  ],
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/wooorm"
+  },
+  "homepage": "https://github.com/wooorm/linked-list#readme",
+  "keywords": [
+    "double",
+    "linked",
+    "list"
+  ],
+  "license": "MIT",
+  "main": "index.cjs",
+  "name": "linked-list",
+  "prettier": {
+    "tabWidth": 2,
+    "useTabs": false,
+    "singleQuote": true,
+    "bracketSpacing": false,
+    "semi": false,
+    "trailingComma": "none"
+  },
+  "remarkConfig": {
+    "plugins": [
+      "preset-wooorm"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wooorm/linked-list.git"
+  },
+  "scripts": {
+    "format": "remark . -qfo && prettier . -w --loglevel warn && xo --fix",
+    "test": "npm run format && npm run test-coverage",
+    "test-api": "node test.js",
+    "test-coverage": "c8 --check-coverage --branches 100 --functions 100 --lines 100 --statements 100 --reporter lcov node test.js"
+  },
+  "sideEffects": false,
+  "type": "module",
+  "types": "index.d.ts",
+  "version": "3.0.1",
+  "xo": {
+    "prettier": true,
+    "rules": {
+      "no-var": "off",
+      "prefer-arrow-callback": "off",
+      "no-multi-assign": "off"
+    },
+    "ignores": [
+      "*.ts",
+      "linked-list.js"
+    ]
+  }
+}
