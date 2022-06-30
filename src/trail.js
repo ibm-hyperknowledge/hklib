@@ -45,7 +45,6 @@ function Trail (id, actions, parent)
 }
 
 Trail.prototype = Object.create (HKEntity.prototype);
-Trail.prototype.constructor = Trail;
 // Trail.prototype = Object.assign(Trail.prototype, List.prototype); // Multiple inheritance with assign
 
 
