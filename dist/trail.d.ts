@@ -29,3 +29,4 @@ declare namespace Trail {
 }
 import HKEntity = require("./hkentity");
 import Connector = require("./connector");
+
