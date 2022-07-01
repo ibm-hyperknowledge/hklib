@@ -61,6 +61,14 @@ declare class Node extends HKEntity {
         };
     };
     /**
+     * @public
+     * @type {Object.<string, string | number | Object>
+     */
+    public properties: {
+        [x: string]: string | number | Object;
+    };
+    metaProperties: any;
+    /**
      *
      * @param {string} key Id of the interface
      * @param {string} type Type of the interface (anchor, etc)
@@ -88,7 +96,7 @@ declare class Node extends HKEntity {
     };
 }
 declare namespace Node {
-    const type: string;
+    const type: "node";
 }
 import HKEntity = require("./hkentity");
 import FI = require("./fi/fi");

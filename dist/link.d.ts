@@ -54,6 +54,8 @@ declare class Link extends HKEntity {
             [x: string]: Object;
         };
     };
+    properties: any;
+    metaProperties: any;
     /**
      * Adds a new bind to this role;
      *
@@ -91,6 +93,6 @@ declare class Link extends HKEntity {
     };
 }
 declare namespace Link {
-    const type: string;
+    const type: "link";
 }
 import HKEntity = require("./hkentity");

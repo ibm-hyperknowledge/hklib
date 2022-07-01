@@ -148,6 +148,18 @@ declare class HKDatasource {
         [x: string]: HKEntity;
     }) => any): void;
     /**
+   * @callback GetTrailCallback
+   * @param {string} err An error object that indicate if the operation was succesful or not
+   * @param {object} trail
+   */
+    /**
+     * Fetch trail
+     *
+     * @param {string} trailId The trail id to retrieve their nested entities.
+     * @param {GetTrailCallback} callback Callback with the entities
+     */
+    fetchTrail(trailId: string, callback?: (err: string, trail: object) => any): void;
+    /**
      * Filter entities using CSS pattern `(TODO: document it better)`
      *
      * Examples:
