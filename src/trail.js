@@ -13,35 +13,35 @@ const HKEntity  = require('./hkentity');
 
 
 function Trail (id, actions, parent)
+{
+
+  if(arguments[0] && typeof arguments[0] === 'object' && isValid(arguments[0]))
   {
+    let trail = arguments[0];
 
-    if(arguments[0] && typeof arguments[0] === 'object' && isValid(arguments[0]))
-    {
-      let trail = arguments[0];
+    this.id = trail.id || null;
+    this.parent = trail.parent || null;
+    this.properties = trail.properties || {};
+    this.metaproperties = trail.metaproperties || {};
+    this.interfaces = trail.interfaces || {};
+    this.actions = trail.actions || new List();
 
-      this.id = trail.id || null;
-      this.parent = trail.parent || null;
-      this.properties = trail.properties || {};
-      this.metaproperties = trail.metaproperties || {};
-      this.interfaces = trail.interfaces || {};
-      this.actions = trail.actions || new List();
-
-      if (this.actions && Object.keys(this.actions).length > 0) {
-        this.loadActions(); 
-      }
+    if (this.actions && Object.keys(this.actions).length > 0) {
+      this.loadActions();
     }
-    else
-    {
-      this.id = id || null;
-      this.parent = parent || null;
-      this.interfaces = {};
-      this.properties = {};
-      this.metaproperties = {};
-      this.actions = actions || new List();
+  }
+  else
+  {
+    this.id = id || null;
+    this.parent = parent || null;
+    this.interfaces = {};
+    this.properties = {};
+    this.metaproperties = {};
+    this.actions = actions || new List();
 
-    }
+  }
 
-    this.type = Types.TRAIL;
+  this.type = Types.TRAIL;
 }
 
 Trail.prototype = Object.create (HKEntity.prototype);
