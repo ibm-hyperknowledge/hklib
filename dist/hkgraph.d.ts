@@ -75,14 +75,14 @@ declare class HKGraph {
     deserialize(str: any): HKGraph;
 }
 declare namespace HKGraph {
-    const NODE_TYPE: string;
-    const VIRTUAL_NODE_TYPE: string;
-    const CONTEXT_TYPE: string;
-    const VIRTUAL_CONTEXT_TYPE: string;
-    const LINK_TYPE: string;
-    const VIRTUAL_LINK_TYPE: string;
-    const CONNECTOR_TYPE: string;
-    const INTERFACE: string;
+    const NODE_TYPE: "node";
+    const VIRTUAL_NODE_TYPE: "virtualnode";
+    const CONTEXT_TYPE: "context";
+    const VIRTUAL_CONTEXT_TYPE: "virtualcontext";
+    const LINK_TYPE: "link";
+    const VIRTUAL_LINK_TYPE: "virtuallink";
+    const CONNECTOR_TYPE: "connector";
+    const INTERFACE: "interface";
 }
 declare function generateId(model: any, length: any): any;
 import HKEntity = require("./hkentity");
