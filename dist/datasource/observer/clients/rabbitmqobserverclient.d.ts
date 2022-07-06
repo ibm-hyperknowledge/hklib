@@ -35,7 +35,9 @@ declare class RabbitMQObserverClient extends ConfigurableObserverClient {
     _channelWrapper: any;
     _setupFunction: ((channel: any) => Promise<void>) | null;
     _queueName: any;
+    init(): Promise<void>;
     _init(exchangeName: any): Promise<void>;
     _isInitialized: boolean | undefined;
+    deinit(): Promise<void>;
 }
 import ConfigurableObserverClient = require("./configurableobserverclient");

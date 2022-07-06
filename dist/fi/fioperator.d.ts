@@ -4,6 +4,6 @@
 */
 export = FIOperator;
 declare const FIOperator: Readonly<{
-    NONE: string;
-    DESCRIPTION: string;
+    NONE: "";
+    DESCRIPTION: "*";
 }>;

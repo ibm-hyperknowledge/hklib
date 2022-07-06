@@ -418,6 +418,40 @@ class HKDatasource {
         });
     }
     /**
+   * @callback GetTrailCallback
+   * @param {string} err An error object that indicate if the operation was succesful or not
+   * @param {object} trail
+   */
+    /**
+     * Fetch trail
+     *
+     * @param {string} trailId The trail id to retrieve their nested entities.
+     * @param {GetTrailCallback} callback Callback with the entities
+     */
+    fetchTrail(trailId, callback = () => { }) {
+        let url = this.url + "repository/" + this.graphName + "/trail/" + encodeURIComponent(trailId);
+        request.get(url, this.options, (err, res) => {
+            // console.log(res.body);
+            if (!err) {
+                if (requestCompletedWithSuccess(res.statusCode)) {
+                    try {
+                        let entities = convertEntities(res.body);
+                        callback(null, entities[trailId]);
+                    }
+                    catch (exp) {
+                        callback(exp);
+                    }
+                }
+                else {
+                    callback(`Server responded with ${res.statusCode}. ${res.body}`);
+                }
+            }
+            else {
+                callback(err);
+            }
+        });
+    }
+    /**
      * Filter entities using CSS pattern `(TODO: document it better)`
      *
      * Examples:

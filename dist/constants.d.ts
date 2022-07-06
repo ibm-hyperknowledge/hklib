@@ -2,5 +2,5 @@
 * Copyright (c) 2016-present, IBM Research
 * Licensed under The MIT License [see LICENSE for details]
 */
-export var LAMBDA: string;
-export var MIMETYPE: string;
+export const LAMBDA: "λ";
+export const MIMETYPE: "hk:mimeType";
