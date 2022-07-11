@@ -7,6 +7,7 @@ const FIOperator = Object.freeze(
     {
         NONE: '',
         DESCRIPTION: '*',
+        FRAGMENTATION: 'f'
     });
     
 
