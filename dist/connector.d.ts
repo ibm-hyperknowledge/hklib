@@ -48,6 +48,8 @@ declare class Connector extends HKEntity {
     public roles: {
         [x: string]: string;
     };
+    properties: any;
+    metaProperties: any;
     /**
      * Adds a new role to this connector.
      *
@@ -96,6 +98,6 @@ declare class Connector extends HKEntity {
     };
 }
 declare namespace Connector {
-    const type: string;
+    const type: "connector";
 }
 import HKEntity = require("./hkentity");

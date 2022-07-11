@@ -11,6 +11,7 @@ exports.REFERENCE = 'ref';
 exports.INTERFACE = 'interface';
 exports.BIND = 'bind';
 exports.TRAIL = 'trail';
+exports.ACTION = 'action';
 exports.VIRTUAL_NODE = 'virtualnode';
 exports.VIRTUAL_CONTEXT = 'virtualcontext';
 exports.VIRTUAL_LINK = 'virtuallink';

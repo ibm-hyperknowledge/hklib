@@ -13,6 +13,7 @@ const Reference = require("./reference");
 const Trail = require("./trail");
 const HKTypes = require("./types");
 const shortId = require('shortid');
+const { Action }    = require("./trail");
 const VirtualContext = require("./virtualcontext");
 const HKEntity = require("./hkentity");
 const VirtualNode = require("./virtualnode");
@@ -32,6 +33,8 @@ class HKGraph
     this.connectors = {};
     this.refs = {};
     this.trails = {};
+    this.actions = {};
+
     // Auxiliar maps
     this.bindsMap = {};
     this.linkMap = {};
@@ -55,7 +58,8 @@ class HKGraph
       this.links.hasOwnProperty(id) ||
       this.connectors.hasOwnProperty(id) ||
       this.refs.hasOwnProperty(id) ||
-      this.trails.hasOwnProperty(id);
+      this.trails.hasOwnProperty(id) ||
+      this.actions.hasOwnProperty(id);
   }
 
   /**
@@ -82,7 +86,7 @@ class HKGraph
       oldEntity.className = entity.className;
     }
 
-    if (entity.type === HKTypes.NODE || entity.type === HKTypes.REFERENCE || entity.type === HKTypes.CONTEXT || entity.type === HKTypes.VIRTUAL_NODE || entity.type === HKTypes.VIRTUAL_CONTEXT)
+    if (entity.type === HKTypes.NODE || entity.type === HKTypes.TRAIL || entity.type === HKTypes.REFERENCE || entity.type === HKTypes.CONTEXT || entity.type === HKTypes.VIRTUAL_NODE || entity.type === HKTypes.VIRTUAL_CONTEXT || entity.type === HKTypes.ACTION)
     {
       oldEntity.interfaces = entity.interfaces;
     }
@@ -218,9 +222,25 @@ class HKGraph
             {
               newEntity = new Trail(entity);
               this.trails[entity.id] = newEntity;
+              this.contextMap[entity.id] = {};
+
+              if(this.orphans.hasOwnProperty(entity.id))
+                {
+                  this.contextMap[entity.id] = this.orphans[entity.id];
+                  delete this.orphans[entity.id];
+                }
             }
             break;
           }
+        case HKTypes.ACTION:
+          {
+            if(entity instanceof Trail.Action)
+            {
+              newEntity = entity;
+              this.actions[entity.id] = newEntity;
+            }
+            break;
+            }
         case HKTypes.LINK:
           {
             if (Link.isValid(entity))
@@ -439,7 +459,12 @@ class HKGraph
           {
             /* delete children trails? */
             delete this.trails[id];
+            delete this.contextMap[entity.id];
             break;
+          }
+        case Action.type:
+          {
+            delete this.actions[id];
           }
       }
 
@@ -612,7 +637,7 @@ class HKGraph
       c.id = null;
       return c;
     }
-    return this.nodes[id] || this.virtualNodes[id] || this.contexts[id] || this.virtualContexts[id] || this.virtualLinks[id] || this.links[id] || this.connectors[id] || this.refs[id] || this.trails[id] || null;
+    return this.nodes[id] || this.virtualNodes[id] || this.contexts[id] || this.virtualContexts[id] || this.virtualLinks[id] || this.links[id] || this.connectors[id] || this.refs[id] || this.trails[id] || this.actions[id] || null;
   }
 
   /**

@@ -35,6 +35,7 @@ exports.CONNECTOR_TYPE = require("./types").CONNECTOR;
 exports.BIND_TYPE = require("./types").BIND;
 exports.INTERFACE = require("./types").INTERFACE;
 exports.TRAIL_TYPE = require("./types").TRAIL;
+exports.ACTION_TYPE = require("./types").ACTION;
 exports.VIRTUAL_NODE_TYPE = require("./types").VIRTUAL_NODE;
 exports.VIRTUAL_CONTEXT_TYPE = require("./types").VIRTUAL_CONTEXT;
 exports.VIRTUAL_LINK_TYPE = require("./types").VIRTUAL_LINK;

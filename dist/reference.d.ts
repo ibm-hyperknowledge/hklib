@@ -20,8 +20,15 @@ declare class Reference extends Node {
      *
      */
     public ref: string | null;
+    type: "ref";
+    serialize: () => {
+        id: any;
+        type: "ref";
+        ref: any;
+        parent: any;
+    };
 }
 declare namespace Reference {
-    const type: string;
+    const type: "ref";
 }
 import Node = require("./node");
