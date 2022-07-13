@@ -18,6 +18,13 @@ class Context extends Node
   constructor(id = null, parent = null)
   {
     super(id, parent)
+    
+    /**
+     *  Type of this link.
+     * 
+     * @public
+     * @type {string | null}
+    */
     this.type = Types.CONTEXT;
   }
 

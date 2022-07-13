@@ -145,7 +145,7 @@ class HKGraph {
                 case HKTypes.VIRTUAL_CONTEXT:
                     {
                         if (VirtualContext.isValid(entity)) {
-                            newEntity = new VirtualContext(entity);
+                            newEntity = new VirtualContext(entity.id, entity.properties["virtualsrc"], entity.properties["datasourcetype"], entity.parent);
                             this.virtualContexts[entity.id] = newEntity;
                             this.virtualContextMap[entity.id] = {};
                         }

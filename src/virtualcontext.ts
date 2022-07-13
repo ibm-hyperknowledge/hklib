@@ -12,12 +12,13 @@ class VirtualContext extends Context {
    * 
    * @param {any} [id] Some id string for this entity.
    * @param {string | null} [virtualSrc] Virtual endpoint to acceess information
+   * @param {string | null} [datasourceType] Type of the external datasource to be fetched. E.g., rdf, hyperknowledge etc.
    * @param {string | null} [parent] Parent id.
    */
-  constructor(id: any, virtualSrc: string, parent?: string) {
+  constructor(id: any, virtualSrc: string, datasourceType: string, parent?: string) {
     super(id, parent);
 
-    const properties = { "readonly": true, "virtualsrc": virtualSrc };
+    const properties = { "readonly": true, "virtualsrc": virtualSrc || null, "datasourcetype": datasourceType || null };
     const metaProperties = { "readonly": "<http://www.w3.org/2001/XMLSchema#boolean>" };
 
     this.properties = Object.assign(this.properties, properties);
@@ -29,8 +30,12 @@ class VirtualContext extends Context {
   static isValid(entity: VirtualContext) {
     let isValid = false;
     if (entity && typeof (entity) === 'object' && !Array.isArray(entity)) {
-      if (entity.hasOwnProperty('type') && entity.type === VIRTUAL_CONTEXT_TYPE &&
-        entity.hasOwnProperty('id') && entity.hasOwnProperty('parent')) {
+      if (
+        entity.hasOwnProperty('type') 
+        && entity.type === VIRTUAL_CONTEXT_TYPE 
+        && entity.hasOwnProperty('id') 
+        && entity.hasOwnProperty('parent')
+      ) {
         isValid = true;
       }
     }
@@ -52,5 +57,3 @@ class VirtualContext extends Context {
     }
   }
 }
-
-VirtualContext.type = VIRTUAL_CONTEXT_TYPE;
