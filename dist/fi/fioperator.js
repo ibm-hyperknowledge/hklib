@@ -6,5 +6,6 @@
 const FIOperator = Object.freeze({
     NONE: '',
     DESCRIPTION: '*',
+    FRAGMENTATION: 'f'
 });
 module.exports = FIOperator;

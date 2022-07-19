@@ -33,7 +33,7 @@ describe("Contexts integration tests:", () => {
 
 	
 	it("Add Virtual Context", done => {
-		const vContext = new VContext("VContext", "http://dbpedia.org/sparql");
+		const vContext = new VContext("VContext", "http://dbpedia.org/sparql", "rdf");
 
 		HKDatasource.saveEntities([vContext], (err, data)=> {
 			if (err) throw err;
