@@ -5,7 +5,7 @@
 
 'use strict'
 
-const {List, Item}    = require('linked-list');
+import {List, Item}  from 'linked-list';
 const Types     = require('./types');
 const HKEntity  = require('./hkentity');
 

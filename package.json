@@ -53,7 +53,7 @@
     "request": "^2.88.0",
     "request-promise-native": "^1.0.8",
     "shortid": "^2.2.14",
-    "linked-list": "file:src/linked-list"
+    "linked-list": "3.0.2"
   },
   "license": "MIT",
   "repository": {
