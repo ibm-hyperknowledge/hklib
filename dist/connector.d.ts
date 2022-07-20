@@ -2,7 +2,7 @@
 * Copyright (c) 2016-present, IBM Research
 * Licensed under The MIT License [see LICENSE for details]
 */
-export = Connector;
+export default Connector;
 declare class Connector extends HKEntity {
     /**
      * Tests whether `entity` is a connector structurally.
@@ -98,4 +98,4 @@ declare class Connector extends HKEntity {
 declare namespace Connector {
     const type: string;
 }
-import HKEntity = require("./hkentity");
+import HKEntity from "./hkentity.js";

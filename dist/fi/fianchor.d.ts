@@ -2,7 +2,7 @@
 * Copyright (c) 2016-present, IBM Research
 * Licensed under The MIT License [see LICENSE for details]
 */
-export = FIAnchor;
+export default FIAnchor;
 declare class FIAnchor {
     /**
      * Create a new Anchor instance based on an FI (or string representing an FI) and a

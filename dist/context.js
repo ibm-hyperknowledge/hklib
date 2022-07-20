@@ -1,10 +1,10 @@
+import * as Types from "./types.js";
+import Node from "./node.js";
 /*
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
 "use strict";
-const Types = require("./types");
-const Node = require("./node");
 class Context extends Node {
     /** Constructs a new context object.
      *
@@ -66,4 +66,4 @@ class Context extends Node {
 }
 Context.type = Types.CONTEXT;
 const isValid = Context.isValid;
-module.exports = Context;
+export default Context;

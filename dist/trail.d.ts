@@ -2,7 +2,7 @@
 * Copyright (c) 2016-present, IBM Research
 * Licensed under The MIT License [see LICENSE for details]
 */
-export = Trail;
+export default Trail;
 declare class Trail extends HKEntity {
     static isValid(entity: any): boolean;
     constructor(id: any, parent: any, ...args: any[]);
@@ -27,5 +27,5 @@ declare class Trail extends HKEntity {
 declare namespace Trail {
     const type: string;
 }
-import HKEntity = require("./hkentity");
-import Connector = require("./connector");
+import HKEntity from "./hkentity.js";
+import Connector from "./connector.js";

@@ -2,7 +2,7 @@
 * Copyright (c) 2016-present, IBM Research
 * Licensed under The MIT License [see LICENSE for details]
 */
-export = FI;
+export default FI;
 /**
  * Fragment Identifier (FI.js)
  */
@@ -35,4 +35,4 @@ declare class FI {
     toStringTail(): string;
     toString(): any;
 }
-import FIAnchor = require("./fianchor");
+import FIAnchor from "./fianchor.js";

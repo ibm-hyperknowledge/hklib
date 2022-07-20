@@ -3,10 +3,8 @@
  * Licensed under The MIT License [see LICENSE for details]
  */
 
-import { VIRTUAL_NODE as VIRTUAL_NODE_TYPE } from "./types";
-import Node from "./node";
-
-export = VirtualNode;
+import { VIRTUAL_NODE as VIRTUAL_NODE_TYPE } from "./types.js";
+import Node from "./node.js";
 class VirtualNode extends Node {
   constructor(id: any, parent?: string) {
     super(id, parent);
@@ -26,3 +24,5 @@ class VirtualNode extends Node {
     return isValid;
   }
 }
+
+export default VirtualNode;

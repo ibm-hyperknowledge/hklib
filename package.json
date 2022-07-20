@@ -4,6 +4,7 @@
   "main": "dist/index.js",
   "author": "IBM Research",
   "types": "dist/index.d.ts",
+  "type": "module",
   "contributors": [
     {
       "name": "Marcelo Machado",
@@ -68,9 +69,9 @@
   ],
   "scripts": {
     "build": "rm -rf dist; tsc; ./prepend-copyright-notice-d-ts.sh; cp index.d.ts.tocopy dist/index.d.ts",
-    "integration-tests": "mocha test/integration test/integration/setup.json --timeout 360000 --forbid-only",
+    "integration-tests": "mocha test/integration test/setup.json --timeout 360000 --forbid-only",
     "unit-tests": "mocha test/unit --timeout 360000 --forbid-only",
-    "tests": "npm run unit-tests && npm run integration-tests"
+    "test": "npm run unit-tests && npm run integration-tests"
   },
   "devDependencies": {
     "@types/amqplib": "^0.8.2",

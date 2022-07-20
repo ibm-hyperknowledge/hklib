@@ -3,10 +3,8 @@
  * Licensed under The MIT License [see LICENSE for details]
  */
 
-import { VIRTUAL_CONTEXT as VIRTUAL_CONTEXT_TYPE } from "./types";
-import Context from "./context";
-
-export = VirtualContext;
+import { VIRTUAL_CONTEXT as VIRTUAL_CONTEXT_TYPE } from "./types.js";
+import Context from "./context.js";
 class VirtualContext extends Context {
   /** Constructs a new virtual context object. 
    * 
@@ -57,3 +55,5 @@ class VirtualContext extends Context {
     }
   }
 }
+
+export default VirtualContext;

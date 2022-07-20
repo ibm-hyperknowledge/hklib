@@ -1,20 +1,19 @@
+import Connector from "./connector.js";
+import Context from "./context.js";
+import Link from "./link.js";
+import Node from "./node.js";
+import Reference from "./reference.js";
+import Trail from "./trail.js";
+import * as HKTypes from "./types.js";
+import * as shortId from "shortid";
+import * as VirtualContext from "./virtualcontext.js";
+import * as VirtualNode from "./virtualnode.js";
+import * as VirtualLink from "./virtuallink.js";
 /*
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
 "use strict";
-const Connector = require("./connector");
-const Context = require("./context");
-const Link = require("./link");
-const Node = require("./node");
-const Reference = require("./reference");
-const Trail = require("./trail");
-const HKTypes = require("./types");
-const shortId = require('shortid');
-const VirtualContext = require("./virtualcontext");
-const HKEntity = require("./hkentity");
-const VirtualNode = require("./virtualnode");
-const VirtualLink = require("./virtuallink");
 class HKGraph {
     constructor() {
         this.nodes = {};
@@ -548,7 +547,6 @@ function generateId(model, length) {
     } while (model.hasId(id));
     return id;
 }
-module.exports = HKGraph;
 HKGraph.NODE_TYPE = HKTypes.NODE;
 HKGraph.VIRTUAL_NODE_TYPE = HKTypes.VIRTUAL_NODE;
 HKGraph.CONTEXT_TYPE = HKTypes.CONTEXT;
@@ -557,3 +555,4 @@ HKGraph.LINK_TYPE = HKTypes.LINK;
 HKGraph.VIRTUAL_LINK_TYPE = HKTypes.VIRTUAL_LINK;
 HKGraph.CONNECTOR_TYPE = HKTypes.CONNECTOR;
 HKGraph.INTERFACE = HKTypes.INTERFACE;
+export default HKGraph;

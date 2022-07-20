@@ -2,7 +2,7 @@
 * Copyright (c) 2016-present, IBM Research
 * Licensed under The MIT License [see LICENSE for details]
 */
-export = HKGraph;
+export default HKGraph;
 declare class HKGraph {
     nodes: {};
     virtualNodes: {};
@@ -85,4 +85,4 @@ declare namespace HKGraph {
     const INTERFACE: string;
 }
 declare function generateId(model: any, length: any): any;
-import HKEntity = require("./hkentity");
+import HKEntity from "./hkentity.js";

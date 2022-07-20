@@ -2,7 +2,7 @@
 * Copyright (c) 2016-present, IBM Research
 * Licensed under The MIT License [see LICENSE for details]
 */
-export = Link;
+export default Link;
 declare class Link extends HKEntity {
     /**
      * Tests whether `entity` is a link structurally.
@@ -93,4 +93,4 @@ declare class Link extends HKEntity {
 declare namespace Link {
     const type: string;
 }
-import HKEntity = require("./hkentity");
+import HKEntity from "./hkentity.js";

@@ -1,4 +1,3 @@
-"use strict";
 /*
  * Copyright (c) 2021-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
@@ -15,4 +14,4 @@ class HKRepository {
         this.url = url;
     }
 }
-module.exports = HKRepository;
+export default HKRepository;

@@ -2,11 +2,9 @@
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
-
 "use strict";
-
-exports.NONE = "n";
-exports.SUBJECT = "s";
-exports.OBJECT = "o";
-exports.PARENT = "p";
-exports.CHILD = "c";
+export const NONE = "n";
+export const SUBJECT = "s";
+export const OBJECT = "o";
+export const PARENT = "p";
+export const CHILD = "c";

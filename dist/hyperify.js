@@ -1,15 +1,14 @@
+import Node from "./node.js";
+import Context from "./context.js";
+import Connector from "./connector.js";
+import Link from "./link.js";
+import * as ConnectorClass from "./connectorclass.js";
+import * as RoleTypes from "./roletypes.js";
 /*
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
 "use strict";
-const Types = require("./types");
-const Node = require("./node");
-const Context = require("./context");
-const Connector = require("./connector");
-const Link = require("./link");
-const ConnectorClass = require("./connectorclass");
-const RoleTypes = require("./roletypes");
 function createRelation(key, subj, obj, options, connectors, entities) {
     let relationId = key;
     if (options.aliasMap.hasOwnProperty(key)) {
@@ -156,4 +155,4 @@ function hyperify(data, options = {}) {
     }
     return entities;
 }
-module.exports = hyperify;
+export default hyperify;

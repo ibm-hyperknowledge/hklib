@@ -1,14 +1,14 @@
+import * as shortid from "shortid";
+import * as Types from "./types.js";
+import HKEntity from "./hkentity.js";
+import Connector from "./connector.js";
+import Link from "./link.js";
+import * as RoleTypes from "./roletypes.js";
 /**
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
 'use strict';
-const shortid = require('shortid');
-const Types = require('./types');
-const HKEntity = require('./hkentity');
-const Connector = require('./connector');
-const Link = require('./link');
-const RoleTypes = require('./roletypes');
 const CONNECTOR_NAME = 'occurs';
 const vConnector = new Connector(CONNECTOR_NAME, 'f');
 vConnector.addRole('sub', RoleTypes.SUBJECT);
@@ -110,4 +110,4 @@ function _loadSteps() {
 }
 Trail.type = Types.TRAIL;
 const isValid = Trail.isValid;
-module.exports = Trail;
+export default Trail;

@@ -1,9 +1,5 @@
-"use strict";
-/*
- * Copyright (c) 2016-present, IBM Research
- * Licensed under The MIT License [see LICENSE for details]
- */
-const FIOperator = require("./fioperator");
+import FIOperator from "./fioperator.js";
+import FI from "./fi.js";
 class FIAnchor {
     /**
      * Create a new Anchor instance based on an FI (or string representing an FI) and a
@@ -14,7 +10,6 @@ class FIAnchor {
      * @param {string} operator set operator (i.e. descriptor). Default is null.
      */
     constructor(indexer, token, operator = FIOperator.NONE) {
-        const FI = require("./fi");
         if (!(indexer instanceof FI)) {
             indexer = new FI(indexer);
         }
@@ -27,7 +22,7 @@ class FIAnchor {
         strAnchor = strAnchor + this.indexer.toString();
         strAnchor = strAnchor + ((this.operator !== undefined && this.operator !== null) ? this.operator.toString() : '');
         if (this.token) {
-            const FI = require("./fi");
+            const FI = FI;
             if (this.token instanceof FI) {
                 strAnchor = `${strAnchor}(${this.token.toString()})`;
             }
@@ -51,4 +46,4 @@ class FIAnchor {
         return strAnchor;
     }
 }
-module.exports = FIAnchor;
+export default FIAnchor;

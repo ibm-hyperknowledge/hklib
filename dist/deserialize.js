@@ -1,19 +1,18 @@
+import * as Types from "./types.js";
+import Node from "./node.js";
+import * as VirtualNode from "./virtualnode.js";
+import Context from "./context.js";
+import * as VirtualContext from "./virtualcontext.js";
+import * as VirtualLink from "./virtuallink.js";
+import Connector from "./connector.js";
+import Reference from "./reference.js";
+import Link from "./link.js";
+import Trail from "./trail.js";
 /*
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
 "use strict";
-const Types = require("./types");
-const Node = require("./node");
-const VirtualNode = require("./virtualnode");
-const Context = require("./context");
-const VirtualContext = require("./virtualcontext");
-const VirtualLink = require("./virtuallink");
-const Connector = require("./connector");
-const Reference = require("./reference");
-const Link = require("./link");
-const Trail = require("./trail");
-const HKEntity = require("./hkentity");
 function _deserialize(input) {
     if (!input || !input.type) {
         return null;
@@ -66,4 +65,4 @@ function deserialize(serialized) {
     }
     return null;
 }
-module.exports = deserialize;
+export default deserialize;

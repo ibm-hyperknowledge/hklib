@@ -1,12 +1,7 @@
-"use strict";
-/*
- * Copyright (c) 2016-present, IBM Research
- * Licensed under The MIT License [see LICENSE for details]
- */
-const grammar = require('./grammar.js');
-const FIOperator = require('./fioperator.js');
-const FIAnchor = require("./fianchor");
-const EBNF = require("ebnf");
+import grammar from "./grammar.js";
+import FIOperator from "./fioperator.js";
+import FIAnchor from "./fianchor.js";
+import * as EBNF from "ebnf";
 const PARSER = new EBNF.Grammars.W3C.Parser(grammar);
 /**
  * Fragment Identifier (FI.js)
@@ -290,4 +285,4 @@ function processId(ast) {
         throw Error(`Error parsing ${ast.text}`);
     }
 }
-module.exports = FI;
+export default FI;

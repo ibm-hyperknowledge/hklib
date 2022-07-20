@@ -1,16 +1,16 @@
+import Node from "./node.js";
+import Reference from "./reference.js";
+import Connector from "./connector.js";
+import * as ConnectorClass from "./connectorclass.js";
+import Link from "./link.js";
+import Context from "./context.js";
+import Graph from "./hkgraph.js";
+import * as RoleTypes from "./roletypes.js";
 /*
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
 "use strict";
-let Node = require("./node");
-let Reference = require("./reference");
-let Connector = require("./connector");
-let ConnectorClass = require("./connectorclass");
-let Link = require("./link");
-let Context = require("./context");
-let Graph = require("./hkgraph");
-let RoleTypes = require("./roletypes");
 const DEFAULT_SUBJECT_LABEL = "subject";
 const DEFAULT_OBJECT_LABEL = "object";
 class GraphBuilder {
@@ -249,4 +249,4 @@ function _addConnector(connectorId, className, roles = []) {
         return this.graph.addEntity(connector);
     }
 }
-module.exports = GraphBuilder;
+export default GraphBuilder;

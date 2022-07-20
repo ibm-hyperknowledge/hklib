@@ -3,5 +3,5 @@
  * Licensed under The MIT License [see LICENSE for details]
  */
 "use strict";
-exports.LAMBDA = '\u03BB';
-exports.MIMETYPE = "hk:mimeType";
+export const LAMBDA = '\u03BB';
+export const MIMETYPE = "hk:mimeType";

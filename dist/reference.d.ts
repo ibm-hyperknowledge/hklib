@@ -2,7 +2,7 @@
 * Copyright (c) 2016-present, IBM Research
 * Licensed under The MIT License [see LICENSE for details]
 */
-export = Reference;
+export default Reference;
 declare class Reference extends Node {
     /** Constructs a new reference node object.
      *
@@ -24,4 +24,4 @@ declare class Reference extends Node {
 declare namespace Reference {
     const type: string;
 }
-import Node = require("./node");
+import Node from "./node.js";

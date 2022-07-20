@@ -1,12 +1,12 @@
+import * as Types from "./types.js";
+import HKEntity from "./hkentity.js";
+import FI from "./fi/fi.js";
+import FIAnchor from "./fi/fianchor.js";
 /*
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
 "use strict";
-const Types = require("./types");
-const HKEntity = require("./hkentity");
-const FI = require("./fi/fi");
-const FIAnchor = require("./fi/fianchor");
 class Node extends HKEntity {
     /** Constructs a new node object. Both `id` and `parent` are optional.
      *
@@ -222,4 +222,4 @@ Node.type = Types.NODE;
 const isValid = Node.isValid;
 const nodefy = Node.nodefy;
 const entitify = Node.entitify;
-module.exports = Node;
+export default Node;

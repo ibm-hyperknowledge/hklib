@@ -2,11 +2,8 @@
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
-
 "use strict";
-
-module.exports =
-`
+export default `
 
 fijs				::= id (DOT_OP anchor)*
 
@@ -53,4 +50,4 @@ iri                 ::= "<" ([a-z] | [A-Z] | [0-9] | "!" | [#x23-#x2F] | ":" | "
 
 
 
-`; 
+`;

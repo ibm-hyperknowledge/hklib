@@ -2,7 +2,7 @@
 * Copyright (c) 2016-present, IBM Research
 * Licensed under The MIT License [see LICENSE for details]
 */
-export = GraphBuilder;
+export default GraphBuilder;
 declare class GraphBuilder {
     graph: Graph;
     linkMap: {};
@@ -16,7 +16,7 @@ declare class GraphBuilder {
     addPreservedEntities(ids: any): void;
     addContext(id: any, parent?: null): object | null;
     addEntity(entity: any): object | null;
-    getEntity(entityId: any): import("./hkentity") | null;
+    getEntity(entityId: any): import("./hkentity.js").default | null;
     addFact(subj: any, pred: any, obj: any, parent: any): any;
     addInheritance(child: any, inheritance: any, className: any, parent: any): any;
     addLink(connectorId: any, linkObj: any, parent?: null): any;
@@ -26,4 +26,4 @@ declare class GraphBuilder {
     addInheritanceRelation(inheritance: any, roles: any): any;
     getEntities(serialized: any): any[];
 }
-import Graph = require("./hkgraph");
+import Graph from "./hkgraph.js";

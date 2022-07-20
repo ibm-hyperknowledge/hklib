@@ -3,8 +3,7 @@
  * Licensed under The MIT License [see LICENSE for details]
  */
 "use strict";
-module.exports =
-    `
+export default `
 
 fijs				::= id (DOT_OP anchor)*
 

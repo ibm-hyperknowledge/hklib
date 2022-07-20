@@ -1,12 +1,10 @@
-"use strict";
 /*
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
-const tslib_1 = require("tslib");
-const types_1 = require("./types");
-const context_1 = (0, tslib_1.__importDefault)(require("./context"));
-class VirtualContext extends context_1.default {
+import { VIRTUAL_CONTEXT as VIRTUAL_CONTEXT_TYPE } from "./types.js";
+import Context from "./context.js";
+class VirtualContext extends Context {
     /** Constructs a new virtual context object.
      *
      * @param {any} [id] Some id string for this entity.
@@ -20,13 +18,13 @@ class VirtualContext extends context_1.default {
         const metaProperties = { "readonly": "<http://www.w3.org/2001/XMLSchema#boolean>" };
         this.properties = Object.assign(this.properties, properties);
         this.metaProperties = Object.assign(this.metaProperties, metaProperties);
-        this.type = types_1.VIRTUAL_CONTEXT;
+        this.type = VIRTUAL_CONTEXT_TYPE;
     }
     static isValid(entity) {
         let isValid = false;
         if (entity && typeof (entity) === 'object' && !Array.isArray(entity)) {
             if (entity.hasOwnProperty('type')
-                && entity.type === types_1.VIRTUAL_CONTEXT
+                && entity.type === VIRTUAL_CONTEXT_TYPE
                 && entity.hasOwnProperty('id')
                 && entity.hasOwnProperty('parent')) {
                 isValid = true;
@@ -48,4 +46,4 @@ class VirtualContext extends context_1.default {
         }
     }
 }
-module.exports = VirtualContext;
+export default VirtualContext;

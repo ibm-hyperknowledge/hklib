@@ -1,11 +1,11 @@
+import * as Types from "./types.js";
+import HKEntity from "./hkentity.js";
+import * as RoleType from "./roletypes.js";
 /*
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
 "use strict";
-const Types = require("./types");
-const HKEntity = require("./hkentity");
-const RoleType = require("./roletypes");
 class Connector extends HKEntity {
     /**
      * Creates a new instance of Connector.
@@ -155,4 +155,4 @@ class Connector extends HKEntity {
 }
 Connector.type = Types.CONNECTOR;
 const isValid = Connector.isValid;
-module.exports = Connector;
+export default Connector;

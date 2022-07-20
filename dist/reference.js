@@ -1,10 +1,10 @@
+import * as Types from "./types.js";
+import Node from "./node.js";
 /*
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
 "use strict";
-const Types = require("./types");
-const Node = require("./node");
 class Reference extends Node {
     /** Constructs a new reference node object.
      *
@@ -65,4 +65,4 @@ class Reference extends Node {
 }
 Reference.type = Types.REFERENCE;
 const isValid = Reference.isValid;
-module.exports = Reference;
+export default Reference;

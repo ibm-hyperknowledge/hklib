@@ -2,8 +2,7 @@
 * Copyright (c) 2016-present, IBM Research
 * Licensed under The MIT License [see LICENSE for details]
 */
-import Context from "./context";
-export = VirtualContext;
+import Context from "./context.js";
 declare class VirtualContext extends Context {
     /** Constructs a new virtual context object.
      *
@@ -16,3 +15,4 @@ declare class VirtualContext extends Context {
     static isValid(entity: VirtualContext): boolean;
     setOrAppendToProperty(property: string, value: Object, metaProperty?: string | undefined): void;
 }
+export default VirtualContext;

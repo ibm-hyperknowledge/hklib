@@ -3,10 +3,9 @@
  * Licensed under The MIT License [see LICENSE for details]
  */
 
-import { VIRTUAL_LINK as VIRTUAL_LINK_TYPE } from "./types";
-import Link from "./link";
+import { VIRTUAL_LINK as VIRTUAL_LINK_TYPE } from "./types.js";
+import Link from "./link.js";
 
-export = VirtualLink;
 class VirtualLink extends Link {
   constructor(id: any, parent?: string) {
     super(id, parent);
@@ -26,3 +25,5 @@ class VirtualLink extends Link {
     return isValid;
   }
 }
+
+export default VirtualLink;

@@ -1,11 +1,11 @@
+import * as Types from "./types.js";
+import HKEntity from "./hkentity.js";
+import * as Constants from "./constants.js";
 /*
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
 "use strict";
-const Types = require("./types");
-const HKEntity = require("./hkentity");
-const Constants = require("./constants");
 class Link extends HKEntity {
     /** Constructs a new link object.
      *
@@ -232,4 +232,4 @@ function _crossBind(self, roles, idx, vetor, withAnchors, callback) {
 }
 Link.type = Types.LINK;
 const isValid = Link.isValid;
-module.exports = Link;
+export default Link;

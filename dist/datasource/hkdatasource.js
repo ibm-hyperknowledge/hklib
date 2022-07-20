@@ -1,19 +1,20 @@
+import request from "request";
+import { default as default$0 } from "axios";
+import fs from "fs";
+import jwt from "jsonwebtoken";
+import HKEntity from "../hkentity.js";
+import deserialize from "../deserialize.js";
+import http from "http";
+import https from "https";
+import FormData from "form-data";
 /*
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
 "use strict";
-const request = require("request");
-const axios = require("axios").default;
-const fs = require("fs");
-const jwt = require("jsonwebtoken");
-const HKEntity = require("../hkentity");
-const deserialize = require("../deserialize");
+const axios = { default: default$0 }.default;
 const PARSE_FAILED_MESSAGE = "Failed to parse server response";
 const UNEXPECTED_NULL_DATA = "Unexpected empty data on parsing";
-const http = require("http");
-const https = require("https");
-const FormData = require('form-data');
 class HKDatasource {
     /**
      * Creates a datasource connected to a hkbase
@@ -1455,4 +1456,4 @@ function requestCompletedWithSuccess(code) {
 function stringifyResponseLog(res) {
     return `Server responded with ${res.statusCode}. ${res.body}`;
 }
-module.exports = HKDatasource;
+export default HKDatasource;

@@ -2,7 +2,7 @@
 * Copyright (c) 2016-present, IBM Research
 * Licensed under The MIT License [see LICENSE for details]
 */
-export = Node;
+export default Node;
 declare class Node extends HKEntity {
     /**
      * Tests whether `entity` is a node structurally.
@@ -90,6 +90,6 @@ declare class Node extends HKEntity {
 declare namespace Node {
     const type: string;
 }
-import HKEntity = require("./hkentity");
-import FI = require("./fi/fi");
-import FIAnchor = require("./fi/fianchor");
+import HKEntity from "./hkentity.js";
+import FI from "./fi/fi.js";
+import FIAnchor from "./fi/fianchor.js";

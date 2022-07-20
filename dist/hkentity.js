@@ -316,4 +316,4 @@ class HKEntity {
         }
     }
 }
-module.exports = HKEntity;
+export default HKEntity;

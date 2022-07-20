@@ -2,7 +2,7 @@
 * Copyright (c) 2016-present, IBM Research
 * Licensed under The MIT License [see LICENSE for details]
 */
-export = HKDatasource;
+export default HKDatasource;
 declare class HKDatasource {
     /**
      * If the authSecret is passed, this method generates a signed jwt token for acessing the datasource
@@ -566,4 +566,4 @@ declare class HKDatasource {
     }, callback: (err: Error | null, data: Object) => any): void;
     getAuthToken(authSecret: any, expiresIn?: number): any;
 }
-import HKEntity = require("../hkentity");
+import HKEntity from "../hkentity.js";
