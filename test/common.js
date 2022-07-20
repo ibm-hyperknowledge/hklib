@@ -1,18 +1,23 @@
-import HKDatasource from "../dist/datasource/hkdatasource.js";
-import fs  from 'fs';
+/*
+ * Copyright (c) 2016-present, IBM Research
+ * Licensed under The MIT License [see LICENSE for details]
+ */
+
+import HKDatasource from "../dist/mjs/datasource/hkdatasource.js";
+import setup from "./setup.json" assert {type: "json"};
 
 export const preamble = function () {
     /* remove `_mocha` from argv array */
     if (process.argv[1].endsWith('mocha')) {
         process.argv.splice(1, 1);
     }
-    if (process.argv[2].endsWith('json')) {
-				const setup = JSON.parse(fs.readFileSync(`./${process.argv[2]}`, 'utf-8'));
-        if (setup.datasource) {
-            let options = setup.options || {};
-            const repoName = this.randomString(10);
-            return new HKDatasource(setup.datasource, `${repoName}_test`, options);
-        }
+    
+    if (setup.datasource) {
+        let options = setup.options || {};
+        const repoName = this.randomString(10);
+        const ds = new HKDatasource(setup.datasource, `${repoName}_test`, options);
+        console.log("Testing:", ds);
+        return ds;
     }
 };
 export const randomString = function (len = 10) {

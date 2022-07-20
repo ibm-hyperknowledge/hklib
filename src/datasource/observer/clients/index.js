@@ -3,9 +3,12 @@
  * Licensed under The MIT License [see LICENSE for details]
  */
 
-'use strict';
+import observerclient from "./observerclient.js";
+import configurableobserverclient from "./configurableobserverclient.js";
+import restobserverclient from "./restobserverclient.js";
+import rabbitmqobserverclient from "./rabbitmqobserverclient.js";
 
-module.exports.DefaultObserverClient       = require('./observerclient');
-module.exports.ConfigurableObserverClient  = require('./configurableobserverclient');
-module.exports.RestObserverClient          = require('./restobserverclient');
-module.exports.RabbitMQObserverClient      = require('./rabbitmqobserverclient')
+export { observerclient as DefaultObserverClient };
+export { configurableobserverclient as ConfigurableObserverClient };
+export { restobserverclient as RestObserverClient };
+export { rabbitmqobserverclient as RabbitMQObserverClient };

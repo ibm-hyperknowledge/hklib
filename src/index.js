@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016-present, IBM Research
+ * Licensed under The MIT License [see LICENSE for details]
+ */
+
 import node from "./node.js";
 import context from "./context.js";
 import connector from "./connector.js";
@@ -21,11 +26,8 @@ import graphbuilder from "./graphbuilder.js";
 import fi from "./fi/fi.js";
 import fioperator from "./fi/fioperator.js";
 import fianchor from "./fi/fianchor.js";
-/*
- * Copyright (c) 2016-present, IBM Research
- * Licensed under The MIT License [see LICENSE for details]
- */
-"use strict";
+
+
 export const NODE_TYPE = { NODE: types }.NODE;
 export const CONTEXT_TYPE = { CONTEXT: types }.CONTEXT;
 export const LINK_TYPE = { LINK: types }.LINK;

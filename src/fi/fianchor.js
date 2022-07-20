@@ -1,6 +1,12 @@
+/*
+ * Copyright (c) 2016-present, IBM Research
+ * Licensed under The MIT License [see LICENSE for details]
+ */
+
 import FIOperator from "./fioperator.js";
 import FI from "./fi.js";
-class FIAnchor {
+
+export default class FIAnchor {
     /**
      * Create a new Anchor instance based on an FI (or string representing an FI) and a
      * ordered collection of arguments.
@@ -45,4 +51,3 @@ class FIAnchor {
         return strAnchor;
     }
 }
-export default FIAnchor;

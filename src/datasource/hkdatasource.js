@@ -1,5 +1,10 @@
+/*
+ * Copyright (c) 2016-present, IBM Research
+ * Licensed under The MIT License [see LICENSE for details]
+ */
+
 import request from "request";
-import { default as default$0 } from "axios";
+import axios from "axios";
 import fs from "fs";
 import jwt from "jsonwebtoken";
 import HKEntity from "../hkentity.js";
@@ -7,12 +12,6 @@ import deserialize from "../deserialize.js";
 import http from "http";
 import https from "https";
 import FormData from "form-data";
-/*
- * Copyright (c) 2016-present, IBM Research
- * Licensed under The MIT License [see LICENSE for details]
- */
-"use strict";
-const axios = { default: default$0 }.default;
 const PARSE_FAILED_MESSAGE = "Failed to parse server response";
 const UNEXPECTED_NULL_DATA = "Unexpected empty data on parsing";
 class HKDatasource {

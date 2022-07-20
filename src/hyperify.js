@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016-present, IBM Research
+ * Licensed under The MIT License [see LICENSE for details]
+ */
+
 import * as Types from "./types.js";
 import Node from "./node.js";
 import Context from "./context.js";
@@ -5,11 +10,7 @@ import Connector from "./connector.js";
 import Link from "./link.js";
 import * as ConnectorClass from "./connectorclass.js";
 import * as RoleTypes from "./roletypes.js";
-/*
- * Copyright (c) 2016-present, IBM Research
- * Licensed under The MIT License [see LICENSE for details]
- */
-"use strict";
+
 function createRelation(key, subj, obj, options, connectors, entities) {
     let relationId = key;
     if (options.aliasMap.hasOwnProperty(key)) {

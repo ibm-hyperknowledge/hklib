@@ -1,11 +1,12 @@
-import * as Types from "./types.js";
-import Node from "./node.js";
 /*
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
-"use strict";
-class Context extends Node {
+
+import * as Types from "./types.js";
+import Node from "./node.js";
+
+export default class Context extends Node {
     /** Constructs a new context object.
      *
      * @param {string | null} [id] Some id string for this context. Deprecated: json object, which will deserialized as a Context; use `nodify()` instead.
@@ -66,4 +67,3 @@ class Context extends Node {
 }
 Context.type = Types.CONTEXT;
 const isValid = Context.isValid;
-export default Context;

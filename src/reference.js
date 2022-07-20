@@ -1,11 +1,11 @@
-import * as Types from "./types.js";
-import Node from "./node.js";
 /*
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
-"use strict";
-class Reference extends Node {
+
+import * as Types from "./types.js";
+import Node from "./node.js";
+export default class Reference extends Node {
     /** Constructs a new reference node object.
      *
      * @param {string | null} [id] Some if string for this node. Deprecated: json object, which will deserialized as a Reference;
@@ -65,4 +65,3 @@ class Reference extends Node {
 }
 Reference.type = Types.REFERENCE;
 const isValid = Reference.isValid;
-export default Reference;

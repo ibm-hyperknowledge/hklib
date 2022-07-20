@@ -1,12 +1,13 @@
-import * as Types from "./types.js";
-import HKEntity from "./hkentity.js";
-import * as Constants from "./constants.js";
 /*
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
-"use strict";
-class Link extends HKEntity {
+
+import * as Types from "./types.js";
+import HKEntity from "./hkentity.js";
+import * as Constants from "./constants.js";
+
+export default class Link extends HKEntity {
     /** Constructs a new link object.
      *
      * @param {string | null} [id] Some id string for this link. Deprecated: json object, which will deserialized as a Link.
@@ -232,4 +233,3 @@ function _crossBind(self, roles, idx, vetor, withAnchors, callback) {
 }
 Link.type = Types.LINK;
 const isValid = Link.isValid;
-export default Link;

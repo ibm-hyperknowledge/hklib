@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016-present, IBM Research
+ * Licensed under The MIT License [see LICENSE for details]
+ */
+
 import grammar from "./grammar.js";
 import FIOperator from "./fioperator.js";
 import FIAnchor from "./fianchor.js";
@@ -6,7 +11,7 @@ const PARSER = new EBNF.Grammars.W3C.Parser(grammar);
 /**
  * Fragment Identifier (FI.js)
  */
-class FI {
+export default class FI {
     /**
      * Create a new FI object.
      *
@@ -285,4 +290,3 @@ function processId(ast) {
         throw Error(`Error parsing ${ast.text}`);
     }
 }
-export default FI;

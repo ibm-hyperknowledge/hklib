@@ -1,13 +1,14 @@
-import * as Types from "./types.js";
-import HKEntity from "./hkentity.js";
-import FI from "./fi/fi.js";
-import FIAnchor from "./fi/fianchor.js";
 /*
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
-"use strict";
-class Node extends HKEntity {
+
+import * as Types from "./types.js";
+import HKEntity from "./hkentity.js";
+import FI from "./fi/fi.js";
+import FIAnchor from "./fi/fianchor.js";
+
+export default class Node extends HKEntity {
     /** Constructs a new node object. Both `id` and `parent` are optional.
      *
      * @param {string | null} [id] Some id string for this node. Deprecated: json object, which will deserialized as a Node; use `nodify()` instead.
@@ -222,4 +223,3 @@ Node.type = Types.NODE;
 const isValid = Node.isValid;
 const nodefy = Node.nodefy;
 const entitify = Node.entitify;
-export default Node;

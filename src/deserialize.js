@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016-present, IBM Research
+ * Licensed under The MIT License [see LICENSE for details]
+ */
+
 import * as Types from "./types.js";
 import Node from "./node.js";
 import * as VirtualNode from "./virtualnode.js";
@@ -9,11 +14,7 @@ import Reference from "./reference.js";
 import Link from "./link.js";
 import Trail from "./trail.js";
 import HKEntity from "./hkentity.js";
-/*
- * Copyright (c) 2016-present, IBM Research
- * Licensed under The MIT License [see LICENSE for details]
- */
-"use strict";
+
 function _deserialize(input) {
     if (!input || !input.type) {
         return null;

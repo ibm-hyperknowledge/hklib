@@ -1,6 +1,13 @@
+/*
+ * Copyright (c) 2016-present, IBM Research
+ * Licensed under The MIT License [see LICENSE for details]
+ */
+
 import { expect as expect$0 } from "chai";
-import FI from "../../src/fi/fi.js";
+import FI from "../../dist/mjs/fi/fi.js";
+
 const expect = { expect: expect$0 }.expect;
+
 describe("Testing FI api:", () => {
     describe("Testing parsing and toString back:", () => {
         //Testing parsing and toString is a good sanity check for the parsing and serialization structure.

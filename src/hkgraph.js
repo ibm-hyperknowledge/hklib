@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016-present, IBM Research
+ * Licensed under The MIT License [see LICENSE for details]
+ */
+
 import Connector from "./connector.js";
 import Context from "./context.js";
 import Link from "./link.js";
@@ -10,12 +15,8 @@ import * as VirtualContext from "./virtualcontext.js";
 import HKEntity from "./hkentity.js";
 import * as VirtualNode from "./virtualnode.js";
 import * as VirtualLink from "./virtuallink.js";
-/*
- * Copyright (c) 2016-present, IBM Research
- * Licensed under The MIT License [see LICENSE for details]
- */
-"use strict";
-class HKGraph {
+
+export default class HKGraph {
     constructor() {
         this.nodes = {};
         this.virtualNodes = {};
@@ -556,4 +557,3 @@ HKGraph.LINK_TYPE = HKTypes.LINK;
 HKGraph.VIRTUAL_LINK_TYPE = HKTypes.VIRTUAL_LINK;
 HKGraph.CONNECTOR_TYPE = HKTypes.CONNECTOR;
 HKGraph.INTERFACE = HKTypes.INTERFACE;
-export default HKGraph;

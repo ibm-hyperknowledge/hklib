@@ -2,8 +2,7 @@
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
-"use strict";
-class HKEntity {
+export default class HKEntity {
     /**
      * Creates a new Hyperknowledge entity
      *
@@ -316,4 +315,4 @@ class HKEntity {
         }
     }
 }
-export default HKEntity;
+

@@ -5,7 +5,7 @@
 
 import { VIRTUAL_CONTEXT as VIRTUAL_CONTEXT_TYPE } from "./types.js";
 import Context from "./context.js";
-class VirtualContext extends Context {
+export default class VirtualContext extends Context {
   /** Constructs a new virtual context object. 
    * 
    * @param {any} [id] Some id string for this entity.
@@ -55,5 +55,3 @@ class VirtualContext extends Context {
     }
   }
 }
-
-export default VirtualContext;

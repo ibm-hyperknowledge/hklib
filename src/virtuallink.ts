@@ -6,7 +6,7 @@
 import { VIRTUAL_LINK as VIRTUAL_LINK_TYPE } from "./types.js";
 import Link from "./link.js";
 
-class VirtualLink extends Link {
+export default class VirtualLink extends Link {
   constructor(id: any, parent?: string) {
     super(id, parent);
     this.type = VIRTUAL_LINK_TYPE;
@@ -25,5 +25,3 @@ class VirtualLink extends Link {
     return isValid;
   }
 }
-
-export default VirtualLink;

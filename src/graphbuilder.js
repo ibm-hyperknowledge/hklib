@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016-present, IBM Research
+ * Licensed under The MIT License [see LICENSE for details]
+ */
+
 import Node from "./node.js";
 import Reference from "./reference.js";
 import Connector from "./connector.js";
@@ -6,14 +11,11 @@ import Link from "./link.js";
 import Context from "./context.js";
 import Graph from "./hkgraph.js";
 import * as RoleTypes from "./roletypes.js";
-/*
- * Copyright (c) 2016-present, IBM Research
- * Licensed under The MIT License [see LICENSE for details]
- */
-"use strict";
+
 const DEFAULT_SUBJECT_LABEL = "subject";
 const DEFAULT_OBJECT_LABEL = "object";
-class GraphBuilder {
+
+export default class GraphBuilder {
     constructor() {
         this.graph = new Graph();
         this.linkMap = {};
@@ -249,4 +251,3 @@ function _addConnector(connectorId, className, roles = []) {
         return this.graph.addEntity(connector);
     }
 }
-export default GraphBuilder;

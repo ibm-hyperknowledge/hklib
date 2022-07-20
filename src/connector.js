@@ -1,11 +1,12 @@
-import * as Types from "./types.js";
-import HKEntity from "./hkentity.js";
-import * as RoleType from "./roletypes.js";
 /*
  * Copyright (c) 2016-present, IBM Research
  * Licensed under The MIT License [see LICENSE for details]
  */
-"use strict";
+
+import * as Types from "./types.js";
+import HKEntity from "./hkentity.js";
+import * as RoleType from "./roletypes.js";
+
 class Connector extends HKEntity {
     /**
      * Creates a new instance of Connector.
