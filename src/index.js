@@ -3,28 +3,20 @@
 * Licensed under The MIT License [see LICENSE for details]
 */
 
-export { default as Node } from "./node";
-export { default as HKNode } from "./node";
-export { default as Context } from "./context";
-export { default as HKContext } from "./context";
-export { default as Connector } from "./connector";
-export { default as HKConnector } from "./connector";
-export { default as Reference } from "./reference";
-export { default as HKReference } from "./reference";
-export { default as Link } from "./link";
-export { default as HKLink } from "./link";
-export { default as Trail } from "./trail";
-export { default as HKTrail } from "./trail";
+export { default as Node, default as HKNode } from "./node";
+export { default as Context, default as HKContext } from "./context";
+export { default as Connector, default as HKConnector } from "./connector";
+export { default as Reference, default as HKReference} from "./reference";
+export { default as Link, default as HKLink } from "./link";
+export { default as Trail, default as HKTrail } from "./trail";
 export { default as HKEntity } from "./hkentity";
 export { default as HKGraph } from "./hkgraph";
-export { default as VirtualNode } from "./virtualnode";
-export { default as HKVirtualNode } from "./virtualnode";
-export { default as VirtualContext } from "./virtualcontext";
-export { default as HKVirtualContext } from "./virtualcontext";
-export { default as VirtualLink } from "./virtuallink";
-export { default as HKVirtualLink } from "./virtuallink";
+export { default as VirtualNode, default as HKVirtualNode } from "./virtualnode";
+export { default as VirtualContext, default as HKVirtualContext } from "./virtualcontext";
+export { default as VirtualLink, default as HKVirtualLink } from "./virtuallink";
 
-export * from "./types";
+export { default as HKTypes } from "./types";
+
 export { NODE as NODE_TYPE } from "./types";
 export { CONTEXT as CONTEXT_TYPE } from "./types";
 export { REFERENCE as REFERENCE_TYPE } from "./types";
@@ -37,16 +29,14 @@ export { VIRTUAL_NODE as VIRTUAL_NODE } from "./types";
 export { VIRTUAL_CONTEXT as VIRTUAL_CONTEXT } from "./types";
 export { VIRTUAL_SOURCE_PROPERTY } from "./types";
 
-
-export * from "./roletypes";
-export { HKRoleTypes as HKRoleTypes } from "./roletypes";
+export { default as HKRoleTypes } from "./roletypes";
 export { OBJECT as OBJECT } from "./roletypes";
 export { SUBJECT as SUBJECT } from "./roletypes";
 export { PARENT as PARENT } from "./roletypes";
 export { CHILD as CHILD } from "./roletypes";
 
-export { ConnectorClass as ConnectorClass } from "./connectorclass";
-export { HKConnectorClass as HKConnectorClass } from "./connectorclass";
+export { default as ConnectorClass } from "./connectorclass";
+export { default as HKConnectorClass } from "./connectorclass";
 export { HIERARCHY as HIERARCHY } from "./connectorclass";
 export { FACTS as FACTS } from "./connectorclass";
 export { REASONING as REASONING } from "./connectorclass";
@@ -58,7 +48,7 @@ export { POSSIBILITYRESOLVER as POSSIBILITYRESOLVER } from "./connectorclass";
 
 export { default as hyperify } from "./hyperify";
 export { default as deserialize } from "./deserialize";
-export { Constants as Constants } from "./constants";
+export { default as Constants } from "./constants";
 export { default as HKDatasource } from "./datasource/hkdatasource";
 export { default as HKRepository } from "./datasource/hkrepository";
 export { default as GraphBuilder } from "./graphbuilder";
