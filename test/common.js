@@ -4,19 +4,25 @@
  */
 
 import HKDatasource from "../dist/mjs/datasource/hkdatasource.js";
-import setup from "./setup.json" assert {type: "json"};
+import { readFile } from 'fs/promises';
 
-export const preamble = function () {
+
+export const preamble = async function () {
     /* remove `_mocha` from argv array */
     if (process.argv[1].endsWith('mocha')) {
         process.argv.splice(1, 1);
     }
-    
+
+    const setup = JSON.parse(
+        await readFile(
+          new URL('./setup.json', import.meta.url)
+        )
+      );
+
     if (setup.datasource) {
         let options = setup.options || {};
         const repoName = this.randomString(10);
         const ds = new HKDatasource(setup.datasource, `${repoName}_test`, options);
-        console.log("Testing:", ds);
         return ds;
     }
 };

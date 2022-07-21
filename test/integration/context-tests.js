@@ -4,16 +4,13 @@
  */
 
 import mocha from "mocha";
-import { expect as expect$0 } from "chai";
+import { expect } from "chai";
 import * as util from "../common.js";
 import Context from "../../dist/mjs/context.js";
 import Node from "../../dist/mjs/node.js";
 import VContext from "../../dist/mjs/virtualcontext.js";
-import HKEntity from "../../dist/mjs/hkentity.js";
 
-
-const expect = { expect: expect$0 }.expect;
-const HKDatasource = util.preamble();
+const HKDatasource = await util.preamble();
 describe("Contexts integration tests:", () => {
     beforeEach(done => {
         HKDatasource.createRepository((err, data) => {

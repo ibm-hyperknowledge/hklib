@@ -2,19 +2,18 @@
   "compilerOptions": {
       "allowJs": true,
       "allowSyntheticDefaultImports": true,
-      "baseUrl": "src",
+      "preserveConstEnums": true,
       "declaration": true,
+      "declarationDir": "./dist/typings",
       "esModuleInterop": true,
-      "sourceMap": false, /* sourceMaps are enabled so you’ll be able to use node’s DevTools integration to view TypeScript sources alongside your JavaScript */
+      "sourceMap": true, /* sourceMaps are enabled so you’ll be able to use node’s DevTools integration to view TypeScript sources alongside your JavaScript */
       "inlineSourceMap": false,
-      "lib": ["esnext"],
       "listEmittedFiles": false,
       "listFiles": false,
       "moduleResolution": "node",
       "noFallthroughCasesInSwitch": true,
       "pretty": true,
       "resolveJsonModule": true,
-      "rootDir": "src",
       "skipLibCheck": true,
       "strict": true,
       "alwaysStrict": true, /* Parse in strict mode and emit "use strict" for each source file. */
@@ -33,6 +32,6 @@
       "forceConsistentCasingInFileNames": true, /* Disallow inconsistently-cased references to the same file. */
   },
   "compileOnSave": false,
-  "exclude": ["node_modules", "dist", "typings"],
-  "include": ["src"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "typings"]
 }

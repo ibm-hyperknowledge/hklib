@@ -1,87 +1,68 @@
 /*
- * Copyright (c) 2016-present, IBM Research
- * Licensed under The MIT License [see LICENSE for details]
- */
+* Copyright (c) 2016-present, IBM Research
+* Licensed under The MIT License [see LICENSE for details]
+*/
 
-import node from "./node.js";
-import context from "./context.js";
-import connector from "./connector.js";
-import reference from "./reference.js";
-import link from "./link.js";
-import trail from "./trail.js";
-import hkentity from "./hkentity.js";
-import hkgraph from "./hkgraph.js";
-import virtualnode from "./virtualnode.js";
-import virtualcontext from "./virtualcontext.js";
-import virtuallink from "./virtuallink.js";
-import * as types from "./types.js";
-import * as roletypes from "./roletypes.js";
-import * as connectorclass from "./connectorclass.js";
-import hyperify from "./hyperify.js";
-import deserialize from "./deserialize.js";
-import * as constants from "./constants.js";
-import hkdatasource from "./datasource/hkdatasource.js";
-import hkrepository from "./datasource/hkrepository.js";
-import graphbuilder from "./graphbuilder.js";
-import fi from "./fi/fi.js";
-import fioperator from "./fi/fioperator.js";
-import fianchor from "./fi/fianchor.js";
+export { default as Node } from "./node";
+export { default as HKNode } from "./node";
+export { default as Context } from "./context";
+export { default as HKContext } from "./context";
+export { default as Connector } from "./connector";
+export { default as HKConnector } from "./connector";
+export { default as Reference } from "./reference";
+export { default as HKReference } from "./reference";
+export { default as Link } from "./link";
+export { default as HKLink } from "./link";
+export { default as Trail } from "./trail";
+export { default as HKTrail } from "./trail";
+export { default as HKEntity } from "./hkentity";
+export { default as HKGraph } from "./hkgraph";
+export { default as VirtualNode } from "./virtualnode";
+export { default as HKVirtualNode } from "./virtualnode";
+export { default as VirtualContext } from "./virtualcontext";
+export { default as HKVirtualContext } from "./virtualcontext";
+export { default as VirtualLink } from "./virtuallink";
+export { default as HKVirtualLink } from "./virtuallink";
+
+export * from "./types";
+export { NODE as NODE_TYPE } from "./types";
+export { CONTEXT as CONTEXT_TYPE } from "./types";
+export { REFERENCE as REFERENCE_TYPE } from "./types";
+export { LINK as LINK_TYPE } from "./types";
+export { CONNECTOR as CONNECTOR_TYPE } from "./types";
+export { BIND as BIND_TYPE } from "./types";
+export { INTERFACE as INTERFACE } from "./types";
+export { TRAIL as TRAIL_TYPE } from "./types";
+export { VIRTUAL_NODE as VIRTUAL_NODE } from "./types";
+export { VIRTUAL_CONTEXT as VIRTUAL_CONTEXT } from "./types";
+export { VIRTUAL_SOURCE_PROPERTY } from "./types";
 
 
-export const NODE_TYPE = { NODE: types }.NODE;
-export const CONTEXT_TYPE = { CONTEXT: types }.CONTEXT;
-export const LINK_TYPE = { LINK: types }.LINK;
-export const CONNECTOR_TYPE = { CONNECTOR: types }.CONNECTOR;
-export const BIND_TYPE = { BIND: types }.BIND;
-export const INTERFACE = { INTERFACE: types }.INTERFACE;
-export const TRAIL_TYPE = { TRAIL: types }.TRAIL;
-export const VIRTUAL_NODE_TYPE = { VIRTUAL_NODE: types }.VIRTUAL_NODE;
-export const VIRTUAL_CONTEXT_TYPE = { VIRTUAL_CONTEXT: types }.VIRTUAL_CONTEXT;
-export const VIRTUAL_LINK_TYPE = { VIRTUAL_LINK: types }.VIRTUAL_LINK;
-export const VIRTUAL_SOURCE_PROPERTY = "virtualsrc";
-export const SUBJECT = { SUBJECT: roletypes }.SUBJECT;
-export const OBJECT = { OBJECT: roletypes }.OBJECT;
-export const PARENT = { PARENT: roletypes }.PARENT;
-export const CHILD = { CHILD: roletypes }.CHILD;
-export const HIERARCHY = { HIERARCHY: connectorclass }.HIERARCHY;
-export const FACTS = { FACTS: connectorclass }.FACTS;
-export const REASONING = { REASONING: connectorclass }.REASONING;
-export const CONSTRAINT = { CONSTRAINT: connectorclass }.CONSTRAINT;
-export const CAUSAL = { CAUSAL: connectorclass }.CAUSAL;
-export const POSSIBILITY = { POSSIBILITY: connectorclass }.POSSIBILITY;
-export const POSSIBILITYRESOLVER = { POSSIBILITYRESOLVER: connectorclass }.POSSIBILITYRESOLVER;
-export { node as Node };
-export { node as HKNode };
-export { context as Context };
-export { context as HKContext };
-export { connector as Connector };
-export { connector as HKConnector };
-export { reference as Reference };
-export { reference as HKReference };
-export { link as Link };
-export { link as HKLink };
-export { trail as Trail };
-export { trail as HKTrail };
-export { hkentity as HKEntity };
-export { hkgraph as HKGraph };
-export { virtualnode as VirtualNode };
-export { virtualnode as HKVirtualNode };
-export { virtualcontext as VirtualContext };
-export { virtualcontext as HKVirtualContext };
-export { virtuallink as VirtualLink };
-export { virtuallink as HKVirtualLink };
-export { types as Types };
-export { types as HKTypes };
-export { roletypes as RoleTypes };
-export { roletypes as HKRoleTypes };
-export { connectorclass as ConnectorClass };
-export { connectorclass as HKConnectorClass };
-export { hyperify };
-export { deserialize };
-export { constants as Constants };
-export { hkdatasource as HKDatasource };
-export { hkrepository as HKRepository };
-export { graphbuilder as GraphBuilder };
-export { fi as FI };
-export { fioperator as FIOperator };
-export { fianchor as FIAnchor };
+export * from "./roletypes";
+export { HKRoleTypes as HKRoleTypes } from "./roletypes";
+export { OBJECT as OBJECT } from "./roletypes";
+export { SUBJECT as SUBJECT } from "./roletypes";
+export { PARENT as PARENT } from "./roletypes";
+export { CHILD as CHILD } from "./roletypes";
+
+export { ConnectorClass as ConnectorClass } from "./connectorclass";
+export { HKConnectorClass as HKConnectorClass } from "./connectorclass";
+export { HIERARCHY as HIERARCHY } from "./connectorclass";
+export { FACTS as FACTS } from "./connectorclass";
+export { REASONING as REASONING } from "./connectorclass";
+export { CONSTRAINT as CONSTRAINT } from "./connectorclass";
+export { CAUSAL as CAUSAL } from "./connectorclass";
+export { POSSIBILITY as POSSIBILITY } from "./connectorclass";
+export { POSSIBILITYRESOLVER as POSSIBILITYRESOLVER } from "./connectorclass";
+
+
+export { default as hyperify } from "./hyperify";
+export { default as deserialize } from "./deserialize";
+export { Constants as Constants } from "./constants";
+export { default as HKDatasource } from "./datasource/hkdatasource";
+export { default as HKRepository } from "./datasource/hkrepository";
+export { default as GraphBuilder } from "./graphbuilder";
+
+export { default as FI } from "./fi/fi";
+export { default as FIOperator } from "./fi/fioperator";
+export { default as FIAnchor } from "./fi/fianchor";

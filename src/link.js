@@ -219,6 +219,7 @@ export default class Link extends HKEntity {
         return false;
     }
 }
+
 function _crossBind(self, roles, idx, vetor, withAnchors, callback) {
     if (idx < roles.length) {
         let binds = self.binds[roles[idx]];

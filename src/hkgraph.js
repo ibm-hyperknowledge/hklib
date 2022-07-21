@@ -10,11 +10,11 @@ import Node from "./node.js";
 import Reference from "./reference.js";
 import Trail from "./trail.js";
 import * as HKTypes from "./types.js";
-import * as shortId from "shortid";
-import * as VirtualContext from "./virtualcontext.js";
+import { nanoid } from "nanoid";
+import VirtualContext from "./virtualcontext.js";
 import HKEntity from "./hkentity.js";
-import * as VirtualNode from "./virtualnode.js";
-import * as VirtualLink from "./virtuallink.js";
+import VirtualNode from "./virtualnode.js";
+import VirtualLink from "./virtuallink.js";
 
 export default class HKGraph {
     constructor() {
@@ -545,7 +545,7 @@ export default class HKGraph {
 function generateId(model, length) {
     let id;
     do {
-        id = shortId();
+        id = nanoid();
     } while (model.hasId(id));
     return id;
 }

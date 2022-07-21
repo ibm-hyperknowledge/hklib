@@ -5,10 +5,10 @@
 
 import * as Types from "./types.js";
 import Node from "./node.js";
-import * as VirtualNode from "./virtualnode.js";
+import VirtualNode from "./virtualnode.js";
 import Context from "./context.js";
-import * as VirtualContext from "./virtualcontext.js";
-import * as VirtualLink from "./virtuallink.js";
+import VirtualContext from "./virtualcontext.js";
+import VirtualLink from "./virtuallink.js";
 import Connector from "./connector.js";
 import Reference from "./reference.js";
 import Link from "./link.js";
