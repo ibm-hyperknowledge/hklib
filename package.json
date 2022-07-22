@@ -1,6 +1,6 @@
 {
   "name": "hklib",
-  "version": "5.0.11",
+  "version": "5.0.12",
   "main": "./dist/mjs/index",
   "author": "IBM Research",
   "types": "./dist/typings/index.d.ts",
@@ -68,6 +68,7 @@
     "driver"
   ],
   "scripts": {
+    "prepublishOnly": "npm run build",
     "build-old": "rm -rf dist; tsc; ./prepend-copyright-notice-d-ts.sh; cp index.d.ts.tocopy dist/index.d.ts",
     "build": "rm -rf dist; tsc -p tsconfig-mjs.json; tsc -p tsconfig-cjs.json; ./fixup.sh",
     "integration-tests": "mocha test/integration --timeout 360000 --forbid-only",
