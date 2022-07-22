@@ -240,4 +240,4 @@ npm run build
 ## Publish
 
 In order to publish new releases you must have write access to our [NPMJS package](https://www.npmjs.com/package/hklib).
-On the first time you publish you need to run ```npm login`` and inform your credentials. Afterwards you shoud use ``npm run publish`` to build the distributable files and publish a new release.
+On the first time you publish you need to run ```npm login`` and inform your credentials. Afterwards you shoud use ``npm publish`` to build the distributable files and publish a new release.
