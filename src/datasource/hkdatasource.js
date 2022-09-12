@@ -1039,7 +1039,8 @@ class HKDatasource
   }
 
   /**
-   * Import a RDF file from the filesystem
+   * @deprecated in favor of importRDFFileBulk. 
+   * Import a RDF files from the filesystem
    * @param {[File]} files files to be imported
    * @param {object} options a set of options to customize the importation
    * @param {string} [options.mimeType] the mimeType for the RDF data
@@ -1096,6 +1097,62 @@ class HKDatasource
       callback(err);
     }
   }
+
+   /**
+   * Import a RDF file from the filesystem
+   * @param {File} file files to be imported
+   * @param {object} options a set of options to customize the importation
+   * @param {string} [options.mimeType] the mimeType for the RDF data
+   * @param {string} [options.context] the target context to import the entities
+   * @param {OperationCallback} callback Response callback
+   */
+    async importRDFFileBulk(file, options, callback = () => { })
+    {
+      const context = options.context || null;
+  
+      let url = `${this.url}repository/${this.graphName}/rdf/bulk`;
+  
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append(file.name, options["mimeType"]);
+  
+      try
+      {
+        const config = {
+          headers: {
+            "context-parent": context,
+            "Content-Type": "multipart/form-data"
+          },
+          params: options,
+          ...getDefaultAxiosConfig()
+        }
+  
+        const response = await axios.post(url, formData, config);
+  
+        if (requestCompletedWithSuccess(response.status))
+        {
+          let out;
+          try
+          {
+            out = JSON.parse(response.body);
+          }
+          catch (err)
+          {
+            out = null;
+          }
+          callback(null, out);
+        }
+  
+        else
+        {
+          callback(stringifyResponseLog(response));
+        }
+      }
+      catch (err)
+      {
+        callback(err);
+      }
+    }
 
   /**
    * Import a RDF data
