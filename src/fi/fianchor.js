@@ -29,6 +29,12 @@ class FIAnchor
         this.operator = operator;
     }
 
+
+    equals(anchor) 
+    {
+        return (typeof anchor === 'FIAnchor') && (this.toString() === anchor.toString());
+    }
+
     toString() 
     {
 
