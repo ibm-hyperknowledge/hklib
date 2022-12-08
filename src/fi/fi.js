@@ -171,7 +171,7 @@ class FI
      */
     equals(fi) 
     {
-        if (typeof fi === 'FI' )
+        if (fi instanceof FI)
         {
             // if (this.getBaseArtifact().toString() === fi.getBaseArtifact().toString()) 
             // {
@@ -234,7 +234,7 @@ function parseId(text)
     }
     let id;
     try {
-        let id = processId(ast);
+        id = processId(ast);
     } finally {
         return id;
     }
