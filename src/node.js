@@ -103,7 +103,9 @@ class Node extends HKEntity
    * Adds FI anchor to this node. If adding FI, base artifact must match this node's id.
    * 
    * @param {FI|FIAnchor} fi 
-   * @param {object} properties 
+   * @param {Object.<string,Object>} properties Properties for the interface
+   * 
+   * @return {void}
    */
   addFIAnchor(fi, properties)
   {
