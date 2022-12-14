@@ -286,7 +286,54 @@ class HKEntity
       }
     }
   }
-
+  /**
+   * Append a value to a Metaproperty, create it if it does not exist, if the Metaproperty exists and it is not an array convert to an array
+   *
+   * @param {string} metaProperty Metaproperty key
+   * @param {string} value Metaproperty, a string that annotates the property (e. g. A type)
+   *
+   * @returns {void}
+   */
+  appendToMetaProperty(metaProperty, value) {
+    if (metaProperty) {
+        if (value !== undefined && value !== null) {
+            if (!this.metaProperties) {
+                this.metaProperties = {};
+            }
+            if (this.metaProperties.hasOwnProperty(metaProperty)) {
+                if (!Array.isArray(this.metaProperties[metaProperty])) {
+                    this.metaProperties[metaProperty] = [this.metaProperties[metaProperty]];
+                }
+                if (Array.isArray(value)) {
+                    this.metaProperties[metaProperty] = this.metaProperties[metaProperty].concat(value);
+                }
+                else {
+                    this.metaProperties[metaProperty].push(value);
+                }
+            }
+            else {
+                if (!Array.isArray(value)) {
+                    value = [value];
+                }
+                this.metaProperties[metaProperty] = value;
+            }
+        }
+    }
+  }
+  /**
+  * Append or create a metaProperty with value, create it if it does not exist as single value, if the metaProperty exists and it is not an array convert to an array.
+  *
+  * @param {string} metaProperty Metaproperty key
+  * @param {string} value Metaproperty, a string that annotates the property (e. g. A type)
+  */
+  setOrAppendToMetaProperty(metaProperty, value) {
+    if (this.hasMetaProperty(metaProperty)) {
+        this.appendToMetaProperty(metaProperty, value);
+    }
+    else {
+        this.setMetaProperty(metaProperty, value);
+    }
+  }
   /**
    * Get a metaproperty value for a given key.
    *
@@ -342,7 +389,18 @@ class HKEntity
     }
     return false;
   }
-
+  /**
+   * Check if the entity has the Metaproperty.
+   *
+   * @param {string} metaProperty Metaproperty key.
+   * @returns {boolean} A boolean indicating that the entity contains the specified Metaproperty.
+   */
+  hasMetaProperty(metaProperty) {
+    if (this.metaProperties) {
+        return this.metaProperties.hasOwnProperty(metaProperty);
+    }
+    return false;
+  }
   /**
    * (Internal) Serialize the properties. Used by serialize() functions of extending classes.
    *
