@@ -94,6 +94,62 @@ class FI
     }
 
     /**
+     * Returns anchor list to the base artifact, so that an fi = fi.getBaseArtifact() + fi.getAnchorTail().
+     * 
+     * @returns {Array<FIAnchor>} 
+     */
+     getAnchorTail() {
+        if (this._artifact instanceof HKID) 
+        {
+            return (this.anchor) ? [this.anchor] : [];
+        }
+        else {
+            return this._artifact.getAnchorTail().concat([this.anchor]);
+        }
+    }
+
+    /**
+     * Returns the difference of tails between two FIs, For example:
+     *       
+     * art.f1.f2.f3.f4 - art.f1.f2 -> [f3.f4] : Array<FIAnchor>
+     * art.f1.f2.f3.f4 - tart.f1.f2 -> [f3.f4] : Array<FIAnchor>
+     * art.f1.f2 - art.f1.f2 -> []
+     * art.f1.f2 - art.f1.f2.f3 -> []
+     * art.f1.f2 - [] -> [f1.f2]
+     * 
+     * 
+     * @param {FI} fi FI with tail to remove.
+     * 
+     * @return {Array<FIAnchor>} Returns a list with the tails not removed.
+     */
+    tailDiff(fi) {
+
+        if (fi === null){
+            return this;
+        } else {
+            let fiElems = fi.getAnchorTail();
+            let thisElems = this.getAnchorTail();
+
+            let lenSmaller = fiElems.length < thisElems.length ? fiElems.length : thisElems.length;
+
+            // if (fiElems.length === 0){
+            //     return thisElems; 
+            // }
+            
+            let i;
+            for (i = 0; i < lenSmaller; i++){
+                if (fiElems[i].equals(thisElems[i])){
+                    break;
+                }
+            }
+            return thisElems.slice(i);
+        }
+        
+
+    }
+
+
+    /**
      * Returns string representation of all anchors from getBaseArtifact()
      */
     toStringTail(){
@@ -108,6 +164,33 @@ class FI
         }
     }
 
+    /**
+     * Tests if `fi` is equal to this fi.
+     * 
+     * @param {FI} fi FI to compare. 
+     */
+    equals(fi) 
+    {
+        if (fi instanceof FI)
+        {
+            // if (this.getBaseArtifact().toString() === fi.getBaseArtifact().toString()) 
+            // {
+            //     let fiElems = fi.getAnchorTail();
+            //     let thisElems = this.getAnchorTail();
+    
+            //     for (let i = 0; i < thisElems.length; i++){
+            //         if (!fiElems[i].equals(thisElems[i])){
+            //             return false;
+            //         }
+            //     }
+            //     return true;
+            // }
+
+            return this.toString() === fi.toString();
+        }
+
+        return false;
+    }
 
     toString()
     {
@@ -151,7 +234,7 @@ function parseId(text)
     }
     let id;
     try {
-        let id = processId(ast);
+        id = processId(ast);
     } finally {
         return id;
     }
