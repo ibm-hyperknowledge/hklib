@@ -45,7 +45,7 @@ class VirtualContext extends Context {
 
   setOrAppendToProperty(property: string, value: Object, metaProperty?: string | undefined): void {
     if (this.hasProperty(property)) {
-      if (property === "virtualsrc" || property === "readonly") {
+      if (property === "virtualsrc" || property === "readonly" || property === "datasourcetype") {
         this.properties[property] = value;
       }
       else {
