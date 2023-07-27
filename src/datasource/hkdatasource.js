@@ -315,7 +315,13 @@ class HKDatasource
   {
     let url = this.url + "repository/" + this.graphName + "/entity/";
 
-    if (!Array.isArray(entities))
+    this._saveEntities(entities, url, callback);
+  }
+
+  _saveEntities(entities, url, callback) 
+  {
+
+    if (!Array.isArray(entities)) 
     {
       throw `Input entities must be an array. Received "${typeof entities}"`;
     }
@@ -372,6 +378,31 @@ class HKDatasource
         callback(err);
       }
     });
+  }
+
+  /**
+   * Callback function for `addEntities`
+   *
+   * @callback AddEntitiesCallback
+   * @param {Error} err Error message/object (null in case of success)
+   * @param {Array} entities repository metadata
+   */
+  /**
+   * Save hyperknowledge entities to a hkbase passing custom options
+   *
+   * @param {Array} entities array of entities to be added or updated
+   * @param {Object} options custom options for add entities
+   * @param {AddEntitiesCallback} callback Response callback
+   */
+  saveEntitiesWithOptions(entities, options= {}, callback)
+  {
+    let url = this.url + "repository/" + this.graphName + "/entity/";
+
+    if(options.forceAdd){
+      url += '?forceAdd=true';
+    }
+
+    this._saveEntities(entities, url, callback);
   }
 
   /**
