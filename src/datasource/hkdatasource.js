@@ -402,7 +402,7 @@ class HKDatasource
       url += '?forceAdd=true';
     }
 
-    this,this._saveEntities(entities, url, callback);
+    this._saveEntities(entities, url, callback);
   }
 
   /**
